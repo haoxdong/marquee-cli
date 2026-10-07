@@ -79,7 +79,7 @@ Narrow with repeatable `--source`, `--subsource`, `--type`, `--publication`, `--
 
 Separate Bash tool calls run **sequentially**. All independent commands — searches, widget reads, projections — go in one Bash call with `&` + `wait`.
 
-**Hedge searches**: the search engine is noisy — run 2-3 query variations in parallel (`&` + `wait`) to increase hit rate.
+**Fan out topic searches** across 2-3 angles.
 
 Search queries: precise, API-ready — include asset class (`EURUSD vol FX`), expand shorthand (`JPY` not `yen`), canonical terms (`risk reversal skew`).
 
