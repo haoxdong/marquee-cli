@@ -2085,6 +2085,165 @@ describe('Widget', () => {
       .toHaveLength(1);
   });
 
+  it.each([
+    ['Asset', 'embedded'],
+    ['Cross', 'embedded'],
+    ['Asset', 'assignment'],
+    ['Cross', 'assignment'],
+  ] as const)('preserves %s %s display evidence when expanding opaque Control Group members', async (
+    field,
+    evidence,
+  ) => {
+    const assetId = `MA${'K'.repeat(16)}`;
+    const controlGroupId = `CG${'L'.repeat(16)}`;
+    const adapter = createFakeRequestAdapter({
+      '/v1/data/visualizations/DV_PRESERVED_EVIDENCE': () => ({}),
+      '/v1/data/visualizations/DV_PRESERVED_EVIDENCE/render': () => ({ renderData: { data: [], layout: {} } }),
+      '/v1/marketview/dashboards': () => ({ results: [] }),
+      '/v1/marketview/constituents': () => ({
+        results: [{
+          constituentId: assetId,
+          name: assetId,
+          controlGroups: [controlGroupId],
+        }],
+      }),
+    });
+    const input = widgetValues('PRESERVED_EVIDENCE', {
+      title: { embedded: 'Currency pair', fallback: 'Fallback', useEntityTitle: true },
+      contextParameter: {
+        field,
+        type: 'Asset',
+        kinds: ['asset'],
+        value: assetId,
+        options: [assetId, controlGroupId],
+      },
+      entityLabels: evidence === 'embedded'
+        ? [{ identity: assetId, label: 'EURUSD' }]
+        : [],
+    });
+    const result = await renderTestValues(
+      createWidgetProductionModule(adapter, {
+        controlGroup: createControlGroupModule(adapter),
+        entity: createEntityModule(adapter),
+      }),
+      {
+        ...input,
+        parameters: evidence === 'assignment'
+          ? [{ field, value: assetId, displayValue: 'EURUSD' }]
+          : [],
+      },
+      'full',
+    );
+
+    expect(result).toMatchObject({
+      ok: true,
+      value: {
+        detail: 'full',
+        snippet: { parameterLines: [field === 'Asset' ? 'asset=EURUSD' : 'cross=EURUSD'] },
+        widget: {
+          parameters: [{
+            field,
+            default: 'EURUSD',
+            rawDefault: assetId,
+          }],
+        },
+      },
+    });
+  });
+
+  it.each(['Asset', 'Cross'] as const)(
+    'preserves %s labels through an override and saved Config reload with opaque Control Group names',
+    async (field) => {
+      const assetId = `MA${'K'.repeat(16)}`;
+      const originalAssetId = `MA${'M'.repeat(16)}`;
+      const controlGroupId = `CG${'L'.repeat(16)}`;
+      const savedConfiguration = {
+        id: 'WC_PRESERVED_RELOAD',
+        widgetId: 'MW_PRESERVED_RELOAD',
+        underlyingChartId: 'DV_PRESERVED_RELOAD',
+        parameters: [{ field, value: assetId }],
+        metadata: { entityMetadata: { [assetId]: { name: 'EURUSD' } } },
+      };
+      const adapter = createFakeRequestAdapter((path, init) => {
+        if (path === '/v1/marketview/widgets/MW_PRESERVED_RELOAD') {
+          return {
+            id: 'MW_PRESERVED_RELOAD',
+            title: 'Currency pair',
+            underlyingChartId: 'DV_PRESERVED_RELOAD',
+            visualizationType: 'DataViz',
+            useEntityTitle: true,
+            contextParameter: {
+              field,
+              type: 'Asset',
+              options: [originalAssetId, controlGroupId],
+              values: { default: originalAssetId },
+            },
+            renderParams: { component: { [field]: originalAssetId }, controls: [] },
+            parameters: [],
+            metadata: {},
+          };
+        }
+        if (path === '/v1/marketview/widgets/configurations') {
+          if (init?.method === 'POST') {
+            expect(init.body).toMatchObject({ parameters: [{ field, value: assetId }] });
+            return savedConfiguration;
+          }
+          return [savedConfiguration];
+        }
+        if (path === '/v1/plots/entities') {
+          return { assets: [{ id: assetId, name: 'EURUSD' }, { id: originalAssetId, name: 'USDJPY' }] };
+        }
+        if (path === '/v1/marketview/constituents') {
+          return { results: [{
+            constituentId: assetId,
+            name: init?.query?.query === 'EURUSD' ? 'EURUSD' : assetId,
+            controlGroups: [controlGroupId],
+          }] };
+        }
+        if (path === '/v1/data/visualizations/DV_PRESERVED_RELOAD') return {};
+        if (path === '/v1/data/visualizations/DV_PRESERVED_RELOAD/render') {
+          return { renderData: { data: [], layout: {} } };
+        }
+        if (path === '/v1/marketview/dashboards') return { results: [] };
+        throw new Error(`unexpected ${path}`);
+      });
+      const widget = createWidget(adapter);
+      const overridden = await widget.get({
+        widgetId: 'MW_PRESERVED_RELOAD' as WidgetId,
+        configurationId: null,
+        parameters: [{ field: field.toLowerCase(), value: 'EURUSD' }],
+        detail: 'full',
+      });
+      expect(overridden).toMatchObject({
+        ok: true,
+        value: {
+          snippet: { parameterLines: [field === 'Asset' ? 'asset=EURUSD' : 'cross=EURUSD'] },
+          widget: {
+            configurationId: 'WC_PRESERVED_RELOAD',
+            parameters: [{ field, default: 'EURUSD', rawDefault: assetId }],
+          },
+        },
+      });
+      if (!overridden.ok) throw new Error(JSON.stringify(overridden.error));
+      const reloaded = await createWidget(adapter).get({
+        widgetId: 'MW_PRESERVED_RELOAD' as WidgetId,
+        configurationId: overridden.value.widget.configurationId,
+        parameters: [],
+        detail: 'full',
+      });
+      expect(reloaded).toMatchObject({
+        ok: true,
+        value: {
+          snippet: { parameterLines: [field === 'Asset' ? 'asset=EURUSD' : 'cross=EURUSD'] },
+          widget: {
+            configurationId: 'WC_PRESERVED_RELOAD',
+            parameters: [{ field, default: 'EURUSD', rawDefault: assetId }],
+          },
+        },
+      });
+    },
+  );
+
   it('resolves current and remaining full options in one Entity request', async () => {
     const assetId = `MA${'F'.repeat(16)}`;
     const unrelatedAssetId = `MA${'G'.repeat(16)}`;

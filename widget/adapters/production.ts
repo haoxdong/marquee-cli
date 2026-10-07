@@ -1845,7 +1845,8 @@ function applySemanticControlGroupExpansions(
     }
     cgMembers[resolution.input.value] = expansion.members.map(({ entityId }) => entityId);
     for (const member of expansion.members) {
-      addResolvedEntityLabel(entityMap, member.entityId, member);
+      entityMap[member.entityId] ??= member.label;
+      for (const alias of member.aliases) entityMap[alias] ??= member.label;
     }
   }
 }
