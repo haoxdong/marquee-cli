@@ -11,7 +11,7 @@ import {
   type MarketViewCoreDependencies,
 } from '../facade.js';
 import type { Dashboard } from '../../dashboard/index.js';
-import type { EntityFeedModule } from '../../entity-feed/index.js';
+import { createEntityFeedModule, type EntityFeedModule } from '../../entity-feed/index.js';
 import type { Entity, EntityModule } from '../../entity/index.js';
 import { createFakeDashboardModule } from './fake-dashboard.js';
 
@@ -758,6 +758,26 @@ describe('MarketView Dashboard reads', () => {
     ]);
     expect(result.value.window.total).toBe(40);
     expect(result.value.artifact.root.cursor).toEqual({ page: 1, pageSize: 10, total: 40 });
+  });
+
+  it('loads beyond the first provider page through the Entity Feed module', async () => {
+    const entries = Array.from({ length: 105 }, (_, index) => ({ id: `MW_FEED_${index + 1}`, title: `Feed ${index + 1}` }));
+    const entityFeed = createEntityFeedModule({
+      async request({ path }, init) {
+        if (path === '/v1/marketview/preferences') return { value: { pins: [] } };
+        if (path !== '/v1/marketview/widgets') throw new Error('Unexpected request');
+        const offset = Number(init?.query?.offset ?? 0);
+        const limit = Number(init?.query?.limit ?? 100);
+        return { total_results: 105, results: entries.slice(offset, offset + limit) };
+      },
+    });
+    const marketView = dashboardFacade({ entity: entityResolver([country]), entityFeed, registry: newRegistry() });
+
+    const result = await marketView.readDashboard({ identifier: 'US', detail: 'raw', limit: 101 });
+
+    expect(result.ok && result.value.window.widgets.length).toBe(101);
+    expect(result.ok && result.value.window.widgets.at(-1)?.title).toBe('Feed 101');
+    expect(result.ok && result.value.artifact.root.cursor).toEqual({ page: 1, pageSize: 101, total: 105 });
   });
 
   it('pages an Entity Feed by the requested limit', async () => {

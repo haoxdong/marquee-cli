@@ -166,7 +166,7 @@ async function readContextDashboard(
   if (!identified.value || identified.value.kind !== kind) {
     return { ok: false, error: { kind: 'entity-not-found', entityKind: kind, identifier } };
   }
-  const feedResult = await entityFeed.get({ entity: identified.value });
+  const feedResult = await entityFeed.get({ entity: identified.value, limit: pageSize });
   if (!feedResult.ok) {
     return { ok: false, error: { kind: 'entity-feed', error: feedResult.error } };
   }

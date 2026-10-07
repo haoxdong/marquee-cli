@@ -27,6 +27,7 @@ export type EntityFeed = {
 
 type EntityFeedGetInput = Readonly<{
   entity: Entity;
+  limit?: number;
 }>;
 
 export type EntityFeedError =

@@ -53,11 +53,25 @@ export function createEntityFeedModuleFromAdapter(deps: {
     async get(input) {
       const source = await deps.adapter.read(input.entity.entityId);
       if (!source.ok) return source;
+      const entries = orderEntries(source.value.entries, source.value.pins);
+      const target = Math.min(input.limit ?? entries.length, source.value.total);
+      while (entries.length < target) {
+        // eslint-disable-next-line no-await-in-loop -- each offset depends on the number of entries actually returned
+        const page = await deps.adapter.page(input.entity.entityId, {
+          offset: entries.length,
+          limit: target - entries.length,
+        });
+        if (!page.ok) return page;
+        if (page.value.entries.length === 0) {
+          return { ok: false, error: { kind: 'invalid-feed', problem: 'response' } };
+        }
+        entries.push(...page.value.entries);
+      }
       return {
         ok: true,
         value: {
           entity: input.entity,
-          entries: orderEntries(source.value.entries, source.value.pins),
+          entries,
           total: source.value.total,
         },
       };
