@@ -1,0 +1,56 @@
+{
+  "name": "@haoxdong/marquee-cli",
+  "version": "0.3.0",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "repository": "https://github.com/haoxdong/marquee-cli.git",
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "bin": {
+    "marquee": "dist/cli.js"
+  },
+  "files": [
+    "dist/cli.js",
+    "skills",
+    "scripts",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "scripts": {
+    "clean": "node -e \"const fs = require('node:fs'); for (const path of ['dist', 'tsconfig.tsbuildinfo']) fs.rmSync(path, { recursive: true, force: true })\"",
+    "build": "npm run clean && esbuild cli-composition/main.ts --bundle --platform=node --format=esm --minify --external:agent-browser --external:tinycolor2 --external:@opentelemetry/* --banner:js=\"import{createRequire}from'node:module';const require=createRequire(import.meta.url);\" --outfile=dist/cli.js && node -e \"require('node:fs').chmodSync('dist/cli.js', 0o755)\"",
+    "build:coverage": "npm run clean && tsc -p tsconfig.json && node -e \"const fs = require('node:fs'); fs.writeFileSync('dist/cli.js', ['#!/usr/bin/env node', \\\"import './cli-composition/main.js';\\\", ''].join('\\n')); fs.chmodSync('dist/cli.js', 0o755)\"",
+    "postinstall": "node scripts/install-skill.mjs",
+    "prepack": "npm run build",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@opentelemetry/api": "1.9.1",
+    "@opentelemetry/instrumentation-undici": "0.32.0",
+    "@opentelemetry/sdk-node": "0.222.0",
+    "agent-browser": "0.38.2",
+    "commander": "^14.0.3",
+    "d3-format": "^3.1.2",
+    "d3-time-format": "^4.1.0",
+    "jq-wasm": "3.0.0-jq-1.8.2",
+    "proper-lockfile": "^4.1.2",
+    "tinycolor2": "^1.6.0"
+  },
+  "devDependencies": {
+    "@types/d3-format": "^3.0.4",
+    "@types/d3-time-format": "^4.0.3",
+    "@types/node": "^24.19.1",
+    "@types/proper-lockfile": "^4.1.4",
+    "@types/tinycolor2": "^1.4.6",
+    "esbuild": "^0.28.2",
+    "fast-check": "^4.10.2",
+    "type-fest": "^5.10.0",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.7"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "marquee",
+  "version": "0.1.0",
+  "description": "Navigate Marquee product surfaces with the marquee CLI and grounded workflows.",
+  "author": {
+    "name": "haoxdong",
+    "url": "https://github.com/haoxdong"
+  },
+  "repository": "https://github.com/haoxdong/marquee-cli",
+  "skills": "./skills/",
+  "keywords": ["marquee", "marketview", "research"],
+  "interface": {
+    "displayName": "Marquee",
+    "shortDescription": "Navigate Marquee with its CLI and workflows.",
+    "longDescription": "Use the marquee CLI to navigate Marquee product surfaces and build grounded research workflows.",
+    "developerName": "haoxdong",
+    "category": "Productivity",
+    "capabilities": ["Research"],
+    "defaultPrompt": ["Use Marquee to research this request."]
+  }
+}

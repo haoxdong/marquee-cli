@@ -1,0 +1,41 @@
+{
+  "empty": {
+    "documents": [],
+    "totalRecords": 0,
+    "page": 1,
+    "facetList": []
+  },
+  "confirmed": {
+    "documents": [],
+    "totalRecords": 0,
+    "page": 1,
+    "facetList": [
+      {
+        "label": "Report Types",
+        "selected": true,
+        "values": [
+          {
+            "id": "report_types",
+            "guid": "blogs-guid",
+            "name": "Blogs",
+            "count": 0,
+            "selected": true
+          }
+        ]
+      },
+      {
+        "label": "Sources",
+        "selected": true,
+        "values": [
+          {
+            "id": "sources",
+            "guid": "research-guid",
+            "name": "Research",
+            "count": 0,
+            "selected": true
+          }
+        ]
+      }
+    ]
+  }
+}
