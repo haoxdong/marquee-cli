@@ -190,14 +190,12 @@ function pageRecordWidgets(
   });
 }
 
-/** `-S` matches: dashboard view's widget table, one Widget Snippet row per match; no match prints nothing. */
 function formatDashboardFilter(
   namespace: string,
   refinement: Extract<NonNullable<MarketViewDashboardValue['refinement']>, { kind: 'filter' }>,
   widgets: readonly DashboardPresentationWidget[],
 ): string {
   const { query, matches, totalMatches } = refinement;
-  if (totalMatches === 0) return '';
   return renderText([
     {
       type: 'table',
@@ -296,6 +294,10 @@ export async function renderMarketviewDashboardTab(
   }
 
   if (refinement?.kind === 'filter') {
+    if (refinement.totalMatches === 0) {
+      deps.writeError(`no widgets match ${JSON.stringify(refinement.query)}\n`);
+      return;
+    }
     write(formatDashboardFilter(artifact.namespace, refinement, window.widgets));
     return;
   }

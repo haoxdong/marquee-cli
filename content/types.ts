@@ -77,6 +77,7 @@ export type ContentPresentationOptions = Readonly<{
 
 export type ContentPresentation = Readonly<{
   output: string;
+  channel?: 'stderr';
   exitCode?: 1 | 2 | 4;
 }>;
 

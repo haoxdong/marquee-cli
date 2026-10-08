@@ -339,12 +339,12 @@ describe('Content get presentation', () => {
 });
 
 describe('Content search presentation', () => {
-  it('prints nothing for a Content Search with no results', async () => {
+  it('reports an empty Content Search on stderr', async () => {
     await expect(presentContentSearch(searched(page({
       query: 'zxqwvk',
       resultCount: 0,
       facets: [{ field: 'source', label: 'Source', isSelected: false, values: [{ name: 'Research', count: 0, isSelected: false }] }],
-    })), {})).resolves.toEqual({ output: '' });
+    })), {})).resolves.toEqual({ output: 'no results match "zxqwvk"\n', channel: 'stderr' });
   });
 
   it('prints one row per Document, a Filters table, the sort sentence and hints', async () => {

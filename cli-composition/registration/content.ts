@@ -83,7 +83,11 @@ export function registerContentCommands(program: Command, ctx: ContentRegistrati
         facets: contentFacetSelections(options),
       });
       const presentation = await presentContentSearch(outcome, options);
-      writePresentation(ctx, presentation.output, presentation.exitCode);
+      if (presentation.channel === 'stderr') {
+        ctx.writeError(presentation.output);
+      } else {
+        writePresentation(ctx, presentation.output, presentation.exitCode);
+      }
     });
 
   const getContent = content

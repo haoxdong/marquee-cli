@@ -504,6 +504,13 @@ function writeTextSearch(
   presentation: MarketViewSearchPresentation,
   namespace: string,
 ): void {
+  if (presentation.entries.length === 0) {
+    const hasWidgets = parsed.types.some((type) => type.startsWith('widget'));
+    const hasDashboards = parsed.types.some((type) => !type.startsWith('widget'));
+    const noun = hasWidgets && hasDashboards ? 'results' : hasWidgets ? 'widgets' : 'dashboards';
+    dependencies.writeError(`no ${noun} match ${JSON.stringify(input.query)}\n`);
+    return;
+  }
   const hint = contentSearchHint(input.query);
   const typeFlag = input.typeSource === 'cli' ? ` --type ${parsed.types.join(',')}` : '';
   dependencies.write(formatMarketViewSearchEntries(value.page.results, {

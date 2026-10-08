@@ -291,8 +291,8 @@ describe('renderMarketviewDashboardTab -S matches', () => {
     ].join('\n'));
   });
 
-  it('prints nothing when nothing matches', async () => {
-    await expect(renderMatches({ kind: 'filter', query: 'gold', matches: [], totalMatches: 0 })).resolves.toBe('');
+  it('reports no matches on stderr', async () => {
+    await expect(renderMatches({ kind: 'filter', query: 'gold', matches: [], totalMatches: 0 })).resolves.toBe('stderr: no widgets match "gold"\n');
   });
 });
 

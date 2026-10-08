@@ -199,6 +199,7 @@ function tooltipField(
   const resolvedFormat = explicitTokenFormat(token) ?? (
     displayValues.every((raw) => formatAccepts(raw, fallbackFormat)) ? fallbackFormat : undefined
   );
+  const hasDisplayValues = points.some((point) => Object.hasOwn(point.displayValues ?? {}, token.path));
   return {
     path: token.path,
     ...(resolvedFormat === undefined ? {} : { format: resolvedFormat.format }),
@@ -212,7 +213,7 @@ function tooltipField(
         templateDateContext(
           token,
           dateContext,
-          points.some((point) => Object.hasOwn(point.displayValues ?? {}, token.path)),
+          hasDisplayValues,
         ),
       ),
     })),

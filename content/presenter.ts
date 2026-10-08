@@ -304,7 +304,6 @@ function contentSearchHints(page: ContentSearchPage): TextHint[] {
 }
 
 function presentContentSearchText({ page, documentRefs }: ContentSearchValue): string {
-  if (page.results.length === 0) return '';
   const filters = contentFiltersTable(page.facets);
   return renderText([
     {
@@ -404,6 +403,9 @@ export async function presentContentSearch(
     };
   }
   const { value } = outcome.result;
+  if (options.json === undefined && value.page.results.length === 0) {
+    return { output: `no results match ${JSON.stringify(value.page.query)}\n`, channel: 'stderr' };
+  }
   return options.json === undefined
     ? { output: presentContentSearchText(value) }
     : presentJson(contentSearchRecords(value), options);

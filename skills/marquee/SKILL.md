@@ -29,6 +29,8 @@ Use exactly these two headers — no other sections, no renaming.
 
 ## Core loop
 
+An empty text list or search writes one line naming what matched nothing on stderr and exits 0; `--json` returns the empty result without that line.
+
 **Chain** refs — every command emits refs, the next consumes them.
 
 ```

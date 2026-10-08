@@ -695,10 +695,16 @@ describe('MarketView Search output', () => {
     expect(run.output).not.toContain('see more');
   });
 
-  it('prints nothing for a search with no results', async () => {
+  it('reports an empty search on stderr', async () => {
     const run = await runSearch({ query: 'latest research notes' });
 
-    expect(run).toMatchObject({ output: '', errors: '', exitCodes: [] });
+    expect(run).toMatchObject({ output: '', errors: 'no widgets match "latest research notes"\n', exitCodes: [] });
+  });
+
+  it('keeps a multiline empty query diagnostic on one line', async () => {
+    const run = await runSearch({ query: 'carry\n3m' });
+
+    expect(run).toMatchObject({ output: '', errors: 'no widgets match "carry\\n3m"\n', exitCodes: [] });
   });
 
   it.each([
