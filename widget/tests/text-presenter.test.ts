@@ -421,6 +421,77 @@ describe('Widget chart tables', () => {
     });
   });
 
+  it.each(['scatterpolar', 'scatter'])('presents hover labels and literal percent in %s tables', (type) => {
+    const chart = figure({
+      data: [{
+        type, name: 'Rates', ...(type === 'scatterpolar'
+          ? { theta: ['A', 'B'], r: [2, 3] } : { x: ['A', 'B'], y: [2, 3] }),
+        text: ['2026-09-01', '2026-09-02'],
+        customdata: [[2.25, '2026-09-01'], [3.5, '2026-09-02']],
+        hovertemplate: 'Rate: %{customdata[0]:.2f}%<br><i>as of %{customdata[1]}</i><extra></extra>',
+      }], layout: {},
+    });
+    expect(chart.data).toEqual({
+      headers: [type === 'scatterpolar' ? 'angle' : 'category', 'Rates: ' + (type === 'scatterpolar' ? 'r' : 'y'), 'Rates: Rate', 'Rates: as of'],
+      rows: [['A', '2', '2.25%', '2026-09-01'], ['B', '3', '3.50%', '2026-09-02']],
+    });
+  });
+
+  it.each([
+    { text: ['different', '2026-09-02'], bound: false,
+      rows: [['A', '2', 'different', '2026-09-01'], ['B', '3', '2026-09-02', '2026-09-02']] },
+    { text: ['2026-09-01'], bound: false,
+      rows: [['A', '2', '2026-09-01', '2026-09-01'], ['B', '3', undefined, '2026-09-02']] },
+    { text: ['2026-09-01', '2026-09-02'], bound: true,
+      rows: [['A', '2', '2026-09-01', '2026-09-01'], ['B', '3', '2026-09-02', '2026-09-02']] },
+  ])('preserves differing, partial, or explicitly bound text $text $bound', ({ text, bound, rows }) => {
+    const chart = figure({
+      data: [{ type: 'scatterpolar', name: 'Rates', theta: ['A', 'B'], r: [2, 3], text,
+        customdata: [['2026-09-01'], ['2026-09-02']],
+        hovertemplate: 'Date: %{customdata[0]}' + (bound ? '<br>Note: %{text}' : ''),
+      }], layout: {},
+    });
+    expect(chart.data).toEqual({
+      headers: bound ? ['angle', 'Rates: r', 'Rates: Date', 'Rates: Note']
+        : ['angle', 'Rates: r', 'Rates: text', 'Rates: Date'],
+      rows,
+    });
+  });
+
+  it('uses the exact formatted token for literal percent without scaling it twice', () => {
+    const chart = figure({ data: [{ type: 'bar', name: 'Rates', x: ['A'], y: [0.25],
+      hovertemplate: '%{y:.1f} / %{y:.2f}% / %{y:.0%}',
+    }], layout: {} });
+    expect(chart.data).toEqual({
+      headers: ['category', 'Rates: y:.1f', 'Rates: y:.2f', 'Rates: y:.0%'],
+      rows: [['A', '0.3', '0.25%', '25%']],
+    });
+  });
+
+  it('uses unformatted template tokens when the projection resolves an axis format', () => {
+    expect(figure({ data: [{ type: 'bar', name: 'Rates', x: ['A'], y: [2.5],
+      hovertemplate: 'Rate: %{y}%',
+    }], layout: { yaxis: { hoverformat: '.2f' } } }).data).toEqual({
+      headers: ['category', 'Rates'], rows: [['A', '2.50%']],
+    });
+  });
+
+  it('keeps text for its own long-table series while blanking its duplicate elsewhere', () => {
+    expect(figure({ data: [
+      { type: 'scatterpolar', name: 'Polar', theta: ['A'], r: [2], text: ['2026-09-01'],
+        customdata: [['2026-09-01', 2.5]],
+        hovertemplate: '<i>as of %{customdata[0]}</i><br>Vol: %{customdata[1]:.2f}%',
+      },
+      { type: 'scatter', name: 'Cartesian', x: ['B'], y: [3], text: ['note'] },
+    ], layout: {} }).data).toEqual({
+      headers: ['series', 'theta', 'r', 'x', 'y', 'text', 'as of', 'Vol'],
+      rows: [
+        ['Polar', 'A', '2', undefined, undefined, undefined, '2026-09-01', '2.50%'],
+        ['Cartesian', undefined, undefined, 'B', '3', 'note', undefined, undefined],
+      ],
+    });
+  });
+
   it('keeps the Data key header with no rows when no series is visible', () => {
     const chart = figure({
       data: [{ type: 'bar', name: 'Toggled off', visible: 'legendonly', x: ['A'], y: [1] }],

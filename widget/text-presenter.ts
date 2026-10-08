@@ -46,6 +46,8 @@ export type WidgetChartText = Readonly<{
 /** A `Data` table; `dateOrdered` marks rows sorted oldest to newest. */
 type DataTable = ChartTable & Readonly<{ dateOrdered?: true }>;
 
+type PresentedTooltipField = DataVizFigureTooltipField & Readonly<{ label: string }>;
+
 type FigureColumn = Readonly<{
   header: string;
   values: ReadonlyMap<string, string>;
@@ -311,7 +313,7 @@ function figureSeriesColumns(
 ): readonly FigureColumn[] {
   const coordinatePaths = figureCoordinatePaths(series);
   const tooltipFields = seriesTooltipFields(series);
-  const tooltipPaths = new Set(tooltipFields.map(({ path }) => path));
+  const tooltipPaths = excludedFigurePaths(series, tooltipFields);
   const paths = unique(series.points.flatMap(({ fields }) => fields.map(({ path }) => path)))
     .filter((path) => !coordinatePaths.includes(path) && !tooltipPaths.has(path));
   const fields = paths.flatMap((path) => {
@@ -327,7 +329,7 @@ function figureSeriesColumns(
     return {
       label: tooltipFields.filter(({ path }) => path === field.path).length > 1
         ? tooltipFieldKey(field.path, field.format)
-        : figureFieldLabel(series, field.path),
+        : field.label,
       values: figureColumnValues(
         series,
         coordinatePaths,
@@ -345,7 +347,7 @@ function figureSeriesColumns(
 }
 
 /** Tooltip fields as data columns: a constant repeats on every point. */
-function seriesTooltipFields(series: DataVizFigureSeries): readonly DataVizFigureTooltipField[] {
+function seriesTooltipFields(series: DataVizFigureSeries): readonly PresentedTooltipField[] {
   const tooltip = series.tooltip;
   if (tooltip === undefined) return [];
   return [
@@ -354,7 +356,33 @@ function seriesTooltipFields(series: DataVizFigureSeries): readonly DataVizFigur
       values: series.points.map(() => presentedValue(field.values[0])),
     })),
     ...tooltip.pointFields,
-  ];
+  ].map((field) => {
+    const token = tooltip.mainTemplate === undefined
+      ? undefined : tooltipToken(tooltip.mainTemplate, field.path, field.format);
+    const suffix = token !== undefined
+      && tooltip.mainTemplate?.[token.index + token.text.length] === '%' ? '%' : '';
+    return {
+      ...field,
+      label: figureFieldLabel(series, field.path, field.format),
+      values: field.values.map((value) => ({ ...value, text: value.text + suffix })),
+    };
+  });
+}
+
+function excludedFigurePaths(
+  series: DataVizFigureSeries,
+  fields: readonly PresentedTooltipField[],
+): ReadonlySet<string> {
+  const paths = new Set(fields.map(({ path }) => path));
+  if (!paths.has('text') && series.points.length > 0 && fields.some((field) => (
+    /^customdata(?:\[|$)/.test(field.path) && series.points.every((point, index) => {
+      const text = point.fields.find((candidate) => candidate.path === 'text');
+      const value = field.values[index];
+      return text !== undefined && text.text !== '' && value !== undefined
+        && value.text !== '' && text.raw === value.raw;
+    })
+  ))) paths.add('text');
+  return paths;
 }
 
 function figureColumnValues(
@@ -374,7 +402,7 @@ function longFigureTable(series: readonly DataVizFigureSeries[]): DataTable {
   const tooltipFields = series.flatMap((entry) => (
     seriesTooltipFields(entry).map((field) => ({
       key: tooltipFieldKey(field.path, field.format),
-      label: figureFieldLabel(entry, field.path),
+      label: field.label,
       path: field.path,
       field,
       entry,
@@ -391,7 +419,7 @@ function longFigureTable(series: readonly DataVizFigureSeries[]): DataTable {
   );
   const tooltipPathsBySeries = new Map(series.map((entry) => [
     entry,
-    new Set(seriesTooltipFields(entry).map(({ path }) => path)),
+    excludedFigurePaths(entry, seriesTooltipFields(entry)),
   ]));
   const tooltipPathCounts = new Map(tooltipGroups.map(({ path }) => [
     path,
@@ -470,14 +498,16 @@ function tooltipFieldKey(path: string, format: string | undefined): string {
   return format === undefined ? path : `${path}:${format}`;
 }
 
-function figureFieldLabel(series: DataVizFigureSeries, path: string): string {
+function figureFieldLabel(series: DataVizFigureSeries, path: string, format?: string): string {
   const template = series.tooltip?.mainTemplate;
   if (template === undefined) return leafPath(path);
-  const token = tooltipToken(template, path);
+  const token = tooltipToken(template, path, format);
   if (token === undefined) return leafPath(path);
   const preceding = plainTooltipText(template.slice(0, token.index));
   const named = /([A-Za-z][A-Za-z0-9 _/()$-]*)\s*[=:]\s*$/.exec(preceding)?.[1]?.trim();
   if (named) return named;
+  const prefix = /(?:^|\n)([A-Za-z][A-Za-z0-9 _/()$-]*)\s+$/.exec(preceding)?.[1]?.trim();
+  if (prefix) return prefix;
   const following = plainTooltipText(template.slice(token.index + token.text.length))
     .replace(/^[ \t]*[@:,—-]?[ \t]*/, '')
     .split(/\s*(?:\n|%\{|[|;,()])/, 1)[0]
@@ -488,9 +518,12 @@ function figureFieldLabel(series: DataVizFigureSeries, path: string): string {
 function tooltipToken(
   template: string,
   path: string,
+  format?: string,
 ): Readonly<{ index: number; text: string }> | undefined {
-  const expression = new RegExp(`%\\{${escapeRegExp(path)}(?:[:|][^}]*)?\\}`);
-  const match = expression.exec(template);
+  const expression = new RegExp(`%\\{${escapeRegExp(path)}(?:[:|]([^}]*))?\\}`, 'g');
+  const matches = [...template.matchAll(expression)];
+  const match = matches.find((candidate) => candidate[1] === format)
+    ?? matches.find((candidate) => candidate[1] === undefined);
   return match?.index === undefined ? undefined : { index: match.index, text: match[0] };
 }
 
