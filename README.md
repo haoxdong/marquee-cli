@@ -25,8 +25,8 @@ precedence. Partial invocation configuration fails rather than falling back.
 A browser session is never an invocation token. Without either configuration,
 the CLI uses its existing local Goldman authentication.
 
-The gateway route is implemented in source. Deployment and protected reads from a
-fresh Codex Cloud runtime remain pending coordinator verification.
+Verify the required read in each assigned runtime. Configured gateway access does
+not establish access for an unconfigured session or direct provider traffic.
 
 ## License
 
