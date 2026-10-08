@@ -37,7 +37,7 @@ type AdvancedSearchRaw = {
     title?: string;
     publicationDateTime?: string | number;
     authors?: string[];
-    source?: string;
+    source?: string | null;
     sources?: string[];
     sourceDisplayName?: string;
     highlight?: string;
@@ -238,7 +238,9 @@ function normalizeDocument(item: AdvancedSearchDocumentRaw): ContentSearchDocume
   ).toISOString();
   const authors = normalizeAuthors(item.authors);
   const source = requiredString(item.sourceDisplayName, 'documents[].sourceDisplayName');
-  const documentSource = requiredString(item.source, 'documents[].source');
+  const documentSource = item.source === null
+    ? undefined
+    : requiredString(item.source, 'documents[].source');
   const synopsis = optionalSnippetString(item.synopsis, 'documents[].synopsis');
   const snippet = optionalSnippetString(item.highlight, 'documents[].highlight');
   const path = requiredString(item.path, 'documents[].path');
@@ -249,7 +251,7 @@ function normalizeDocument(item: AdvancedSearchDocumentRaw): ContentSearchDocume
     publicationDate,
     authors,
     source,
-    documentSource,
+    ...(documentSource === undefined ? {} : { documentSource }),
     ...(synopsis ? { synopsis } : {}),
     ...(snippet ? { snippet } : {}),
     path,

@@ -279,6 +279,49 @@ describe('content/search adapter', () => {
     ]);
   });
 
+  it('normalizes null-source legacy documents alongside markets documents', async () => {
+    const { result } = await discover(advancedSearchResponse({
+      totalRecords: 2,
+      documents: [
+        advancedSearchDocument({
+          source: null,
+          sources: ['Research'],
+          sourceDisplayName: 'Research | Economics',
+          path: '/content/research/en/reports/doc-1.html',
+        }),
+        advancedSearchDocument({ id: 'doc-2' }),
+      ],
+    }));
+
+    expect(result.ok && result.value.page.results).toStrictEqual([
+      {
+        documentId: 'doc-1',
+        type: 'document',
+        title: 'Document 1',
+        publicationDate: '2026-05-30T12:00:00.000Z',
+        authors: ['Analyst One'],
+        source: 'Research | Economics',
+        synopsis: 'Document synopsis',
+        snippet: 'Document snippet',
+        path: '/content/research/en/reports/doc-1.html',
+        url: 'https://marquee.gs.com/content/research/en/reports/doc-1.html',
+      },
+      {
+        documentId: 'doc-2',
+        type: 'document',
+        title: 'Document 1',
+        publicationDate: '2026-05-30T12:00:00.000Z',
+        authors: ['Analyst One'],
+        source: 'FICC and Equities',
+        documentSource: 'sec_div',
+        synopsis: 'Document synopsis',
+        snippet: 'Document snippet',
+        path: '/content/markets/en/doc-1.html',
+        url: 'https://marquee.gs.com/content/markets/en/doc-1.html',
+      },
+    ]);
+  });
+
   it('normalizes the facet footer', async () => {
     const { result } = await discover(advancedSearchResponse({
       facetList: [advancedSearchFacet({
@@ -318,6 +361,8 @@ describe('content/search adapter', () => {
     ['documents[].sourceDisplayName is required',
       { documents: [advancedSearchDocument({ sourceDisplayName: undefined })] }],
     ['documents[].source is required', { documents: [advancedSearchDocument({ source: undefined })] }],
+    ['documents[].source is required', { documents: [advancedSearchDocument({ source: ' ' })] }],
+    ['documents[].source is required', { documents: [advancedSearchDocument({ source: 5 })] }],
     ['documents[].synopsis is not a string', { documents: [advancedSearchDocument({ synopsis: 5 })] }],
     ['documents[].highlight is not a string', { documents: [advancedSearchDocument({ highlight: 5 })] }],
     ['documents[].path is required', { documents: [advancedSearchDocument({ path: undefined })] }],
