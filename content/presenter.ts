@@ -180,16 +180,18 @@ function contentViewRecord(
 function presentContentFacetRejection(
   rejection: Extract<ContentSearchError, { kind: 'facet-resolution-rejected' }>['rejections'][number],
 ): string {
-  if (rejection.status === 'not-found') {
-    return `no ${rejection.field} matching "${rejection.input}" — try a shorter prefix`;
-  }
   const shown = rejection.candidates.slice(0, 10);
   const lines = [
-    `ambiguous ${rejection.field} "${rejection.input}" — candidates:`,
+    rejection.status === 'not-found'
+      ? `no ${rejection.field} matching "${rejection.input}" — known ${rejection.field}s:`
+      : `ambiguous ${rejection.field} "${rejection.input}" — candidates:`,
     ...shown.map((candidate) => `  ${candidate.name}`),
   ];
   const remaining = rejection.candidates.length - shown.length;
-  if (remaining > 0) lines.push(`  …and ${remaining} more — narrow the value`);
+  if (remaining > 0) {
+    const hint = rejection.status === 'not-found' ? 'copy an exact value' : 'narrow the value';
+    lines.push(`  …and ${remaining} more — ${hint}`);
+  }
   return lines.join('\n');
 }
 

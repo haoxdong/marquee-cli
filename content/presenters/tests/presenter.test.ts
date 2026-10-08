@@ -512,11 +512,57 @@ describe('Content search presentation', () => {
     expect(presentation).toEqual({
       output: [
         'Error: ambiguous author "cohen" — candidates:',
-        ...candidates.slice(0, 10).map(({ name }) => `  ${name}`),
+        '  Cohen 1',
+        '  Cohen 2',
+        '  Cohen 3',
+        '  Cohen 4',
+        '  Cohen 5',
+        '  Cohen 6',
+        '  Cohen 7',
+        '  Cohen 8',
+        '  Cohen 9',
+        '  Cohen 10',
         '  …and 2 more — narrow the value',
-        'Error: no source matching "missing" — try a shorter prefix',
+        'Error: no source matching "missing" — known sources:',
         '',
       ].join('\n'),
+      exitCode: 1,
+    });
+  });
+
+  it('lists at most ten known values in rail order without counts for an unknown author', async () => {
+    const candidates = [
+      { name: 'Zoe', guid: 'z', count: 1 },
+      { name: 'Amy', guid: 'a', count: 999 },
+      { name: 'Lee', guid: 'l', count: 42 },
+      { name: 'Sam', guid: 's' },
+      { name: 'Pat', guid: 'p' },
+      { name: 'Kim', guid: 'k' },
+      { name: 'Alex', guid: 'x' },
+      { name: 'Jo', guid: 'j' },
+      { name: 'Max', guid: 'm' },
+      { name: 'Dee', guid: 'd' },
+      { name: 'Ray', guid: 'r' },
+      { name: 'Bea', guid: 'b' },
+    ];
+    await expect(presentContentSearch(searchFailure({
+      kind: 'facet-resolution-rejected',
+      rejections: [{ status: 'not-found', field: 'author', input: 'typo', candidates }],
+    }), {})).resolves.toEqual({
+      output: 'Error: no author matching "typo" — known authors:\n  Zoe\n  Amy\n  Lee\n  Sam\n  Pat\n  Kim\n  Alex\n  Jo\n  Max\n  Dee\n  …and 2 more — copy an exact value\n',
+      exitCode: 1,
+    });
+  });
+
+  it('lists every known value without an elision when fewer than ten exist', async () => {
+    await expect(presentContentSearch(searchFailure({
+      kind: 'facet-resolution-rejected',
+      rejections: [{
+        status: 'not-found', field: 'source', input: 'missing',
+        candidates: [{ name: 'Research', guid: 'r' }, { name: 'FICC and Equities', guid: 'f' }],
+      }],
+    }), {})).resolves.toEqual({
+      output: 'Error: no source matching "missing" — known sources:\n  Research\n  FICC and Equities\n',
       exitCode: 1,
     });
   });
