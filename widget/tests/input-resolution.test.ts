@@ -12,6 +12,7 @@ import {
 import { WidgetSemanticFailure } from '../semantic-failure.js';
 import { unwrapSliderValue } from '../slider.js';
 import type { Asset, EntityMatch } from '../../entity/index.js';
+import { createEntityModule } from '../../entity/index.js';
 
 const MSFT = `MA${'L'.repeat(15)}`;
 const MSF = `MA${'N'.repeat(15)}`;
@@ -557,13 +558,11 @@ describe('resolveWidgetInput', () => {
   });
 
   it('matches raw Asset options remotely by label or ticker alias', async () => {
-    const calls: unknown[] = [];
     const matches: EntityMatch[] = [
       { entityId: EXAMPLE_UW, display: 'Example Corp A', aliases: ['EXMPL', 'EXMPL UW'] },
     ];
     const entity = entityModule({
-      async resolveMatches(...input) {
-        calls.push(input);
+      async resolveMatches() {
         return { ok: true, value: matches };
       },
     });
@@ -573,7 +572,31 @@ describe('resolveWidgetInput', () => {
       value: EXAMPLE_UW,
       label: 'Example Corp A',
     });
-    expect(calls).toEqual([[[EXAMPLE_UW], 'exmpl', 30]]);
+  });
+
+  it('resolves a unique alias and rejects a shared alias for duplicate Asset labels', async () => {
+    const entity = createEntityModule({
+      async request() {
+        return { assets: [
+          { id: EXAMPLE_UW, name: 'Example Corp', bbid: 'EXMPL UW', ticker: 'EXMPL' },
+          { id: EXAMPLE_UN, name: 'Example Corp', bbid: 'EXMPL UN', ticker: 'EXMPL' },
+        ] };
+      },
+    });
+
+    expect(await resolve('Asset', [EXAMPLE_UW, EXAMPLE_UN], 'EXMPL UW', { entity })).toEqual({
+      ok: true,
+      value: EXAMPLE_UW,
+      label: 'Example Corp (EXMPL UW)',
+    });
+    expect(await resolve('Asset', [EXAMPLE_UW, EXAMPLE_UN], 'EXMPL', { entity })).toEqual({
+      ok: false,
+      error: {
+        kind: 'ambiguous',
+        requested: 'EXMPL',
+        candidates: ['Example Corp (EXMPL UW)', 'Example Corp (EXMPL UN)'],
+      },
+    });
   });
 
   it('rejects an exact Asset alias shared by several options', async () => {
@@ -635,15 +658,13 @@ describe('resolveWidgetInput', () => {
   });
 
   it('keeps an AssetList label containing the list separator whole', async () => {
-    const queries: unknown[] = [];
     const entity = entityModule({
-      async resolveMatches(_identifiers, query) {
-        queries.push(query);
+      async resolveMatches() {
         const all: EntityMatch[] = [
           { entityId: EXAMPLE_UW, display: 'Example, Inc', aliases: [] },
           { entityId: MSFT, display: 'Microsoft Corp', aliases: [] },
         ];
-        return { ok: true, value: all.filter(({ display }) => display.toLowerCase().startsWith(String(query).toLowerCase())) };
+        return { ok: true, value: all };
       },
     });
 
@@ -654,7 +675,6 @@ describe('resolveWidgetInput', () => {
       displayValue: ['Example, Inc', 'Microsoft Corp'],
       echo: 'assets = Example, Inc, Microsoft Corp (matched "Example, Inc, Micro")',
     });
-    expect(queries).toEqual(['Example', 'Example, Inc', 'Micro']);
   });
 
   it('rejoins an exact AssetList item only into an exact label', async () => {
@@ -664,8 +684,8 @@ describe('resolveWidgetInput', () => {
       { entityId: EXAMPLE_UW, display: 'Ltd', aliases: [] },
     ];
     const entity = entityModule({
-      async resolveMatches(_identifiers, query) {
-        return { ok: true, value: all.filter(({ display }) => display.toLowerCase().startsWith(String(query).toLowerCase())) };
+      async resolveMatches() {
+        return { ok: true, value: all };
       },
     });
 

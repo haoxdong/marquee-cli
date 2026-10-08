@@ -257,7 +257,7 @@ async function assetCandidates(
     return controlGroupCandidates(context, domain.controlGroupIds, requested);
   }
   if (domain.assetIds.length > 0) {
-    const result = await context.entity.resolveMatches(domain.assetIds, requested.trim(), MATCH_LIMIT);
+    const result = await context.entity.resolveMatches(domain.assetIds, undefined, domain.assetIds.length);
     if (!result.ok) return failEntityResolution(result.error);
     return entityMatchCandidates(result.value);
   }
