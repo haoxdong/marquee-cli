@@ -550,13 +550,7 @@ function parsedPublicTypes(input: RunMarketViewSearchInput):
   return {
     ok: true,
     types: requestedTypes,
-    selectors: requestedTypes.map((type) => {
-      const selector = SELECTOR_BY_PUBLIC_TYPE[type as MarketViewSearchType];
-      // Marquee Web recommends Dashboards from the Dashboard LLM pool.
-      return selector === 'thematic' && input.typeSource === 'default'
-        ? 'web-dashboard'
-        : selector;
-    }),
+    selectors: requestedTypes.map((type) => SELECTOR_BY_PUBLIC_TYPE[type as MarketViewSearchType]),
     limit,
   };
 }

@@ -644,10 +644,10 @@ describe('MarketView Search input parsing', () => {
     }]);
   });
 
-  it('searches the Web Dashboard pool for the default thematic Dashboards', async () => {
+  it('searches the keyword Dashboard pool for the default thematic Dashboards', async () => {
     const run = await runSearch({ type: 'widget,thematic-dashboard', typeSource: 'default' });
 
-    expect(run.requests).toEqual([{ query: 'carry', selectors: ['keyword-widget', 'web-dashboard'], limit: 10 }]);
+    expect(run.requests).toEqual([{ query: 'carry', selectors: ['keyword-widget', 'thematic'], limit: 10 }]);
   });
 });
 

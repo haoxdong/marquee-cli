@@ -321,102 +321,8 @@ describe('MarketView Search production adapter', () => {
         useNewSchema: false,
         combineSearchResults: false,
       },
-      hedgeDelaysMs: [1000],
+      retry: false,
       signal,
-    });
-  });
-
-  it('requests the Dashboard LLM pool in Web shape beside the keyword sources', async () => {
-    const request = vi.fn(async (_endpoint: Endpoint, init?: { query?: Readonly<Record<string, unknown>> }) => (
-      (init?.query?.types as string[]).includes('Dashboard LLM')
-        ? {
-            totalResults: 10,
-            resultsMap: {
-              dashboards_llm: [{
-                type: 'Dashboard LLM',
-                data: {
-                  id: 'MD_WEB',
-                  title: 'Web Dashboard',
-                  type: 'Dashboard',
-                  children: [],
-                  alias: 'web-dashboard',
-                },
-              }, {
-                type: 'Dashboard LLM',
-                data: {
-                  id: 'MD_WEB_2',
-                  title: 'Second Web Dashboard',
-                  type: 'Dashboard',
-                  children: [],
-                  alias: 'second-web-dashboard',
-                },
-              }],
-            },
-          }
-        : {
-            requestId: 'keyword-request',
-            totalResults: 22,
-            resultsMap: { assets: [{ data: { id: 'MA_ASSET', name: 'Asset' } }] },
-          }
-    ));
-    const port = createMarketViewSearchProductionPort({ request });
-
-    const discovered = await port.discover({
-      query: 'Fed rate cuts',
-      selectors: ['web-dashboard', 'asset'],
-      limit: 1,
-    });
-
-    expect(request.mock.calls.map(([, init]) => init?.query)).toEqual([
-      {
-        query: 'Fed rate cuts',
-        types: ['Asset'],
-        limit: 1,
-        useNewSchema: false,
-        combineSearchResults: false,
-      },
-      { query: 'Fed rate cuts', types: ['Dashboard LLM'], combineSearchResults: false },
-    ]);
-    expect(discovered).toMatchObject({
-      ok: true,
-      value: {
-        results: [
-          { type: 'dashboard', dashboardId: 'MD_WEB', category: { kind: 'thematic' } },
-          { type: 'entity', entityKind: 'asset', entityId: 'MA_ASSET' },
-        ],
-      },
-    });
-  });
-
-  it('sends the Dashboard LLM limit only past Web\'s page of 10', async () => {
-    const request = vi.fn(async () => ({ totalResults: 0, resultsMap: {} }));
-    const port = createMarketViewSearchProductionPort({ request });
-
-    await port.discover({ query: 'rates', selectors: ['web-dashboard'], limit: 20 });
-
-    expect(request).toHaveBeenCalledOnce();
-    expect(request).toHaveBeenCalledWith({ method: 'GET', path: '/v1/marketview/search' }, expect.objectContaining({
-      query: { query: 'rates', types: ['Dashboard LLM'], limit: 20, combineSearchResults: false },
-    }));
-  });
-
-  it('fails loud when the Dashboard LLM request fails beside keyword sources', async () => {
-    const port = createMarketViewSearchProductionPort({
-      async request(_path, init) {
-        if ((init?.query?.types as string[]).includes('Dashboard LLM')) {
-          throw new MarqueeError('http', 'Dashboard LLM unavailable', { status: 503 });
-        }
-        return { totalResults: 0, resultsMap: {} };
-      },
-    });
-
-    await expect(port.discover({
-      query: 'rates',
-      selectors: ['web-dashboard', 'asset'],
-      limit: 2,
-    })).resolves.toEqual({
-      ok: false,
-      error: { kind: 'discovery-failed', failure: { kind: 'unavailable' } },
     });
   });
 
@@ -1091,31 +997,11 @@ describe('MarketView Search production adapter translation', () => {
       { method: 'GET', path: '/v1/marketview/search' },
       {
         query: { query: 'q', types, limit: 3, useNewSchema, combineSearchResults: false },
-        hedgeDelaysMs: [1000],
+        ...(selectors.some((selector) => selector === 'semantic-widget' || selector === 'hybrid-widget')
+          ? { hedgeDelaysMs: [1000] }
+          : { retry: false }),
       },
     );
-  });
-
-  it('omits the Dashboard LLM limit at Web\'s page of 10', async () => {
-    const { request, port } = respond({ resultsMap: {} });
-
-    await port.discover({ query: 'q', selectors: ['web-dashboard'], limit: 10 });
-
-    expect(request.mock.calls.map(([, init]) => init)).toEqual([{
-      query: { query: 'q', types: ['Dashboard LLM'], combineSearchResults: false },
-      hedgeDelaysMs: [1000],
-    }]);
-  });
-
-  it('decodes a sole Dashboard LLM response', async () => {
-    await expect(discover({
-      resultsMap: {
-        dashboards_llm: [{ data: { id: 'MD_WEB', title: 'Web', type: 'Dashboard', children: [], alias: 'web' } }],
-      },
-    }, { selectors: ['web-dashboard'] })).resolves.toMatchObject({
-      ok: true,
-      value: { results: [{ dashboardId: 'MD_WEB', url: 'https://marquee.gs.com/s/marketview/dashboards/web' }] },
-    });
   });
 
   it.each([
@@ -1672,60 +1558,6 @@ describe('MarketView Search production adapter translation', () => {
     expect(outcome.ok && outcome.value.results.map((entry) => (
       entry.type === 'dashboard' ? entry.dashboardId : entry.type === 'entity' ? entry.entityId : entry.widgetId
     ))).toEqual(['MP', 'MD', 'MA', 'JP']);
-  });
-
-  it('joins the Dashboard LLM pool after keyword sources, capped at the limit', async () => {
-    const request = vi.fn(async (_endpoint: Endpoint, init?: { query?: Readonly<Record<string, unknown>> }) => (
-      (init?.query?.types as string[]).includes('Dashboard LLM')
-        ? {
-            totalResults: 2,
-            resultsMap: {
-              dashboards_llm: [
-                { data: { id: 'MD_WEB', title: 'Web', type: 'Dashboard', children: [], alias: 'web' } },
-                { data: { title: 'Malformed beyond the limit' } },
-              ],
-            },
-          }
-        : { totalResults: 1, resultsMap: { countries: [{ data: { id: 'JP', name: 'Japan' } }] } }
-    ));
-    const port = createMarketViewSearchProductionPort({ request });
-
-    await expect(port.discover({ query: 'q', selectors: ['country', 'web-dashboard'], limit: 1 }))
-      .resolves.toMatchObject({
-        ok: true,
-        value: { results: [{ entityId: 'JP' }, { dashboardId: 'MD_WEB' }] },
-      });
-  });
-
-  it('decodes the keyword sources when the Dashboard LLM pool is absent', async () => {
-    const request = vi.fn(async (_endpoint: Endpoint, init?: { query?: Readonly<Record<string, unknown>> }) => (
-      (init?.query?.types as string[]).includes('Dashboard LLM')
-        ? { totalResults: 0, resultsMap: {} }
-        : { totalResults: 1, resultsMap: { countries: [{ data: { id: 'JP', name: 'Japan' } }] } }
-    ));
-    const port = createMarketViewSearchProductionPort({ request });
-
-    await expect(port.discover({ query: 'q', selectors: ['web-dashboard', 'country'], limit: 1 }))
-      .resolves.toMatchObject({ ok: true, value: { results: [{ entityId: 'JP' }] } });
-  });
-
-  it.each([
-    ['a non-object Dashboard LLM response', 'llm', []],
-    ['a Dashboard LLM response without resultsMap', 'llm', { totalResults: 0 }],
-    ['a non-array Dashboard LLM bucket', 'llm', { totalResults: 0, resultsMap: { dashboards_llm: {} } }],
-    ['a non-object keyword response', 'keyword', 'oops'],
-    ['a keyword response without resultsMap', 'keyword', { totalResults: 0 }],
-  ])('fails loud on %s beside keyword sources', async (_label, side, response) => {
-    const port = createMarketViewSearchProductionPort({
-      async request(_endpoint, init) {
-        const llm = (init?.query?.types as string[]).includes('Dashboard LLM');
-        if ((side === 'llm') === llm) return response;
-        return { totalResults: 0, resultsMap: {} };
-      },
-    });
-
-    await expect(port.discover({ query: 'q', selectors: ['web-dashboard', 'country'], limit: 1 }))
-      .resolves.toEqual(unavailable);
   });
 
   it.each([

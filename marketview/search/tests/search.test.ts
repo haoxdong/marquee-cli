@@ -420,31 +420,28 @@ describe('Search', () => {
     expect(render).not.toHaveBeenCalled();
   });
 
-  it('returns a semantic page and preserves literal query fan-out ordering', async () => {
-    const discover = vi.fn<MarketViewSearchPort['discover']>(async (input) => ({
+  it('returns a semantic page and preserves the literal query in one keyword discovery', async () => {
+    const discover = vi.fn<MarketViewSearchPort['discover']>(async () => ({
       ok: true,
       value: {
-        results: input.selectors[0] === 'keyword-widget'
-          ? [
-              {
-                type: 'widget',
-                widgetId: 'MW_FIRST' as WidgetId,
-                title: 'First widget',
-                configurationId: 'WC_FIRST' as ConfigId,
-                parameterLines: ['Asset'],
-                ...renderValues('MW_FIRST', 'WC_FIRST'),
-              },
-            ]
-          : [
-              {
-                type: 'entity',
-                entityKind: 'asset',
-                entityId: 'MA_SECOND',
-                label: 'Second dashboard',
-                qualifiers: [],
-                url: 'https://marquee.gs.com/s/marketview/asset/MA_SECOND',
-              },
-            ],
+        results: [
+          {
+            type: 'widget',
+            widgetId: 'MW_FIRST' as WidgetId,
+            title: 'First widget',
+            configurationId: 'WC_FIRST' as ConfigId,
+            parameterLines: ['Asset'],
+            ...renderValues('MW_FIRST', 'WC_FIRST'),
+          },
+          {
+            type: 'entity',
+            entityKind: 'asset',
+            entityId: 'MA_SECOND',
+            label: 'Second dashboard',
+            qualifiers: [],
+            url: 'https://marquee.gs.com/s/marketview/asset/MA_SECOND',
+          },
+        ],
       },
     }));
     const search = createMarketViewSearchModule({
@@ -532,13 +529,7 @@ describe('Search', () => {
     });
     expect(discover).toHaveBeenNthCalledWith(1, {
       query: '  AAPL carry  ',
-      selectors: ['keyword-widget'],
-      limit: 7,
-      signal: expect.any(AbortSignal),
-    });
-    expect(discover).toHaveBeenNthCalledWith(2, {
-      query: '  AAPL carry  ',
-      selectors: ['asset'],
+      selectors: ['keyword-widget', 'asset'],
       limit: 7,
       signal: expect.any(AbortSignal),
     });
@@ -604,7 +595,7 @@ describe('Search', () => {
       evidence: {
         kind: 'discovery-call',
         index: 0,
-        selectors: ['keyword-widget'],
+        selectors: ['keyword-widget', 'asset'],
       },
     });
   });
@@ -814,7 +805,7 @@ describe('Search module behavior', () => {
   function bySelector(
     results: Partial<Record<string, readonly MarketViewSearchDiscoveryEntry[]>>,
   ): MarketViewSearchPort {
-    return port(async (input) => ({ ok: true, value: { results: results[String(input.selectors[0])] ?? [] } }));
+    return port(async (input) => ({ ok: true, value: { results: input.selectors.flatMap((selector) => results[selector] ?? []) } }));
   }
 
   it.each([
@@ -1029,7 +1020,7 @@ describe('Search module behavior', () => {
       widget: { render: vi.fn() },
     });
 
-    await expect(search.search({ query: 'q', selectors: ['asset', 'country'], limit: 5 })).resolves.toEqual({
+    await expect(search.search({ query: 'q', selectors: ['semantic-widget', 'country'], limit: 5 })).resolves.toEqual({
       ok: false,
       error: { kind: 'discovery-failed', failure: { kind: 'timeout' } },
       evidence: { kind: 'discovery-call', index: 1, selectors: ['country'] },

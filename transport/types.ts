@@ -25,6 +25,7 @@ export interface HttpRequestInit {
   expectedContentType?: string;
   body?: unknown;
   timeoutMs?: number;
+  retry?: false;
   signal?: AbortSignal | undefined;
   isHtmlAccepted?: boolean;
   redirect?: 'manual';

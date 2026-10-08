@@ -8,7 +8,6 @@ export type MarketViewSearchSelector =
   | 'semantic-widget'
   | 'hybrid-widget'
   | 'thematic'
-  | 'web-dashboard'
   | 'asset'
   | 'country'
   | 'portfolio';

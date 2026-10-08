@@ -189,6 +189,9 @@ function discoveryCalls(
   selectors: readonly MarketViewSearchSelector[],
   signal: AbortSignal,
 ): TaggedDiscovery[] {
+  if (selectors.every((selector) => selector !== 'semantic-widget' && selector !== 'hybrid-widget')) {
+    return [{ input: { query: input.query, selectors, limit: input.limit, signal } }];
+  }
   const calls = widgetDiscoveryCalls(input, selectors, signal);
   for (const selector of selectors.filter((value) => !isMarketViewSearchWidgetSelector(value))) {
     calls.push({

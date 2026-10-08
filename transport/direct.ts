@@ -124,7 +124,7 @@ export class HttpTransport {
     let response = await this.fetchAndPersist(url, fetchInit);
     const redirect = manualRedirect(init, response);
     if (redirect) return absoluteRedirect(redirect, url);
-    if (response.status === 401 && !isResearchRealmRequest(url)) {
+    if (response.status === 401 && init.retry !== false && !isResearchRealmRequest(url)) {
       const exchanged = await this.exchangeAccessToken(signal);
       if (exchanged) {
         headers.Authorization = `Bearer ${exchanged}`;
@@ -139,7 +139,7 @@ export class HttpTransport {
       contentType: response.headers.get('content-type') ?? '',
       body: htmlBody,
       expected: expectedResponseKind(init),
-      retryEligible: responseIsRetryableApiHtml(url, init.method ?? 'GET'),
+      retryEligible: init.retry !== false && responseIsRetryableApiHtml(url, init.method ?? 'GET'),
       retryAttempted: false,
     }).outcome === 'retry';
     if (retryAttempted) {
@@ -386,7 +386,7 @@ async function assertHtmlAccepted(
     contentType,
     body: htmlBody,
     expected: expectedResponseKind(init),
-    retryEligible: responseIsRetryableApiHtml(url, init.method ?? 'GET'),
+    retryEligible: init.retry !== false && responseIsRetryableApiHtml(url, init.method ?? 'GET'),
     retryAttempted: prior.retryAttempted,
   });
   const details = {

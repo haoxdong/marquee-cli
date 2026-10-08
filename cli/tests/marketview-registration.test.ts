@@ -68,7 +68,7 @@ describe('marketview command module', () => {
 
     expect(search).toHaveBeenCalledWith({
       query: 'spx carry',
-      selectors: ['keyword-widget', 'web-dashboard', 'asset', 'country', 'portfolio'],
+      selectors: ['keyword-widget', 'thematic', 'asset', 'country', 'portfolio'],
       limit: 3,
     });
     expect(getWidget).toHaveBeenCalledWith({

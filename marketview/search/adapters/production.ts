@@ -23,6 +23,7 @@ type MarketViewSearchRequestInit = Readonly<{
   query?: Readonly<Record<string, unknown>>;
   signal?: AbortSignal;
   hedgeDelaysMs?: readonly number[];
+  retry?: false;
 }>;
 
 export interface MarketViewSearchRequester {
@@ -56,9 +57,7 @@ const NON_WIDGET_SELECTOR_ORDER: readonly NonWidgetSelector[] = [
   'portfolio',
 ];
 
-type KeywordSelector = Exclude<MarketViewSearchSelector, 'web-dashboard'>;
-
-const PROVIDER_PROJECTIONS: Readonly<Record<KeywordSelector, ProviderProjection>> = {
+const PROVIDER_PROJECTIONS: Readonly<Record<MarketViewSearchSelector, ProviderProjection>> = {
   'keyword-widget': { types: ['Widget'], newSchema: false },
   'semantic-widget': { types: ['Widget LLM'], newSchema: false },
   'hybrid-widget': { types: ['Widget', 'Widget LLM', 'Widget Ranked'], newSchema: true },
@@ -68,9 +67,7 @@ const PROVIDER_PROJECTIONS: Readonly<Record<KeywordSelector, ProviderProjection>
   portfolio: { types: ['Portfolio'], newSchema: false },
 };
 
-const WEB_DASHBOARD_TYPES: readonly string[] = ['Dashboard LLM'];
-
-function providerProjection(selectors: readonly KeywordSelector[]): ProviderProjection {
+function providerProjection(selectors: readonly MarketViewSearchSelector[]): ProviderProjection {
   const definitions = selectors.map((selector) => PROVIDER_PROJECTIONS[selector]);
   return {
     types: [...new Set(definitions.flatMap((definition) => definition.types))],
@@ -486,7 +483,6 @@ function decodeSearchResults(
   }
   const nonWidgetDecoders: Readonly<Record<NonWidgetSelector, () => void>> = {
     thematic: () => decodeSource(entries(map, 'dashboards'), thematic),
-    'web-dashboard': () => decodeSource(entries(map, 'dashboards_llm'), thematic),
     asset: () => decodeSource(entries(map, 'assets'), asset),
     country: () => decodeSource(entries(map, 'countries'), country),
     portfolio: () => decodeSource(entries(map, 'portfolios'), portfolio),
@@ -495,30 +491,6 @@ function decodeSearchResults(
     nonWidgetDecoders[selector]();
   }
   return results;
-}
-
-// Joins Web's separate Dashboard LLM response to the keyword response. The pool
-// ignores `limit` up to Web's page of 10, so its bucket is capped here.
-function withWebDashboards(
-  keywordRaw: unknown,
-  webDashboardRaw: unknown,
-  limit: number,
-): SearchRaw {
-  const keyword = requiredRecord(keywordRaw, 'search response is not an object');
-  const web = requiredRecord(webDashboardRaw, 'Dashboard LLM response is not an object');
-  const { dashboards_llm: dashboards } = requiredRecord(
-    web.resultsMap,
-    'Dashboard LLM response missing resultsMap',
-  );
-  return {
-    resultsMap: {
-      ...requiredRecord(keyword.resultsMap, 'missing resultsMap'),
-      ...(dashboards === undefined ? {} : {
-        dashboards_llm: requiredArray(dashboards, 'dashboards_llm bucket is not an array')
-          .slice(0, limit),
-      }),
-    },
-  };
 }
 
 function dependencyFailure(error: MarqueeError): MarketViewSearchError {
@@ -562,37 +534,19 @@ export function createMarketViewSearchProductionPort(
         const marketView = new MarketViewApi({
           request: (endpoint, init) => requester.request(endpoint, {
             ...init,
-            hedgeDelaysMs: [1000],
+            ...(input.selectors.some((selector) => selector === 'semantic-widget' || selector === 'hybrid-widget')
+              ? { hedgeDelaysMs: [1000] }
+              : { retry: false }),
             ...(input.signal ? { signal: input.signal } : {}),
           }),
         });
-        const selectors = input.selectors.filter(
-          (selector): selector is KeywordSelector => selector !== 'web-dashboard',
-        );
-        const projection = providerProjection(selectors);
-        const [keywordRaw, webDashboardRaw] = await Promise.all([
-          selectors.length > 0
-            ? marketView.search({
-                query: input.query,
-                types: [...projection.types],
-                limit: input.limit,
-                isNewSchema: projection.newSchema,
-              })
-            : undefined,
-          // Marquee Web requests Dashboard LLM on its own without paging
-          // params, and the provider ranks differently when they are sent;
-          // past Web's page of 10, `limit` is still needed to fetch enough.
-          input.selectors.includes('web-dashboard')
-            ? marketView.search({
-                query: input.query,
-                types: WEB_DASHBOARD_TYPES,
-                ...(input.limit > 10 ? { limit: input.limit } : {}),
-              })
-            : undefined,
-        ]);
-        const raw = keywordRaw === undefined || webDashboardRaw === undefined
-          ? keywordRaw ?? webDashboardRaw
-          : withWebDashboards(keywordRaw, webDashboardRaw, input.limit);
+        const projection = providerProjection(input.selectors);
+        const raw = await marketView.search({
+          query: input.query,
+          types: projection.types,
+          limit: input.limit,
+          isNewSchema: projection.newSchema,
+        });
         return {
           ok: true,
           value: {
