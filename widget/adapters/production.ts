@@ -827,9 +827,10 @@ function refreshedWidgetComponent(
     const field = cleanRecordText(parameter.field);
     const values = parameter.values;
     assert(
-      field && isRecord(values) && values.default !== undefined,
+      field && isRecord(values) && (values.default !== undefined || component[field] === undefined),
       invalidWidget('date-parameter-default-missing'),
     );
+    if (values.default === undefined) continue;
     const current = component[field];
     const currentRule = relativeDateRule(current);
     const fallback = freshestRelativeDateCandidate([

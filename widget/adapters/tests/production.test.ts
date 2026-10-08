@@ -2776,8 +2776,7 @@ describe('Widget', () => {
     });
   });
 
-  it('saves the relative Date option matching the current rule when a Config changes', async () => {
-    // A saved value later than every option survives the relative-date refresh.
+  it('refreshes relative Dates without adding an unset optional Date when a Config changes', async () => {
     const savedToday = { rdate: { rule: '0b' }, value: '2026-09-30' };
     const yesterday = { rdate: { rule: '-1b' }, value: '2026-09-25' };
     const today = { rdate: { rule: '0b' }, value: '2026-09-26' };
@@ -2793,6 +2792,7 @@ describe('Widget', () => {
           parameters: [
             { field: 'pricingDate', type: 'Date', values: { default: savedToday }, options: [yesterday, today] },
             { field: 'asOf', type: 'Date', values: { default: '2026-09-01' }, options: ['2026-08-01', '2026-09-01'] },
+            { field: 'compareDate', type: 'Date', values: {} },
             { field: 'region', type: 'Enum', values: { default: 'US' }, options: ['US', 'EU'] },
           ],
           metadata: { title: 'Relative date' },
