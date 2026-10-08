@@ -1,6 +1,6 @@
 /**
  * The Plot window codec: the one place that reads a Chart's provider window
- * tokens (`-3m`, `-ytd`, `ytd`, `-max`, `0d`, `+1m`; ends `0d`, `-0d`, `+5y`,
+ * tokens (`-3m`, `-ytd`, `ytd`, `-max`, `0d`, `+1m`; ends `0d`, `-0d`, `-1b`, `+5y`,
  * `30y`) and prints the `-p relativeDate`, Params and Dashboard spellings.
  */
 import { requiredGroup } from '../../lib/regex-group.js';
@@ -68,6 +68,7 @@ function parseStart(token: string): PlotToolWindowStart | null {
 
 function parseEnd(token: string): PlotToolWindowEnd | null {
   if (token === '0d') return { kind: 'today' };
+  if (token === '-1b') return { kind: 'offset', amount: -1, unit: 'b' };
   const match = /^(?:-(?=0d)|\+)?(\d+)([dmy])$/.exec(token);
   return match && {
     kind: 'offset',

@@ -39,6 +39,7 @@ describe('parsePlotToolWindow', () => {
   it.each([
     ['0d', { kind: 'today' }, false],
     ['-0d', { kind: 'offset', amount: 0, unit: 'd' }, false],
+    ['-1b', { kind: 'offset', amount: -1, unit: 'b' }, false],
     ['+0d', { kind: 'offset', amount: 0, unit: 'd' }, false],
     ['+5y', { kind: 'offset', amount: 5, unit: 'y' }, true],
     ['30y', { kind: 'offset', amount: 30, unit: 'y' }, true],
@@ -56,7 +57,7 @@ describe('parsePlotToolWindow', () => {
     expect(window()).toStrictEqual({ isForward: false });
   });
 
-  it.each(['forever', '', '+0d', '-5Y', 'x-5y', '-5yx', '5y', '+1xd'])(
+  it.each(['forever', '', '+0d', '-5Y', 'x-5y', '-5yx', '5y', '+1xd', '-1b'])(
     'rejects the relative start %j',
     (token) => {
       expect(parsePlotToolWindow({ relativeStartDate: token })).toStrictEqual({
@@ -66,7 +67,7 @@ describe('parsePlotToolWindow', () => {
     },
   );
 
-  it.each(['-5d', '-00d', '+5Y', 'x+5y', '+5yx', 'ytd', '-0dd'])('rejects the relative end %j', (token) => {
+  it.each(['-5d', '-00d', '+5Y', 'x+5y', '+5yx', 'ytd', '-0dd', '+1b', '1b', '-0b', '-2b'])('rejects the relative end %j', (token) => {
     expect(parsePlotToolWindow({ relativeEndDate: token })).toStrictEqual({
       ok: false,
       reason: `unsupported relative end ${token}`,
@@ -162,7 +163,7 @@ describe('parsePlotToolWindowOverride', () => {
     });
   });
 
-  it.each(['+1M', '-3M', '3W', 'soon', 'MAXX', 'xYTD', ' 3M', '3M '])('rejects %j', (value) => {
+  it.each(['+1M', '-3M', '3W', 'soon', 'MAXX', 'xYTD', ' 3M', '3M ', '1B'])('rejects %j', (value) => {
     expect(parsePlotToolWindowOverride(value)).toBeUndefined();
   });
 

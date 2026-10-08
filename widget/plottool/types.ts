@@ -15,7 +15,10 @@ export type PlotToolWindowStart = Readonly<{ token: string }> & (
   | (PlotToolWindowOffset & Readonly<{ direction: 'back' | 'forward' }>)
 );
 
-export type PlotToolWindowEnd = Readonly<{ kind: 'today' }> | PlotToolWindowOffset;
+export type PlotToolWindowEnd =
+  | Readonly<{ kind: 'today' }>
+  | PlotToolWindowOffset
+  | Readonly<{ kind: 'offset'; amount: -1; unit: 'b' }>;
 
 export type PlotToolWindow = Readonly<{
   start?: PlotToolWindowStart;

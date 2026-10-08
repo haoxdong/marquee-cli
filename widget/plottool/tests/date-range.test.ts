@@ -90,6 +90,38 @@ describe('PlotTool Pro date range', () => {
     ).toEqual({ ok: true, value: { kind: 'calendar', start, end, interval: '1D' } });
   });
 
+  it.each([
+    ['2026-03-09T00:30:00', '2026-03-06'],
+    ['2026-03-07T12:00:00', '2026-03-06'],
+    ['2026-03-08T12:00:00', '2026-03-06'],
+    ['2026-03-10T12:00:00', '2026-03-09'],
+    ['2026-11-02T00:30:00', '2026-10-30'],
+  ])('resolves the prior business day from %s to %s', (now, end) => {
+    const timezone = process.env.TZ;
+    process.env.TZ = 'America/New_York';
+    try {
+      expect(resolvePlotToolDateRange(
+        { interval: 'Daily', window: window(undefined, '-1b', '2025-01-01') },
+        new Date(now),
+      )).toEqual({
+        ok: true,
+        value: { kind: 'calendar', start: '2025-01-01', end, interval: '1D' },
+      });
+    } finally {
+      process.env.TZ = timezone;
+    }
+  });
+
+  it('subtracts a business-day end offset from a saved end date', () => {
+    expect(resolvePlotToolDateRange(
+      { interval: 'Daily', window: window('-1y', '-1b'), endDate: '2026-03-09T00:00:00Z' },
+      new Date('2026-08-09T12:00:00'),
+    )).toEqual({
+      ok: true,
+      value: { kind: 'calendar', start: '2025-08-09', end: '2026-03-06', interval: '1D' },
+    });
+  });
+
   it('adds the relative end to a saved end date', () => {
     expect(
       resolvePlotToolDateRange(

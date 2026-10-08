@@ -59,7 +59,13 @@ export function resolvePlotToolDateRange(
     : new Date(now);
   const relativeEnd = chart.window.end;
   if (relativeEnd?.kind === 'offset') {
-    applyRelativeOffset(end, relativeEnd.amount, relativeEnd.unit);
+    if (relativeEnd.unit === 'b') {
+      do {
+        end.setDate(end.getDate() - 1);
+      } while (end.getDay() === 0 || end.getDay() === 6);
+    } else {
+      applyRelativeOffset(end, relativeEnd.amount, relativeEnd.unit);
+    }
   }
   const interval = executionInterval(chart.interval);
   if (!interval) {
