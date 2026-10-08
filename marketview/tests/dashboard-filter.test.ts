@@ -101,6 +101,7 @@ describe('stored Entity Feed filtering', () => {
             type: 'widget',
             widgetId: 'MW_SKEW' as WidgetId,
             configurationId: 'WC_SKEW' as ConfigId,
+            selectedContext: 'MA_EURUSD',
           },
         },
       },
@@ -190,6 +191,7 @@ describe('stored Entity Feed filtering', () => {
             type: 'widget',
             widgetId: 'MW_TARGET' as WidgetId,
             configurationId: 'WC_NEW' as ConfigId,
+            selectedContext: null,
           },
         });
         return {
@@ -217,6 +219,7 @@ describe('stored Entity Feed filtering', () => {
             type: 'widget',
             widgetId: 'MW_TARGET' as WidgetId,
             configurationId: 'WC_NEW' as ConfigId,
+            selectedContext: null,
           },
         },
       },
@@ -225,6 +228,7 @@ describe('stored Entity Feed filtering', () => {
       type: 'widget',
       widgetId: 'MW_TARGET' as WidgetId,
       configurationId: 'WC_NEW' as ConfigId,
+      selectedContext: null,
     });
   });
 
@@ -321,6 +325,7 @@ describe('stored Entity Feed filtering', () => {
         selectedContext: 'MA_EURUSD',
         dashboardId: 'MD_CARRY',
         childId: 'CHILD_CARRY',
+        configurationId: null,
       });
     });
 

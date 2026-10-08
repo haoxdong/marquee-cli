@@ -42,11 +42,11 @@ export function isArtifactRef(value: unknown): value is ArtifactRef {
       const hasChildId = value.childId !== undefined;
       return typeof value.widgetId === 'string'
         && value.widgetId.startsWith('MW')
-        && (value.configurationId === undefined || (
+        && (value.configurationId === null || (
           typeof value.configurationId === 'string'
           && value.configurationId.startsWith('WC')
         ))
-        && (value.selectedContext === undefined || (
+        && (value.selectedContext === null || (
           typeof value.selectedContext === 'string'
           && value.selectedContext.length > 0
         ))

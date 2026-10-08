@@ -38,8 +38,8 @@ export function createMarketViewDashboardCreation(dependencies: {
         }
         resolvedWidgets.push({
           widgetId: ref.widgetId,
-          ...(ref.configurationId ? { configurationId: ref.configurationId } : {}),
-          ...(ref.selectedContext ? { selectedContext: ref.selectedContext } : {}),
+          ...(ref.configurationId !== null ? { configurationId: ref.configurationId } : {}),
+          ...(ref.selectedContext !== null ? { selectedContext: ref.selectedContext } : {}),
         });
       }
       const result = await dependencies.dashboard.create({

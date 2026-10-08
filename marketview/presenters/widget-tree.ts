@@ -138,7 +138,8 @@ export function widgetArtifact(
   return {
     type: 'widget',
     widgetId,
-    ...(configurationId ? { configurationId } : {}),
+    configurationId: configurationId ?? null,
+    selectedContext: null,
   };
 }
 

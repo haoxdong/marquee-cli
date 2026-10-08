@@ -15,7 +15,7 @@ import { isArtifactRef } from '../ref-resolution.js';
 
 function registryStateFile(dir: string): string {
   const name = readdirSync(dir).find((entry) => (
-    entry.startsWith('v6-') && entry.endsWith('.artifact-registry.json')
+    entry.startsWith('v7-') && entry.endsWith('.artifact-registry.json')
   ));
   if (!name) throw new Error(`missing Artifact Registry state in ${dir}`);
   return join(dir, name);
@@ -38,7 +38,7 @@ function searchRef(_query = ''): ArtifactRef {
 }
 
 function widgetRef(id: string, configurationId = id.replace(/^MW/, 'WC')): ArtifactRef {
-  return { type: 'widget', widgetId: id as WidgetId, configurationId: configurationId as ConfigId };
+  return { type: 'widget', widgetId: id as WidgetId, configurationId: configurationId as ConfigId, selectedContext: null };
 }
 
 function dashboardRef(id: string): ArtifactRef {
@@ -56,6 +56,36 @@ describe('ArtifactRegistry', () => {
 
   afterEach(() => {
     rmSync(dir, { recursive: true, force: true });
+  });
+
+  it('reloads Widget refs with explicit null identity values', () => {
+    registry.setRefs('w1', {
+      w1: { type: 'widget', widgetId: 'MW1' as WidgetId, configurationId: null, selectedContext: null },
+    });
+
+    const reloaded = createArtifactRegistry(dir, 12345);
+    expect(reloaded.resolveArtifact('w1' as Ref)).toEqual({
+      ref: { type: 'widget', widgetId: 'MW1', configurationId: null, selectedContext: null },
+      identity: { family: 'widget', widgetId: 'MW1', configurationId: null, selectedContext: null },
+      membership: { ancestors: [] },
+    });
+  });
+
+  it.each(['configurationId', 'selectedContext'])('rejects stored Widget identity without %s', (field) => {
+    registry.setRefs('w1', {
+      w1: { type: 'widget', widgetId: 'MW1' as WidgetId, configurationId: null, selectedContext: null },
+    });
+    const file = registryStateFile(dir);
+    const state = JSON.parse(readFileSync(file, 'utf8')) as {
+      artifacts: Record<string, { identity: Record<string, unknown> }>;
+    };
+    const artifact = state.artifacts.w1;
+    if (!artifact) throw new Error('missing stored Widget');
+    delete artifact.identity[field];
+    writeFileSync(file, JSON.stringify(state));
+
+    expect(() => createArtifactRegistry(dir, 12345).resolveRef('w1' as Ref))
+      .toThrow('invalid registry state shape');
   });
 
   it('claimSearch returns s1 on first call, s2 on second', () => {
@@ -162,6 +192,8 @@ describe('ArtifactRegistry', () => {
           widgetId: 'MW1' as WidgetId,
           dashboardId: 'MD1',
           childId: 'CHILD1',
+          configurationId: null,
+          selectedContext: null,
         },
       },
       payload: [],
@@ -370,7 +402,7 @@ describe('ArtifactRegistry', () => {
   it('initializes missing registry state on first use', () => {
     const fresh = createArtifactRegistry(dir, 'fresh');
 
-    expect(readdirSync(dir).filter((entry) => entry.startsWith('v6-'))).toEqual([]);
+    expect(readdirSync(dir).filter((entry) => entry.startsWith('v7-'))).toEqual([]);
     expect(fresh.getAllRefs()).toEqual({});
     expect(registryStateFile(dir)).toMatch(/\.artifact-registry\.json$/);
     expect(fresh.claimWidget()).toBe('w1');
@@ -445,6 +477,37 @@ describe('ArtifactRegistry', () => {
     expect(registry.resolveRef('d1' as Ref)).toBeUndefined();
     expect(registry.getPayload('d1')).toBeUndefined();
     expect(registry.claimDashboard()).toBe('d1');
+  });
+
+  it.each([
+    { type: 'widget', widgetId: 'MW1' },
+    { type: 'widget', widgetId: 'MW1', configurationId: 'WC1' },
+  ])('hard-cuts unexpired v6 Widget refs with optional identity keys: %o', (ref) => {
+    const file = legacyRegistryStateFile(dir, 12345, 6);
+    const { type: _type, ...identity } = ref;
+    const contents = JSON.stringify({
+      schemaVersion: 6,
+      lastUsedAt: Date.now(),
+      counters: { w: 1 },
+      refs: { w1: ref },
+      artifacts: {
+        w1: { ref, identity: { family: 'widget', ...identity }, membership: { ancestors: [] } },
+      },
+      payloads: {},
+      interactionNamespaces: {},
+      interactionNamespaceNames: [],
+    });
+    writeFileSync(file, contents, 'utf8');
+
+    expect(registry.getAllRefs()).toEqual({});
+    expect(registry.claimWidget()).toBe('w1');
+    registry.setRefs('w1', {
+      w1: { type: 'widget', widgetId: 'MW1' as WidgetId, configurationId: null, selectedContext: null },
+    });
+    expect(createArtifactRegistry(dir, 12345).resolveRef('w1' as Ref)).toEqual({
+      type: 'widget', widgetId: 'MW1', configurationId: null, selectedContext: null,
+    });
+    expect(readFileSync(file, 'utf8')).toBe(contents);
   });
 
   it('a delayed first-use instance cannot clobber another instance claim', () => {

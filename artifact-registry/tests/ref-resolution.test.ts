@@ -18,6 +18,7 @@ const widget: ArtifactRef = {
   type: 'widget',
   widgetId: 'MW123' as WidgetId,
   configurationId: 'WC123' as ConfigId,
+  selectedContext: null,
 };
 
 function registry(refs: Record<string, ArtifactRef>): ArtifactRegistry {
@@ -42,8 +43,8 @@ describe('Artifact Ref resolution', () => {
     { type: 'dashboard', dashboardId: 'MD123', cursor: { page: 1, pageSize: 50, total: 1 } },
     { type: 'entity-feed', entityId: 'MA123', entityKind: 'asset', dashboardId: 'MA123' },
     { type: 'document', documentId: 'report', realm: 'research', url: 'https://example.test' },
-    { type: 'widget', widgetId: 'MW123', dashboardId: 'MD123' },
-    { type: 'widget', widgetId: 'MW123', childId: 'CHILD123' },
+    { type: 'widget', widgetId: 'MW123', dashboardId: 'MD123', configurationId: null, selectedContext: null },
+    { type: 'widget', widgetId: 'MW123', childId: 'CHILD123', configurationId: null, selectedContext: null },
   ])('rejects resumable or incomplete membership fields on %o', (ref) => {
     expect(isArtifactRef(ref)).toBe(false);
   });
@@ -55,7 +56,17 @@ describe('Artifact Ref resolution', () => {
       configurationId: 'WC123',
       dashboardId: 'MD123',
       childId: 'CHILD123',
+      selectedContext: null,
     })).toBe(true);
+  });
+
+  it('accepts explicit null identity values and rejects missing or undefined keys', () => {
+    const complete = { type: 'widget', widgetId: 'MW123', configurationId: null, selectedContext: null };
+    expect(isArtifactRef(complete)).toBe(true);
+    expect(isArtifactRef({ type: 'widget', widgetId: 'MW123', configurationId: null })).toBe(false);
+    expect(isArtifactRef({ type: 'widget', widgetId: 'MW123', selectedContext: null })).toBe(false);
+    expect(isArtifactRef({ ...complete, configurationId: undefined })).toBe(false);
+    expect(isArtifactRef({ ...complete, selectedContext: undefined })).toBe(false);
   });
 
   it('normalizes names and resolves namespaces', () => {

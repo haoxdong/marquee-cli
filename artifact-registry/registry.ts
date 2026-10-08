@@ -25,7 +25,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 interface RegistryState {
-  schemaVersion: 6;
+  schemaVersion: 7;
   lastUsedAt: number;
   counters: Record<string, number>;
   refs: Record<string, ArtifactRef>;
@@ -63,12 +63,12 @@ function registryFile(dir: string, sessionId: RegistrySessionId): string {
     .update(String(sessionId))
     .digest('hex')
     .slice(0, 16);
-  return join(dir, `v6-${digest}.artifact-registry.json`);
+  return join(dir, `v7-${digest}.artifact-registry.json`);
 }
 
 function defaultState(now: number): RegistryState {
   return {
-    schemaVersion: 6,
+    schemaVersion: 7,
     lastUsedAt: now,
     counters: {},
     refs: {},
@@ -94,11 +94,11 @@ function isArtifactIdentity(value: unknown): value is ArtifactIdentity {
           || field === 'configurationId'
           || field === 'selectedContext'
         ))
-        && (value.configurationId === undefined || (
+        && (value.configurationId === null || (
           typeof value.configurationId === 'string'
           && value.configurationId.startsWith('WC')
         ))
-        && (value.selectedContext === undefined || (
+        && (value.selectedContext === null || (
           typeof value.selectedContext === 'string'
           && value.selectedContext.length > 0
         ));
@@ -229,7 +229,7 @@ function readState(file: string, now: number, inactivityMs: number): RegistrySta
     const parsed = JSON.parse(readFileSync(file, 'utf8')) as unknown;
     if (
       !isRecord(parsed) ||
-      parsed.schemaVersion !== 6 ||
+      parsed.schemaVersion !== 7 ||
       typeof parsed.lastUsedAt !== 'number' ||
       !Number.isFinite(parsed.lastUsedAt) ||
       hasInvalidCounters(parsed) ||
@@ -258,7 +258,7 @@ function readState(file: string, now: number, inactivityMs: number): RegistrySta
       return defaultState(now);
     }
     return {
-      schemaVersion: 6,
+      schemaVersion: 7,
       lastUsedAt: now,
       counters: parsed.counters as Record<string, number> | undefined ?? {},
       refs: parsed.refs as Record<string, ArtifactRef> | undefined ?? {},
@@ -462,8 +462,8 @@ function identityFor(ref: ArtifactRef): ArtifactIdentity {
       return {
         family: 'widget',
         widgetId: ref.widgetId,
-        ...(ref.configurationId ? { configurationId: ref.configurationId } : {}),
-        ...(ref.selectedContext ? { selectedContext: ref.selectedContext } : {}),
+        configurationId: ref.configurationId,
+        selectedContext: ref.selectedContext,
       };
     case 'dashboard':
       return { family: 'dashboard', dashboardId: ref.dashboardId };

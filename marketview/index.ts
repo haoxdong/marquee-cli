@@ -417,8 +417,8 @@ async function getMarketViewWidget(
     [namespace]: {
       type: 'widget',
       widgetId: configured.widgetId,
-      ...(configured.configurationId ? { configurationId: configured.configurationId } : {}),
-      ...(configured.selectedContext ? { selectedContext: configured.selectedContext } : {}),
+      configurationId: configured.configurationId ?? null,
+      selectedContext: configured.selectedContext ?? null,
     },
   });
   return Object.freeze({

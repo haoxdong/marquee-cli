@@ -31,6 +31,7 @@ describe('Dashboard edit registration', () => {
         configurationId: 'WC_OLD' as ConfigId,
         dashboardId: 'MD_MACRO',
         childId: 'CHILD_OLD',
+        selectedContext: null,
       },
     });
     const before = {

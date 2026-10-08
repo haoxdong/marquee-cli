@@ -90,6 +90,7 @@ describe('MarketView facade', () => {
       type: 'widget',
       widgetId: 'MW_CARRY',
       configurationId: 'WC_CARRY',
+      selectedContext: null,
     });
   });
 
@@ -304,9 +305,9 @@ describe('MarketView facade', () => {
     expect(searchUrl).toBe('https://marquee.gs.com/s/marketview/search?query=carry%20trade');
     expect(refs).toStrictEqual({
       s1: { type: 'search', searchKind: 'market-data' },
-      's1.w1': { type: 'widget', widgetId: 'MW_KEYWORD', configurationId: 'WC_KEYWORD' },
-      's1.w2': { type: 'widget', widgetId: 'MW_UNMARKED', configurationId: 'WC_UNMARKED' },
-      's1.w3': { type: 'widget', widgetId: 'MW_SEMANTIC', configurationId: 'WC_SEMANTIC' },
+      's1.w1': { type: 'widget', widgetId: 'MW_KEYWORD', configurationId: 'WC_KEYWORD', selectedContext: null },
+      's1.w2': { type: 'widget', widgetId: 'MW_UNMARKED', configurationId: 'WC_UNMARKED', selectedContext: null },
+      's1.w3': { type: 'widget', widgetId: 'MW_SEMANTIC', configurationId: 'WC_SEMANTIC', selectedContext: null },
       's1.d1': { type: 'dashboard', dashboardId: 'MD_RATES' },
       's1.d2': { type: 'entity-feed', entityId: 'BR', entityKind: 'country' },
     });
@@ -321,8 +322,8 @@ describe('MarketView facade', () => {
 
     expect(refs).toStrictEqual({
       s1: { type: 'search', searchKind: 'market-data' },
-      's1.w1': { type: 'widget', widgetId: 'MW_SEMANTIC', configurationId: 'WC_SEMANTIC' },
-      's1.w2': { type: 'widget', widgetId: 'MW_UNMARKED', configurationId: 'WC_UNMARKED' },
+      's1.w1': { type: 'widget', widgetId: 'MW_SEMANTIC', configurationId: 'WC_SEMANTIC', selectedContext: null },
+      's1.w2': { type: 'widget', widgetId: 'MW_UNMARKED', configurationId: 'WC_UNMARKED', selectedContext: null },
     });
   });
 });

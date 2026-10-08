@@ -19,6 +19,7 @@ describe('browser target registration', () => {
       type: 'widget',
       widgetId: 'MW1' as WidgetId,
       configurationId: 'WC1' as ConfigId,
+      selectedContext: null,
     })).toBe('marquee marketview widget view');
     expect(artifactOwnerCommandPath({ type: 'dashboard', dashboardId: 'MD1' }))
       .toBe('marquee marketview dashboard view');

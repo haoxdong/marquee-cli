@@ -30,7 +30,7 @@ function removeExpired(file: string, now: number, inactivityMs: number): void {
 /** Sweep only registry formats observed in the sessions directory. */
 export function cleanupInactiveRegistries(dir: string, now: number, inactivityMs: number): void {
   for (const name of readdirSync(dir)) {
-    const match = /^(v[56]-[a-f0-9]{16}\.artifact-registry\.json|.+\.(?:registry|refs)\.json)(?:\.\d+\.tmp)?$/.exec(name);
+    const match = /^(v[567]-[a-f0-9]{16}\.artifact-registry\.json|.+\.(?:registry|refs)\.json)(?:\.\d+\.tmp)?$/.exec(name);
     const baseName = match?.[1];
     if (baseName === undefined) continue;
     const file = join(dir, name);

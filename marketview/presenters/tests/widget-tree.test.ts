@@ -4,14 +4,14 @@ import { formatWidgetAuthor, widgetArtifact } from '../widget-tree.js';
 describe('widgetArtifact', () => {
   it('refers to a Widget by its id and configuration id', () => {
     expect(widgetArtifact({ title: 'Carry', widgetId: 'MW_CARRY', configurationId: 'WC_CARRY', params: [] }))
-      .toEqual({ type: 'widget', widgetId: 'MW_CARRY', configurationId: 'WC_CARRY' });
+      .toEqual({ type: 'widget', widgetId: 'MW_CARRY', configurationId: 'WC_CARRY', selectedContext: null });
   });
 
-  it('drops a missing or malformed configuration id', () => {
+  it('stores null for a missing or malformed configuration id', () => {
     expect(widgetArtifact({ title: 'Carry', widgetId: 'MW_CARRY', params: [] }))
-      .toEqual({ type: 'widget', widgetId: 'MW_CARRY' });
+      .toEqual({ type: 'widget', widgetId: 'MW_CARRY', configurationId: null, selectedContext: null });
     expect(widgetArtifact({ title: 'Carry', widgetId: 'MW_CARRY', configurationId: 'CH1', params: [] }))
-      .toEqual({ type: 'widget', widgetId: 'MW_CARRY' });
+      .toEqual({ type: 'widget', widgetId: 'MW_CARRY', configurationId: null, selectedContext: null });
   });
 
   it('refers to nothing for a malformed Widget id', () => {

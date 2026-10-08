@@ -23,8 +23,8 @@ describe('MarketView Dashboard creation', () => {
     directories.push(directory);
     const registry = createArtifactRegistry(directory, 'dashboard-create-test');
     registry.setRefs('w1', {
-      w1: { type: 'widget', widgetId: 'MW_ONE' as WidgetId, configurationId: 'WC_ONE' as ConfigId },
-      w2: { type: 'widget', widgetId: 'MW_TWO' as WidgetId, configurationId: 'WC_TWO' as ConfigId },
+      w1: { type: 'widget', widgetId: 'MW_ONE' as WidgetId, configurationId: 'WC_ONE' as ConfigId, selectedContext: null },
+      w2: { type: 'widget', widgetId: 'MW_TWO' as WidgetId, configurationId: 'WC_TWO' as ConfigId, selectedContext: null },
     });
     const creation = createMarketViewDashboardCreation({
       dashboard: createFakeDashboardModule(),
@@ -45,11 +45,13 @@ describe('MarketView Dashboard creation', () => {
       type: 'widget',
       widgetId: 'MW_ONE',
       configurationId: 'WC_ONE',
+      selectedContext: null,
     });
     expect(registry.resolveRef('w2' as Ref)).toEqual({
       type: 'widget',
       widgetId: 'MW_TWO',
       configurationId: 'WC_TWO',
+      selectedContext: null,
     });
     expect(registry.resolveRef('d1' as Ref)).toEqual({ type: 'dashboard', dashboardId: 'MD_TEST_1' });
   });
@@ -96,7 +98,7 @@ describe('MarketView Dashboard creation', () => {
     directories.push(directory);
     const registry = createArtifactRegistry(directory, 'dashboard-create-no-config-test');
     registry.setRefs('w1', {
-      w1: { type: 'widget', widgetId: 'MW_ONE' as WidgetId, selectedContext: 'MA_CONTEXT' },
+      w1: { type: 'widget', widgetId: 'MW_ONE' as WidgetId, selectedContext: 'MA_CONTEXT', configurationId: null },
     });
     const dashboard = createFakeDashboardModule();
     const creation = createMarketViewDashboardCreation({ dashboard, registry });

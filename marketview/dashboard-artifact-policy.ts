@@ -18,8 +18,8 @@ export function dashboardWidgetArtifact(
   const identity = {
     type: 'widget',
     widgetId: widget.widgetId,
-    ...(widget.configurationId ? { configurationId: widget.configurationId } : {}),
-    ...(widget.selectedContext ? { selectedContext: widget.selectedContext } : {}),
+    configurationId: widget.configurationId ?? null,
+    selectedContext: widget.selectedContext ?? null,
   } as const;
   return widget.childId && dashboardId
     ? { ...identity, childId: widget.childId, dashboardId }

@@ -63,7 +63,7 @@ describe('Artifact Registry hard cutover', () => {
       membership: { ancestors: ['s1', 's1.d1'] },
     });
     expect(readdirSync(dir)).toContain('owner-legacy.registry.json');
-    expect(readdirSync(dir).some((name) => name.startsWith('v6-'))).toBe(true);
+    expect(readdirSync(dir).some((name) => name.startsWith('v7-'))).toBe(true);
   });
 
   it('expires the complete inactive session atomically', () => {
@@ -98,10 +98,10 @@ describe('Artifact Registry hard cutover', () => {
     });
 
     expect(() => registry.setRefs('d1', {
-      'd1.w1': { type: 'widget', widgetId: 'MW1' as WidgetId, configurationId: '' as ConfigId },
+      'd1.w1': { type: 'widget', widgetId: 'MW1' as WidgetId, configurationId: '' as ConfigId, selectedContext: null },
     })).toThrow('invalid canonical identity');
     expect(() => registry.setRefs('d1', {
-      'd1.w1': { type: 'widget', widgetId: 'MW1' as WidgetId, configurationId: 'WC1' as ConfigId },
+      'd1.w1': { type: 'widget', widgetId: 'MW1' as WidgetId, configurationId: 'WC1' as ConfigId, selectedContext: null },
     })).toThrow('requires Dashboard and Dashboard Child identity');
     expect(registry.resolveRef('d1.w1' as Ref)).toBeUndefined();
 
@@ -112,10 +112,11 @@ describe('Artifact Registry hard cutover', () => {
         configurationId: 'WC1' as ConfigId,
         dashboardId: 'MD1',
         childId: 'CHILD1',
+        selectedContext: null,
       },
     });
     expect(registry.resolveArtifact('d1.w1' as Ref)).toMatchObject({
-      identity: { family: 'widget', widgetId: 'MW1', configurationId: 'WC1' },
+      identity: { family: 'widget', widgetId: 'MW1', configurationId: 'WC1', selectedContext: null },
       membership: { dashboardId: 'MD1', dashboardChildId: 'CHILD1' },
     });
 
@@ -134,6 +135,7 @@ describe('Artifact Registry hard cutover', () => {
           configurationId: 'WC2' as ConfigId,
           dashboardId: 'MD2',
           childId: 'CHILD2',
+          selectedContext: null,
         },
       },
       payload: {},
@@ -142,11 +144,11 @@ describe('Artifact Registry hard cutover', () => {
     expect(registry.resolveRef('d1.w2' as Ref)).toMatchObject({ dashboardId: 'MD2' });
   });
 
-  it('stores Widget identity with optional Config and Selected Context', () => {
+  it('stores Widget identity with nullable Config and Selected Context', () => {
     const registry = createArtifactRegistry(tempRegistryDir(), 'interaction-a');
 
     registry.setRefs('w1', {
-      w1: { type: 'widget', widgetId: 'MW1' as WidgetId },
+      w1: { type: 'widget', widgetId: 'MW1' as WidgetId, configurationId: null, selectedContext: null },
       w2: {
         type: 'widget',
         widgetId: 'MW2' as WidgetId,
@@ -156,7 +158,7 @@ describe('Artifact Registry hard cutover', () => {
     });
 
     expect(registry.resolveArtifact('w1' as Ref)).toMatchObject({
-      identity: { family: 'widget', widgetId: 'MW1' },
+      identity: { family: 'widget', widgetId: 'MW1', configurationId: null, selectedContext: null },
     });
     expect(registry.resolveArtifact('w2' as Ref)).toMatchObject({
       identity: {
@@ -172,12 +174,14 @@ describe('Artifact Registry hard cutover', () => {
         type: 'widget',
         widgetId: 'MW3',
         data: { title: 'cached surface value' },
+        configurationId: null,
+        selectedContext: null,
       } as unknown as ArtifactRef,
     })).toThrow('invalid canonical identity');
 
     expect(() => registry.storeArtifact({
       namespace: 'w3',
-      root: { type: 'widget', widgetId: 'MW3' as WidgetId },
+      root: { type: 'widget', widgetId: 'MW3' as WidgetId, configurationId: null, selectedContext: null },
       payload: { title: 'cached surface value' },
     })).toThrow('Widget Artifacts cannot store payloads');
     expect(() => registry.setPayload('w1', { title: 'cached surface value' }))

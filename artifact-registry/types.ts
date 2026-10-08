@@ -21,24 +21,17 @@ export interface InteractionSessionNamespace<T> {
   update(updater: (current: T | undefined) => T): T;
 }
 
+type WidgetRefIdentity = Readonly<{
+  type: 'widget';
+  widgetId: WidgetId;
+  configurationId: ConfigId | null;
+  selectedContext: string | null;
+}>;
+
 export type ArtifactRef =
   | Readonly<{ type: 'search'; searchKind: 'market-data' | 'research' }>
-  | Readonly<{
-      type: 'widget';
-      widgetId: WidgetId;
-      configurationId?: ConfigId;
-      selectedContext?: string;
-      dashboardId?: never;
-      childId?: never;
-    }>
-  | {
-      readonly type: 'widget';
-      readonly widgetId: WidgetId;
-      readonly configurationId?: ConfigId;
-      readonly selectedContext?: string;
-      readonly dashboardId: string;
-      readonly childId: string;
-    }
+  | (WidgetRefIdentity & Readonly<{ dashboardId?: never; childId?: never }>)
+  | (WidgetRefIdentity & Readonly<{ dashboardId: string; childId: string }>)
   | Readonly<{ type: 'dashboard'; dashboardId: string }>
   | Readonly<{
       type: 'entity-feed';
@@ -53,8 +46,8 @@ export type ArtifactIdentity =
   | {
       family: 'widget';
       widgetId: string;
-      configurationId?: string;
-      selectedContext?: string;
+      configurationId: string | null;
+      selectedContext: string | null;
     }
   | { family: 'dashboard'; dashboardId: string }
   | {

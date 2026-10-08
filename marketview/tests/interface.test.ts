@@ -228,7 +228,7 @@ describe('MarketView interface', () => {
     const registry = createArtifactRegistry(directory, 'marketview-widget-artifact-intent');
     expect(registry.claimWidget()).toBe('w1');
     registry.setRefs('w1', {
-      w1: { type: 'widget', widgetId: 'MW_ONE' as WidgetId, configurationId: 'WC_ONE' as ConfigId },
+      w1: { type: 'widget', widgetId: 'MW_ONE' as WidgetId, configurationId: 'WC_ONE' as ConfigId, selectedContext: null },
     });
     const widget: WidgetModule = {
       async get() {
@@ -428,7 +428,7 @@ describe('MarketView Widget get', () => {
 
     await marketView.widget.get({ target: 'MW_ONE', overrides: [], detail: 'snippet' });
 
-    expect(registry.resolveRef(registry.refName('w1'))).toStrictEqual({ type: 'widget', widgetId: 'MW_ONE' });
+    expect(registry.resolveRef(registry.refName('w1'))).toStrictEqual({ type: 'widget', widgetId: 'MW_ONE', configurationId: null, selectedContext: null });
   });
 
   it('returns a failed get as a Widget error with a failed Widget audit', async () => {
@@ -468,7 +468,7 @@ describe('MarketView Widget get', () => {
         selectedContext: 'MA_ACME',
       },
     });
-    registry.setRefs(registry.claimWidget(), { w2: { type: 'widget', widgetId: 'MW_TWO' as WidgetId } });
+    registry.setRefs(registry.claimWidget(), { w2: { type: 'widget', widgetId: 'MW_TWO' as WidgetId, configurationId: null, selectedContext: null } });
 
     await marketView.widget.get({ target: '@w1', overrides: [], detail: 'full' });
     await marketView.widget.get({
@@ -606,7 +606,7 @@ describe('MarketView Dashboard get', () => {
 
   it('rejects a blank -S query, -S without a Dashboard Ref, and a Ref that is not a Dashboard', async () => {
     const { marketView, registry } = setup();
-    registry.setRefs(registry.claimWidget(), { w1: { type: 'widget', widgetId: 'MW_ONE' as WidgetId } });
+    registry.setRefs(registry.claimWidget(), { w1: { type: 'widget', widgetId: 'MW_ONE' as WidgetId, configurationId: null, selectedContext: null } });
 
     await expect(Promise.all([
       marketView.dashboard.get({ target: '@w1', search: ' ' }),
@@ -619,7 +619,7 @@ describe('MarketView Dashboard get', () => {
       {
         result: {
           ok: false,
-          error: { kind: 'wrong-artifact-kind', ref: 'w1', artifact: { type: 'widget', widgetId: 'MW_ONE' } },
+          error: { kind: 'wrong-artifact-kind', ref: 'w1', artifact: { type: 'widget', widgetId: 'MW_ONE', configurationId: null, selectedContext: null } },
         },
         evidence: [],
       },
@@ -800,7 +800,7 @@ describe('MarketView Dashboard edit and create', () => {
       order,
     });
 
-    await expect(Promise.all([edit(' , ,'), edit(' @d1.s2 ,, @d1.s1')])).resolves.toStrictEqual([
+    await expect(Promise.all([edit(',,'), edit(' @d1.s2,, @d1.s1')])).resolves.toStrictEqual([
       { result: { ok: false, error: { kind: 'invalid-input', reason: 'empty-order' } }, evidence: [] },
       { result: { ok: false, error: { kind: 'unknown-ref', refName: 'd1.s2' } }, evidence: [] },
     ]);

@@ -143,8 +143,8 @@ function resolveRemoveWidgetChange(
           childId: ref.childId,
           widget: {
             widgetId: ref.widgetId,
-            ...(ref.configurationId ? { configurationId: ref.configurationId } : {}),
-            ...(ref.selectedContext ? { selectedContext: ref.selectedContext } : {}),
+            ...(ref.configurationId !== null ? { configurationId: ref.configurationId } : {}),
+            ...(ref.selectedContext !== null ? { selectedContext: ref.selectedContext } : {}),
           },
           ...(target.sectionId ? { sectionId: target.sectionId } : {}),
         },
@@ -193,8 +193,8 @@ function resolveAddChange(
         kind: 'add-widget',
         widget: {
           widgetId: ref.widgetId,
-          ...(ref.configurationId ? { configurationId: ref.configurationId } : {}),
-          ...(ref.selectedContext ? { selectedContext: ref.selectedContext } : {}),
+          ...(ref.configurationId !== null ? { configurationId: ref.configurationId } : {}),
+          ...(ref.selectedContext !== null ? { selectedContext: ref.selectedContext } : {}),
         },
         ...(target.sectionId ? { sectionId: target.sectionId } : {}),
         ...(

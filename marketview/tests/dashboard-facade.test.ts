@@ -932,6 +932,8 @@ describe('MarketView Dashboard reads', () => {
       widgetId: 'MW_1',
       childId: 'CHILD_1',
       dashboardId: 'MD_SAVED',
+      configurationId: null,
+      selectedContext: null,
     });
   });
 

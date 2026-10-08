@@ -312,6 +312,7 @@ describe('browser open', () => {
         type: 'widget',
         widgetId: 'MW123' as WidgetId,
         configurationId: 'WC1' as ConfigId,
+        selectedContext: null,
       },
     });
 
@@ -371,6 +372,7 @@ describe('browser open', () => {
         type: 'widget',
         widgetId: 'MW123' as WidgetId,
         configurationId: 'WC1' as ConfigId,
+        selectedContext: null,
       },
     });
 
@@ -396,7 +398,7 @@ describe('browser open', () => {
     const registry = createArtifactRegistry(refsDir, process.ppid);
     registry.setRefs('s1', {
       s1: { type: 'search', searchKind: 'market-data' },
-      's1.w1': { type: 'widget', widgetId: 'MW1' as WidgetId, configurationId: 'WC1' as ConfigId },
+      's1.w1': { type: 'widget', widgetId: 'MW1' as WidgetId, configurationId: 'WC1' as ConfigId, selectedContext: null },
     });
 
     let output = '';

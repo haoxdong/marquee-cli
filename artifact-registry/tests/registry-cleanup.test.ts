@@ -24,7 +24,7 @@ function age(file: string): void {
 }
 function endedRegistry(): string {
   createArtifactRegistry(dir, 'ended').claimSearch();
-  const name = readdirSync(dir).find((entry) => entry.startsWith('v6-'));
+  const name = readdirSync(dir).find((entry) => entry.startsWith('v7-'));
   if (name === undefined) throw new Error('ended registry fixture was not created');
   const file = join(dir, name);
   age(file);
@@ -51,7 +51,7 @@ describe('ended session cleanup', () => {
   });
 
   it('removes stale known legacy files and abandoned writes without parsing them', () => {
-    const names = ['v5-0123456789abcdef.artifact-registry.json', 'owner.registry.json', 'owner.refs.json', 'owner.registry.json.123.tmp', 'v6-0123456789abcdef.artifact-registry.json.456.tmp'];
+    const names = ['v5-0123456789abcdef.artifact-registry.json', 'owner.registry.json', 'owner.refs.json', 'owner.registry.json.123.tmp', 'v6-0123456789abcdef.artifact-registry.json.456.tmp', 'v7-0123456789abcdef.artifact-registry.json', 'v7-0123456789abcdef.artifact-registry.json.456.tmp'];
     for (const name of names) {
       const file = join(dir, name);
       writeFileSync(file, 'not JSON');
@@ -62,7 +62,7 @@ describe('ended session cleanup', () => {
   });
 
   it('preserves recent registries, unknown files and symlinks', () => {
-    const names = ['recent.registry.json', 'notes.json', 'unrelated.tmp', 'v7-0123456789abcdef.artifact-registry.json'];
+    const names = ['recent.registry.json', 'notes.json', 'unrelated.tmp', 'v8-0123456789abcdef.artifact-registry.json'];
     for (const name of names) {
       const file = join(dir, name);
       writeFileSync(file, 'not JSON');

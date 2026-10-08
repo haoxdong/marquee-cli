@@ -31,6 +31,6 @@ export interface WidgetPresentation {
 export type WidgetArtifact = Readonly<{
   type: 'widget';
   widgetId: WidgetId;
-  configurationId?: ConfigId;
-  selectedContext?: string;
+  configurationId: ConfigId | null;
+  selectedContext: string | null;
 }>;

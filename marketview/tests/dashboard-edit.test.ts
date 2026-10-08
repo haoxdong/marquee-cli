@@ -82,6 +82,7 @@ describe('MarketView Dashboard edit', () => {
         configurationId: 'WC_OLD' as ConfigId,
         dashboardId: 'MD_OTHER',
         childId: 'CHILD_OLD',
+        selectedContext: null,
       },
     });
     const dashboard = createFakeDashboardModule([{
@@ -205,6 +206,7 @@ describe('MarketView Dashboard edit', () => {
         configurationId: 'WC_OLD' as ConfigId,
         dashboardId: 'MD_MACRO',
         childId: 'CHILD_OLD',
+        selectedContext: null,
       },
     });
     const dashboard = createFakeDashboardModule([{
@@ -251,11 +253,13 @@ describe('MarketView Dashboard edit', () => {
         configurationId: 'WC_OLD' as ConfigId,
         dashboardId: 'MD_MACRO',
         childId: 'CHILD_OLD',
+        selectedContext: null,
       },
       w2: {
         type: 'widget',
         widgetId: 'MW_NEW' as WidgetId,
         configurationId: 'WC_NEW' as ConfigId,
+        selectedContext: null,
       },
     });
     const dashboard = createFakeDashboardModule([{
@@ -302,7 +306,7 @@ describe('MarketView Dashboard edit', () => {
     temporaryDirectories.push(refsDirectory);
     const registry = createArtifactRegistry(refsDirectory, process.ppid);
     registry.setRefs('w1', {
-      w1: { type: 'widget', widgetId: 'MW_NEW' as WidgetId, selectedContext: 'MA_CONTEXT' },
+      w1: { type: 'widget', widgetId: 'MW_NEW' as WidgetId, selectedContext: 'MA_CONTEXT', configurationId: null },
     });
     const dashboard = createFakeDashboardModule([{
       dashboardId: 'MD_MACRO',
@@ -346,6 +350,7 @@ describe('MarketView Dashboard edit', () => {
         configurationId: 'WC_REPEAT' as ConfigId,
         dashboardId: 'MD_MACRO',
         childId: 'CHILD_ONE',
+        selectedContext: null,
       },
       'd1.w2': {
         type: 'widget',
@@ -353,6 +358,7 @@ describe('MarketView Dashboard edit', () => {
         configurationId: 'WC_REPEAT' as ConfigId,
         dashboardId: 'MD_MACRO',
         childId: 'CHILD_TWO',
+        selectedContext: null,
       },
     });
     const dashboard = createFakeDashboardModule([{
@@ -413,6 +419,7 @@ describe('MarketView Dashboard edit', () => {
         configurationId: 'WC_OLD' as ConfigId,
         dashboardId: 'MD_MACRO',
         childId: 'CHILD_OLD',
+        selectedContext: null,
       },
     });
     const dashboard = createFakeDashboardModule([{
@@ -478,8 +485,8 @@ describe('MarketView Dashboard edit', () => {
       's1.d1': { type: 'dashboard', dashboardId: 'MD_MACRO' },
       's1.d1.s1': { type: 'section', dashboardId: 'MD_MACRO', sectionId: 'SECTION_ONE' },
       's1.d1.s2': { type: 'section', dashboardId: 'MD_MACRO', sectionId: 'SECTION_TWO' },
-      's1.d1.w1': { type: 'widget', widgetId: 'MW_ONE' as WidgetId, dashboardId: 'MD_MACRO', childId: 'CHILD_ONE' },
-      's1.d1.w2': { type: 'widget', widgetId: 'MW_TWO' as WidgetId, dashboardId: 'MD_MACRO', childId: 'CHILD_TWO' },
+      's1.d1.w1': { type: 'widget', widgetId: 'MW_ONE' as WidgetId, dashboardId: 'MD_MACRO', childId: 'CHILD_ONE', configurationId: null, selectedContext: null },
+      's1.d1.w2': { type: 'widget', widgetId: 'MW_TWO' as WidgetId, dashboardId: 'MD_MACRO', childId: 'CHILD_TWO', configurationId: null, selectedContext: null },
     });
     const dashboard = createFakeDashboardModule([{
       dashboardId: 'MD_MACRO',
@@ -575,7 +582,7 @@ describe('MarketView Dashboard edit change resolution', () => {
         dashboardId: 'MD_MACRO',
         childId: 'CHILD_ONE',
       },
-      'd1.w2': { type: 'widget', widgetId: 'MW_TWO' as WidgetId, dashboardId: 'MD_MACRO', childId: 'CHILD_TWO' },
+      'd1.w2': { type: 'widget', widgetId: 'MW_TWO' as WidgetId, dashboardId: 'MD_MACRO', childId: 'CHILD_TWO', configurationId: null, selectedContext: null },
     });
     registry.setRefs('d2', {
       d2: { type: 'dashboard', dashboardId: 'MD_OTHER' },
@@ -586,6 +593,7 @@ describe('MarketView Dashboard edit change resolution', () => {
         configurationId: 'WC_OTHER' as ConfigId,
         dashboardId: 'MD_OTHER',
         childId: 'CHILD_OTHER',
+        selectedContext: null,
       },
     });
     registry.setRefs('w3', {
@@ -596,7 +604,7 @@ describe('MarketView Dashboard edit change resolution', () => {
         selectedContext: 'MA_NEW',
       },
     });
-    registry.setRefs('w4', { w4: { type: 'widget', widgetId: 'MW_BARE' as WidgetId } });
+    registry.setRefs('w4', { w4: { type: 'widget', widgetId: 'MW_BARE' as WidgetId, configurationId: null, selectedContext: null } });
     const edit = vi.spyOn(dashboardModule, 'edit');
     return { edit, marketView: createMarketViewDashboardEdit({ dashboard: dashboardModule, registry }) };
   }

@@ -11,6 +11,8 @@ describe('ArtifactRef types', () => {
       widgetId: 'MW1' as WidgetId,
       dashboardId: 'MD1',
       childId: 'CHILD1',
+      configurationId: null,
+      selectedContext: null,
     };
 
     // @ts-expect-error Search query belongs to its surface-owned payload.
@@ -22,6 +24,8 @@ describe('ArtifactRef types', () => {
       type: 'widget',
       widgetId: 'MW1' as WidgetId,
       dashboardId: 'MD1',
+      configurationId: null,
+      selectedContext: null,
     };
 
     expect([search, dashboardWidget]).toHaveLength(2);

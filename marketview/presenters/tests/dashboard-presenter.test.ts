@@ -599,7 +599,7 @@ describe('renderMarketviewDashboardTab errors', () => {
   it('writes each Ref and refinement error with exit code 1', async () => {
     await expect(Promise.all([
       render(failed({ kind: 'artifact-not-found', ref: 'd9', availableRefs: [] })),
-      render(failed({ kind: 'wrong-artifact-kind', ref: 'w1', artifact: { type: 'widget', widgetId: 'MW1' as WidgetId } })),
+      render(failed({ kind: 'wrong-artifact-kind', ref: 'w1', artifact: { type: 'widget', widgetId: 'MW1' as WidgetId, configurationId: null, selectedContext: null } })),
       render(failed({ kind: 'invalid-refinement', problem: 'empty-search' })),
       render(failed({ kind: 'invalid-refinement', problem: 'ref-required' })),
       render(failed({ kind: 'artifact-payload-not-found', ref: 'd1' })),

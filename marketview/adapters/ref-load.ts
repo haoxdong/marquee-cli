@@ -16,7 +16,7 @@ export async function prepareWidgetRef(
   const configId = explicitConfigId ?? ref.configurationId;
   return {
     widgetId: ref.widgetId,
-    ...(configId ? { configId } : {}),
-    ...(ref.selectedContext ? { contextIdentity: ref.selectedContext } : {}),
+    ...(configId !== null ? { configId } : {}),
+    ...(ref.selectedContext !== null ? { contextIdentity: ref.selectedContext } : {}),
   };
 }

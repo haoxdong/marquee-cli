@@ -38,12 +38,15 @@ describe('MarketView Dashboard Artifact policy', () => {
       configurationId: 'WC_A',
       childId: 'child-a',
       dashboardId: 'MD_REG',
+      selectedContext: null,
     });
     expect(refs['d1.w3']).toMatchObject({
       type: 'widget',
       widgetId: 'MW_C',
       childId: 'child-c',
       dashboardId: 'MD_REG',
+      configurationId: 'WC_C',
+      selectedContext: null,
     });
     expect(refs['d1.s1']).toEqual({
       type: 'section',
@@ -125,8 +128,8 @@ describe('MarketView Dashboard Artifact policy', () => {
     }, 'd1', undefined, { page: 1, pageSize: 10, total: 2 });
 
     expect(refs).toEqual({
-      'd1.w1': { type: 'widget', widgetId: 'MW_SKEW', selectedContext: 'MA_EURUSD' },
-      'd1.w2': { type: 'widget', widgetId: 'MW_CARRY' },
+      'd1.w1': { type: 'widget', widgetId: 'MW_SKEW', selectedContext: 'MA_EURUSD', configurationId: null },
+      'd1.w2': { type: 'widget', widgetId: 'MW_CARRY', configurationId: null, selectedContext: null },
     });
   });
 
@@ -136,6 +139,6 @@ describe('MarketView Dashboard Artifact policy', () => {
     delete window.sections;
 
     expect(dashboardArtifactRefs(window, 'd1', 'MD_REG', { page: 1, pageSize: 20, total: 1 }))
-      .toEqual({ 'd1.w1': { type: 'widget', widgetId: 'MW_A' } });
+      .toEqual({ 'd1.w1': { type: 'widget', widgetId: 'MW_A', configurationId: null, selectedContext: null } });
   });
 });

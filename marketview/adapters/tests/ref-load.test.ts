@@ -31,6 +31,8 @@ describe('prepared Widget Ref', () => {
     await expect(prepareWidgetRef({
       type: 'widget',
       widgetId: 'MW_DEFAULT' as WidgetId,
+      configurationId: null,
+      selectedContext: null,
     })).resolves.toEqual({
       widgetId: 'MW_DEFAULT',
     });
