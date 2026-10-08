@@ -4,6 +4,17 @@ import type { WidgetCallLog } from '../widget-evidence.js';
 import { presentWidgetError } from '../widget-error.js';
 
 describe('Widget error presentation', () => {
+  it('names the original unsafe Integer value and the accepted range', () => {
+    expect(presentWidgetError({
+      kind: 'unsafe-integer-input',
+      identity: { widgetId: 'MW_TEST' },
+      input: 'relativeStrike',
+      requested: '9007199254740993',
+    })).toStrictEqual({
+      message: 'relativeStrike "9007199254740993" must be an integer between -9007199254740991 and 9007199254740991',
+    });
+  });
+
   it.each([
     [
       {

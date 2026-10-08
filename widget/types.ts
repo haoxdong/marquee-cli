@@ -305,6 +305,12 @@ export type WidgetError =
         | 'control-group'
         | 'incompatible-dependent-input';
     }>
+  | Readonly<{
+      kind: 'unsafe-integer-input';
+      identity: { widgetId: string };
+      input: string;
+      requested: string;
+    }>
   | Readonly<{ kind: 'required-input'; identity: { widgetId: string }; input: string }>
   | Readonly<{
       kind: 'unsupported-execution-target';

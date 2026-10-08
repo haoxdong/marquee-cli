@@ -185,6 +185,7 @@ function controlGroupMatchCandidates(matches: readonly Asset[]): WidgetInputCand
 }
 
 type WidgetInputFailure =
+  | { kind: 'unsafe-integer'; requested: string }
   | { kind: 'invalid'; problem: 'empty' | 'boolean-required' | 'date-required' | 'integer-required' | 'malformed' }
   | { kind: 'unknown'; requested: string; candidates: readonly string[] }
   | { kind: 'ambiguous'; requested: string; candidates: readonly string[] };
@@ -217,10 +218,13 @@ function resolveScalarInput(type: string, requested: string): WidgetInputResolut
     return { ok: false, error: { kind: 'invalid', problem: 'date-required' } };
   }
   if (type === 'Integer') {
+    if (!/^[+-]?\d+$/.test(requested)) {
+      return { ok: false, error: { kind: 'invalid', problem: 'integer-required' } };
+    }
     const value = Number(requested);
-    return /^[+-]?\d+$/.test(requested) && Number.isInteger(value)
+    return Number.isSafeInteger(value)
       ? { ok: true, value, label: String(value) }
-      : { ok: false, error: { kind: 'invalid', problem: 'integer-required' } };
+      : { ok: false, error: { kind: 'unsafe-integer', requested } };
   }
   return { ok: true, value: requested, label: requested };
 }

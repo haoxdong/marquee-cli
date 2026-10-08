@@ -260,6 +260,29 @@ describe('resolveWidgetInput', () => {
     }
   });
 
+  it.each([
+    ['9007199254740991', 9007199254740991],
+    ['-9007199254740991', -9007199254740991],
+  ])('accepts safe Integer boundary %s', async (requested, value) => {
+    expect(await resolve('Integer', [], requested)).toEqual({ ok: true, value, label: requested });
+  });
+
+  it.each([
+    '9007199254740992',
+    '9007199254740993',
+    '-9007199254740992',
+    '-9007199254740993',
+    '+9007199254740993',
+    '09007199254740993',
+    '99999999999999999999',
+    '9'.repeat(400),
+  ])('rejects unsafe Integer %s without changing its spelling', async (requested) => {
+    expect(await resolve('Integer', [], requested)).toEqual({
+      ok: false,
+      error: { kind: 'unsafe-integer', requested },
+    });
+  });
+
   it.each(['2026-02-28', '0b', '-1b', '-10b', '+2d', '1Y', '-1bd', '-4y+A'])('accepts valid Date value %s', async (requested) => {
     expect(await resolve('Date', [], requested)).toEqual({ ok: true, value: requested, label: requested });
   });

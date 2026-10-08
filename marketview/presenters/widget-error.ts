@@ -216,6 +216,10 @@ export function presentWidgetError(
       return { message: unmatchedInputMessage(error) };
     case 'invalid-input':
       return { message: invalidInputMessage(error) };
+    case 'unsafe-integer-input':
+      return {
+        message: `${error.input} "${error.requested}" must be an integer between ${Number.MIN_SAFE_INTEGER} and ${Number.MAX_SAFE_INTEGER}`,
+      };
     case 'required-input':
       return { message: `Widget input ${error.input} is required` };
     case 'unsupported-execution-target':

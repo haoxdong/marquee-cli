@@ -1071,6 +1071,14 @@ function semanticAssignmentError(
   field: string,
   failure: SemanticAssignmentFailure,
 ): WidgetError {
+  if (failure.kind === 'unsafe-integer') {
+    return {
+      kind: 'unsafe-integer-input',
+      identity: { widgetId },
+      input: field,
+      requested: failure.requested,
+    };
+  }
   if (failure.kind === 'invalid') {
     return {
       kind: 'invalid-input',
