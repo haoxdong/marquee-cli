@@ -590,7 +590,7 @@ function buildProgram(write: Writer, programOptions: ProgramOptions = {}) {
     if (!httpTransport) {
       const proxyConfig = resolveProxyConfig();
       if (proxyConfig) {
-        httpTransport = createTransport({ execution: 'proxy', ...proxyConfig });
+        httpTransport = createTransport(proxyConfig);
         return httpTransport;
       }
       // The auth gate runs identically in every mode — offline replay relies on a
@@ -672,13 +672,18 @@ function buildProgram(write: Writer, programOptions: ProgramOptions = {}) {
   };
 }
 
-function resolveProxyConfig(env: NodeJS.ProcessEnv = process.env): ProxyConfig | undefined {
+function resolveProxyConfig(env: NodeJS.ProcessEnv = process.env): (ProxyConfig & { execution: 'proxy' }) | { execution: 'session'; baseUrl: string; sessionToken: string } | undefined {
   const baseUrl = env.MARQUEE_BASE_URL?.trim();
   const accountId = env.MARQUEEBOT_ACCOUNT_ID?.trim();
   const sessionId = env.MARQUEE_OWNER_SESSION_ID?.trim();
   const invocationToken = env.MARQUEE_AUTH_TOKEN?.trim();
-  const proxyPresent = [baseUrl, accountId, invocationToken].filter(Boolean).length;
-  if (proxyPresent === 0) {
+  const proxyPresent = ['MARQUEE_BASE_URL', 'MARQUEEBOT_ACCOUNT_ID', 'MARQUEE_AUTH_TOKEN'].filter((name) => env[name] !== undefined).length;
+  const ownerInvocationWithSession = env.MARQUEE_OWNER_SESSION_ID !== undefined && env.MARQUEEBOT_SESSION !== undefined;
+  if (proxyPresent === 0 && !ownerInvocationWithSession) {
+    if (env.MARQUEEBOT_SESSION !== undefined) {
+      return { execution: 'session', baseUrl: env.MARQUEEBOT_GATEWAY_URL ?? 'https://api.marqueebot.com/marquee', sessionToken: env.MARQUEEBOT_SESSION };
+    }
+    if (env.MARQUEEBOT_GATEWAY_URL !== undefined) throw new MarqueeError('config', 'Marquee gateway configuration requires MARQUEEBOT_SESSION');
     return undefined;
   }
   if (!baseUrl || !accountId || !invocationToken || !sessionId) {
@@ -688,6 +693,7 @@ function resolveProxyConfig(env: NodeJS.ProcessEnv = process.env): ProxyConfig |
     );
   }
   return {
+    execution: 'proxy',
     baseUrl,
     accountId,
     sessionId,

@@ -41,8 +41,10 @@ export function createTransport(config: TransportConfig): Transport {
   const withDebug = (fetchFn: typeof fetch | undefined) => (
     level ? createDebugFetch(fetchFn, level) : fetchFn
   );
-  if (config.execution === 'proxy') {
-    executor = new ProxyHttpTransport({ ...config, fetchFn: withDebug(config.fetchFn) });
+  if (config.execution !== 'direct') {
+    const fetchFn = config.execution === 'session' && level
+      ? sanitizedSessionFetch(config.fetchFn) : config.fetchFn;
+    executor = new ProxyHttpTransport({ ...config, fetchFn: withDebug(fetchFn) });
   } else {
     const authentication = config.authentication;
     jar = authentication.jar ?? load(authentication.cookieJarPath);
@@ -124,5 +126,15 @@ function recordingFetchOptions(config: Extract<TransportConfig, { execution: 'di
       manifestPath: config.recording.manifestPath,
       realFetch: replayFetch ?? config.fetchFn,
     },
+  };
+}
+
+function sanitizedSessionFetch(fetchFn: typeof fetch | undefined): typeof fetch {
+  return async (input, init) => {
+    try { return await (fetchFn ?? fetch)(input, init); }
+    catch (error) {
+      if (error instanceof Error && ['AbortError', 'TimeoutError'].includes(error.name)) throw new DOMException('Marquee gateway request aborted', error.name);
+      throw new Error('Cannot reach Marquee gateway');
+    }
   };
 }

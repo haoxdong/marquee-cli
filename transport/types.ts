@@ -117,6 +117,12 @@ type ManagedDirectTransportConfig = Readonly<{
 export type TransportConfig =
   | ManagedDirectTransportConfig
   | Readonly<{
+      execution: 'session';
+      baseUrl: string;
+      sessionToken: string;
+      fetchFn?: typeof fetch;
+    }>
+  | Readonly<{
       execution: 'proxy';
       baseUrl: string;
       accountId: string;
