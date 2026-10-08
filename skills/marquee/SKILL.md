@@ -1,149 +1,42 @@
 ---
 name: marquee
-description: Use when querying Marquee for market data or research content, or when asked to open, read, or interact with any web page — `marquee browser` is your browser.
+description: Use when the user asks about markets, research or anything on Marquee. Also use when asked to open, read or interact with any web page; `marquee browser` is your browser.
 ---
 
-## Response format
+## Answering
 
-**Authoritative.** State conclusions as facts. No hedging ("it seems", "appears to"). No emoji.
+When you give a view, name what would flip it: the key risk, or the condition under which the narrative changes.
+Refs like `@s1.c1` are CLI plumbing; keep them out of the answer.
 
-**Direct.** Answer the question asked, nothing adjacent. Tables over paragraphs for structured data.
+## What's in Marquee
 
-**Concise.** Numbers over narrative. One sentence where one suffices; a table cell where a sentence would pad. Never restate the question. Most answers are a few flat sentences — stop once the question is answered. Only when genuinely multi-part:
+- **Widgets**: live charts and tables: prices, curves, vol and skew; positioning (CFTC); GIR forecasts and scenario projections; event calendars (macro releases, weekly earnings).
+- **Dashboards**: sets of widgets for an asset, a country, a theme, or one of the user's portfolios.
+- **Research**: GS Research: company notes with rating and price-target changes, the Early Morning Research Recap, economics (US Daily, Data Comment), strategy, commodities and credit.
+- **Desk commentary**: trader notes through the day: the Morning Wrap, market and regional wraps (GS HK Market Wrap, GS LatAm Daily), sector previews.
+- **Browser-only apps**: Visual Structuring (option trade ideas and payoffs), My Portfolios and Workbench (portfolio risk), Backtesting, Bond Screener, Neuron (who reads the user's content, trending themes), MarketPoll (client polls), Data Catalog.
 
-```
-### Summary
-Bottom line in 1-2 sentences.
+## Commands
 
-### More Details
-Supporting data, tables, and analysis.
-```
-
-Use exactly these two headers — no other sections, no renaming.
-
-**Counterweight.** Close with what could break the thesis — the key risk or the condition under which the narrative flips.
-
-**Citations.** Every factual claim gets a source URL — no exceptions, including bullets and table cells: `…widened 12bp [[1]](https://marquee.gs.com/s/markets/…)`. Never surface refs in the final answer — they are internal plumbing.
-
-**Charts.** For Mermaid `xychart-beta`, use unique x-axis labels. For time series spanning more than 12 months, include the year on every label (for example, `Nov24`, `Nov25`). Repeated categorical labels fold distinct points onto the same x position.
-
-## Core loop
-
-An empty text list or search writes one line naming what matched nothing on stderr and exits 0; `--json` returns the empty result without that line.
-
-**Chain** refs — every command emits refs, the next consumes them.
+`marquee` is a gh-style CLI.
 
 ```
-marquee marketview search "query"                    # → @s1 with widget refs
-marquee marketview widget view @s1.w1                 # → @wN
-marquee marketview widget view @wN --json data --jq '.data | map(select(…))' # extract rows
+marquee marketview search "query"            # widgets and dashboards
+marquee marketview widget view <id|ref>
+marquee marketview dashboard view <id|ref>
+marquee marketview dashboard edit|create …
+marquee content search "query"               # research and desk commentary
+marquee content view <id|url|ref>
+marquee browser open <url>
 ```
 
-Asset-level: `marquee marketview dashboard view TICKER` → `@dN`, then `marquee marketview widget view @dN.w1`.
+`dashboard edit` and `create` change the user's dashboards: confirm with the user first.
 
-Go straight to the best command; search only when genuinely ambiguous.
+## Search
 
-## Refs
-
-Use the exact ref from the latest output — never hardcode. The global registry accumulates across commands.
-
-| Target | Shape          | When                                            |
-| ------ | -------------- | ----------------------------------------------- |
-| `@wN`  | widget         | display, change parameters, or inspect its rows |
-| `@s1`  | search payload | choose a result before retrieving it            |
-
-### Changing parameters
-
-Widget output shows canonical `-p` keys. Re-get the widget with one or more overrides:
-
-```
-marquee marketview widget view @wN -p universe=Latam
-marquee marketview widget view @wN -p pricingDate=2026-01-15
-marquee marketview widget view @wN -p includeInternal=true
-marquee marketview widget view @wN --json params  # inspect defaults and published options
-```
-
-Searchable/filterable selectors may offer additional choices beyond the published options.
-
-## Content
-
-Research articles and market commentary:
-
-```
-marquee content search "query"                       # → @s1 with @s1.cN
-marquee content search "query" --author hatz         # fuzzy values resolve fail-loud
-marquee content search "query" --source Research --published ">=2026-01-01"
-marquee content view <uuid|url>                       # retrieves the document → @cN
-marquee content view @s1.c1                           # get the exact result ref printed
-```
-
-Narrow with repeatable `--source`, `--subsource`, `--type`, `--publication`, `--author`, `--region`, `--subject`, `--company`, `--industry`, `--action`, and `--focus` flags. Repeat one flag for OR; combine different flags for AND. Use the `Filter by:` footer for common values and resolution errors for candidates. For JSON document records, select fields with `marquee content search "US CPI" --json title,published`.
-
-## Execution
-
-### Unrestricted Bash
-
-When the tool accepts Bash scripts, run independent commands concurrently in one Bash call. Capture each PID, wait every child, and report each exit status. Exit with the first failed child's status after all children finish.
-
-Replace the example commands below; keep one PID capture per command. Child stdout and stderr remain visible.
-
-```bash
-pids=()
-statuses=()
-marquee marketview search "EURUSD vol FX" &
-pids+=("$!")
-marquee marketview search "EURUSD risk reversal skew FX" &
-pids+=("$!")
-marquee marketview search "EURUSD forward FX" &
-pids+=("$!")
-
-batch_status=0
-for index in "${!pids[@]}"; do
-  if wait "${pids[$index]}"; then
-    child_status=0
-  else
-    child_status=$?
-  fi
-  statuses+=("$child_status")
-  printf 'Batch child %s exited %s\n' "$((index + 1))" "$child_status" >&2
-  if [[ "$batch_status" == 0 && "$child_status" != 0 ]]; then
-    batch_status=$child_status
-  fi
-done
-exit "$batch_status"
-```
-
-### Restricted execute
-
-When `execute` accepts only Marquee command chains, submit independent commands as concurrent separate tool calls, one command per call. Await every result, preserve each exit code, and report every failed command with its output. The batch succeeds only when every exit code is zero.
-
-Submit each example line below as its own tool call in the same concurrent batch:
-
-```text
-marquee marketview search "EURUSD vol FX"
-marquee marketview search "EURUSD risk reversal skew FX"
-marquee marketview search "EURUSD forward FX"
-```
-
-**Fan out topic searches** across 2-3 angles.
-
-Search queries: precise, API-ready — include asset class (`EURUSD vol FX`), expand shorthand (`JPY` not `yen`), canonical terms (`risk reversal skew`).
+Search by topic, publication or author name. Default searches are keyword-based and return 10 results: fan out parallel searches, rewriting the query and covering different angles.
 
 ## Browser
 
-To open any web page, or when structured commands can't get the data:
-
-```
-marquee browser open <url>                           # navigate
-marquee browser snapshot                             # → @e1, @e2, …
-marquee browser click @e1                            # click
-marquee browser fill @e2 "value"                     # clear + type
-marquee browser get text @e1                         # read text
-marquee browser wait --load networkidle              # wait for page
-marquee browser network requests --type xhr,fetch    # list API calls
-marquee browser network request <id>                 # request detail
-```
-
-Snapshot → interact → re-snapshot. Use `network requests` for API debugging.
-The browser is signed in as the user: for a consequential action (submit, save, delete, share, send), stop and ask the user to Take over.
-Parallel subagents pass a unique `--session <name>` on every browser command and avoid `close --all`, which closes every agent's browsers.
+`marquee browser` is agent-browser, signed in as the user. When the CLI can't reach what the user asks for, offer the browser and wait for their yes. Parallel subagents pass a unique `--session <name>` on every browser command and close only their own session.
+For consequential actions (submit, save, delete, share, send), stop and ask the user to Take over.
