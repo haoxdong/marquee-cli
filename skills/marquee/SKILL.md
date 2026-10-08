@@ -60,8 +60,10 @@ Widget output shows canonical `-p` keys. Re-get the widget with one or more over
 marquee marketview widget view @wN -p universe=Latam
 marquee marketview widget view @wN -p pricingDate=2026-01-15
 marquee marketview widget view @wN -p includeInternal=true
-marquee marketview widget view @wN --json params  # inspect the complete option space
+marquee marketview widget view @wN --json params  # inspect defaults and published options
 ```
+
+Searchable/filterable selectors may offer additional choices beyond the published options.
 
 ## Content
 
@@ -75,7 +77,7 @@ marquee content view <uuid|url>                       # retrieves the document â
 marquee content view @s1.c1                           # get the exact result ref printed
 ```
 
-Narrow with repeatable `--source`, `--subsource`, `--type`, `--publication`, `--author`, `--region`, `--subject`, `--company`, `--industry`, `--action`, and `--focus` flags. Repeat one flag for OR; combine different flags for AND. Use the `Filter by:` footer for common values, resolution errors for candidates, and `--json` for the full facet list.
+Narrow with repeatable `--source`, `--subsource`, `--type`, `--publication`, `--author`, `--region`, `--subject`, `--company`, `--industry`, `--action`, and `--focus` flags. Repeat one flag for OR; combine different flags for AND. Use the `Filter by:` footer for common values and resolution errors for candidates. For JSON document records, select fields with `marquee content search "US CPI" --json title,published`.
 
 ## Execution
 

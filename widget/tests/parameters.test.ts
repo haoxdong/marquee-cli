@@ -2,6 +2,7 @@ import { assert, describe, expect, it } from 'vitest';
 import { createEntityModule } from '../../entity/index.js';
 import { buildWidgetParams, type BuildWidgetParamsInput } from '../parameters.js';
 import type { WidgetPayload } from '../payload.js';
+import { widgetParameterStates } from '../parameter-state.js';
 import { parsePlotToolWindow } from '../plottool/window.js';
 import { InvalidWidgetResponseError } from '../semantic-failure.js';
 
@@ -38,6 +39,30 @@ const assetLabels = (count: number) => Object.fromEntries(
 );
 
 describe('buildWidgetParams context parameter', () => {
+  it('keeps the selected Asset default separate from published option labels', () => {
+    const params = build({
+      widget: assetContext('MA_GLD', ['MA_TESLA']),
+      entityMap: { MA_GLD: 'GLD', MA_TESLA: 'Tesla' },
+    });
+    expect(params).toMatchObject([{
+      default: 'GLD',
+      rawDefault: 'MA_GLD',
+      display: ['Tesla'],
+      options: [{ label: 'Tesla', rawValue: 'MA_TESLA' }],
+    }]);
+    expect(widgetParameterStates({ widgetId: 'MW_ASSET', params })).toEqual([
+      ['asset', {
+        field: 'asset',
+        value: 'GLD',
+        rawValue: 'MA_GLD',
+        paramType: 'Asset',
+        options: ['Tesla'],
+        optionRawValues: { Tesla: 'MA_TESLA' },
+        widgetId: 'MW_ASSET',
+      }],
+    ]);
+  });
+
   it('offers the Control Groups of an Asset context as filters', () => {
     expect(build({
       widget: assetContext('MA1', ['MA1', `CG${'J'.repeat(15)}`]),
