@@ -77,7 +77,49 @@ Narrow with repeatable `--source`, `--subsource`, `--type`, `--publication`, `--
 
 ## Execution
 
-Separate Bash tool calls run **sequentially**. All independent commands — searches, widget reads, projections — go in one Bash call with `&` + `wait`.
+### Unrestricted Bash
+
+When the tool accepts Bash scripts, run independent commands concurrently in one Bash call. Capture each PID, wait every child, and report each exit status. Exit with the first failed child's status after all children finish.
+
+Replace the example commands below; keep one PID capture per command. Child stdout and stderr remain visible.
+
+```bash
+pids=()
+statuses=()
+marquee marketview search "EURUSD vol FX" &
+pids+=("$!")
+marquee marketview search "EURUSD risk reversal skew FX" &
+pids+=("$!")
+marquee marketview search "EURUSD forward FX" &
+pids+=("$!")
+
+batch_status=0
+for index in "${!pids[@]}"; do
+  if wait "${pids[$index]}"; then
+    child_status=0
+  else
+    child_status=$?
+  fi
+  statuses+=("$child_status")
+  printf 'Batch child %s exited %s\n' "$((index + 1))" "$child_status" >&2
+  if [[ "$batch_status" == 0 && "$child_status" != 0 ]]; then
+    batch_status=$child_status
+  fi
+done
+exit "$batch_status"
+```
+
+### Restricted execute
+
+When `execute` accepts only Marquee command chains, submit independent commands as concurrent separate tool calls, one command per call. Await every result, preserve each exit code, and report every failed command with its output. The batch succeeds only when every exit code is zero.
+
+Submit each example line below as its own tool call in the same concurrent batch:
+
+```text
+marquee marketview search "EURUSD vol FX"
+marquee marketview search "EURUSD risk reversal skew FX"
+marquee marketview search "EURUSD forward FX"
+```
 
 **Fan out topic searches** across 2-3 angles.
 
