@@ -1,5 +1,9 @@
 // @format
 
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
 import { describe, expect, it } from 'vitest';
 
 import { projectDataVizFigure } from '../data-viz/figure-lane.js';
@@ -27,6 +31,38 @@ function table(input: Parameters<typeof projectDataVizTable>[0]) {
 }
 
 describe('Widget chart tables', () => {
+  it('prints the captured intraday row in reader-local time without a chart-zone suffix', () => {
+    const captured: unknown = JSON.parse(readFileSync(
+      join(process.cwd(), 'contract/regressions/widget-plot-reader-local-label.json'),
+      'utf8',
+    ));
+    assert(typeof captured === 'object' && captured !== null && !Array.isArray(captured));
+    assert('results' in captured && 'expressions' in captured && 'definition' in captured);
+    assert(Array.isArray(captured.results));
+    assert(Array.isArray(captured.expressions));
+    const expressions = captured.expressions.map((label: unknown) => {
+      assert(typeof label === 'string');
+      return label;
+    });
+    const projection = projectPlotTool({
+      definition: captured.definition,
+      results: captured.results,
+      expressions,
+    });
+
+    expect(process.env.TZ).toBe('UTC');
+    expect(projection.timeZone).toBe('Asia/Hong_Kong');
+    expect(presentWidgetChart(projection).data).toEqual({
+      dateOrdered: true,
+      headers: ['date', 'NKY Spot', 'NKY 1m 110 call vs 90 put ', '1m ATM Implied Vol'],
+      rows: [
+        ['8 Oct 03:00AM', '69,373.40', undefined, undefined],
+        ['8 Oct 03:21AM', undefined, '0.79', '25.39'],
+      ],
+    });
+  });
+
+
   it('prints PlotTool Pro axes, series and point-rule values as tables', () => {
     const chart = presentWidgetChart(projectPlotTool({
       definition: {
@@ -106,7 +142,7 @@ describe('Widget chart tables', () => {
     });
   });
 
-  it('keeps raw midnight keys for scatter and bar rows and chart-aware timestamps', () => {
+  it('keeps raw midnight keys for scatter and bar rows and reader-local line timestamps', () => {
     const scatter = presentWidgetChart(projectPlotTool({
       definition: {
         chartType: 'scatter',
@@ -132,7 +168,7 @@ describe('Widget chart tables', () => {
       expressions: ['line'],
     }));
     expect(process.env.TZ).toBe('UTC');
-    expect(line.data).toMatchObject({ rows: [['20 Aug 02:30PM EDT', '1']] });
+    expect(line.data).toMatchObject({ rows: [['20 Aug 02:30PM', '1']] });
 
     const zoneless = presentWidgetChart(projectPlotTool({
       definition: { chartType: 'line', expressions: [{ label: 'Line' }] },

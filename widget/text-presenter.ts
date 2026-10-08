@@ -130,10 +130,10 @@ function presentPlotTool(projection: PlotToolProjection): WidgetChartText {
 function plotToolRowLabel(projection: PlotToolProjection, rawKey: string): string {
   if (projection.isOrdinal || projection.chartType === 'bar') return rawKey;
   if (projection.chartType === 'scatter') return formatPlotToolScatterDate(rawKey);
-  return formatPlotToolLineDate(rawKey, projection.timeZone);
+  return formatPlotToolLineDate(rawKey);
 }
 
-function formatPlotToolLineDate(rawKey: string, timeZone: string | undefined): string {
+function formatPlotToolLineDate(rawKey: string): string {
   const dateOnly = PLOT_DATE_ONLY.exec(rawKey);
   if (dateOnly !== null) {
     return `${dateOnly[3]} ${PLOT_DATE_MONTHS[Number(dateOnly[2]) - 1]} ${dateOnly[1]}`;
@@ -151,8 +151,7 @@ function formatPlotToolLineDate(rawKey: string, timeZone: string | undefined): s
   const hour = hours % 12 || 12;
   const minutes = String(date.getMinutes()).padStart(2, '0');
   const meridiem = hours < 12 ? 'AM' : 'PM';
-  const zone = timeZone === undefined ? '' : ` ${plotToolTimeZoneName(date, timeZone)}`;
-  return `${day} ${month} ${String(hour).padStart(2, '0')}:${minutes}${meridiem}${zone}`;
+  return `${day} ${month} ${String(hour).padStart(2, '0')}:${minutes}${meridiem}`;
 }
 
 function formatPlotToolScatterDate(rawKey: string): string {
@@ -165,13 +164,6 @@ function formatPlotToolScatterDate(rawKey: string): string {
     `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`,
     `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`,
   ].join(' ');
-}
-
-function plotToolTimeZoneName(date: Date, timeZone: string): string {
-  return presentedValue(new Intl.DateTimeFormat('en-US', {
-    timeZone,
-    timeZoneName: 'short',
-  }).formatToParts(date).find((part) => part.type === 'timeZoneName')?.value);
 }
 
 function plotToolAxisRow(axis: PlotToolProjectedAxis): TextRows {
