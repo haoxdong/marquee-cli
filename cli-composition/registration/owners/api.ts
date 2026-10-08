@@ -105,7 +105,7 @@ export const apiOwnerAttachment = Object.freeze({
       .command('api')
       .description('Make an authenticated HTTP request to the Marquee API and print the response')
       .argument('<endpoint>', 'API path, such as /v1/marketview/dashboards/MD1')
-      .addOption(new Option('-X, --method <method>', 'The HTTP method for the request (default "GET")')
+      .addOption(new Option('-X, --method <method>', 'The HTTP method for the request (default GET; POST when fields or --input are provided)')
         .choices(['GET', 'POST']))
       .option('-F, --field <key=value>', 'Add a typed parameter in key=value format', collectField, [])
       .option('-f, --raw-field <key=value>', 'Add a string parameter in key=value format', collectField, [])
