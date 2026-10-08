@@ -1,3 +1,4 @@
+import type { EntityFeedEntry } from '../entity-feed/index.js';
 import type { ArtifactRef, ArtifactRegistry } from '../artifact-registry/index.js';
 import {
   enrichContextDashboardWidgets,
@@ -7,7 +8,6 @@ import { dashboardWidgetArtifact } from './dashboard-artifact-policy.js';
 import { enrichDashboardWidgets } from './dashboard-widget-enrichment.js';
 import type { MarketViewWidgetOperations } from './dashboard-widget-operations.js';
 import type {
-  DashboardPresentation,
   DashboardPresentationWidget,
   DashboardReadError,
 } from './dashboard-presentation.js';
@@ -26,9 +26,8 @@ function widgetTitle(widget: DashboardPresentationWidget): string {
   return widget.snippet?.title || widget.title;
 }
 
-/** Loads every Entity Feed widget the stored window still lacks, page after page. */
 async function hydrateEntityFeed(
-  window: DashboardPresentation,
+  value: Extract<MarketViewDashboardArtifactPayload, { kind: 'entity-feed' }>,
   entityId: string,
   readEntityFeedPage: EntityFeedPageReader,
 ): Promise<
@@ -36,10 +35,9 @@ async function hydrateEntityFeed(
   | Readonly<{ ok: false; error: DashboardReadError }>
 > {
   let changed = false;
-  const pages = Math.ceil((window.total - window.widgets.length) / FILTER_FETCH_LIMIT);
-  // A page count fixed up front keeps the loop finite even if a page comes back short.
-  for (const _page of Array.from({ length: pages })) {
-    const offset = window.widgets.length;
+  const { window, entityFeed } = value;
+  while (entityFeed.entries.length < window.total) {
+    const offset = entityFeed.entries.length;
     // eslint-disable-next-line no-await-in-loop -- pagination: each page starts at the first widget still missing
     const page = await readEntityFeedPage({
       entityId,
@@ -49,8 +47,10 @@ async function hydrateEntityFeed(
     if (!page.ok) {
       return { ok: false, error: { kind: 'entity-feed', error: page.error } };
     }
-    if (page.value.entries.length === 0) break;
-    window.widgets.push(...page.value.entries.map(createEntityFeedDashboardWidget));
+    if (page.value.entries.length === 0) return invalidFeed('response');
+    const storedPrefix = Math.max(0, window.widgets.length - offset);
+    entityFeed.entries = [...entityFeed.entries, ...page.value.entries];
+    window.widgets.push(...page.value.entries.slice(storedPrefix).map(createEntityFeedDashboardWidget));
     changed = true;
   }
   return { ok: true, changed };
@@ -80,6 +80,50 @@ function matchingWidgets(
       widgetTitle(widget).toLowerCase().includes(lowerQuery)
       || widget.widgetId.toLowerCase().includes(lowerQuery)
     ));
+}
+
+function invalidFeed(problem: 'response' | 'widget-entry'): Readonly<{ ok: false; error: DashboardReadError }> {
+  return { ok: false, error: { kind: 'entity-feed', error: { kind: 'invalid-feed', problem } } };
+}
+
+function widgetIdentity(widget: Pick<EntityFeedEntry, 'widgetId' | 'configurationId'>): string {
+  return JSON.stringify([widget.widgetId, widget.configurationId ?? null]);
+}
+
+async function queriedWidgets(
+  value: Extract<MarketViewDashboardArtifactPayload, { kind: 'entity-feed' }>,
+  entityId: string,
+  query: string,
+  limit: number,
+  readPage: EntityFeedPageReader,
+): Promise<
+  | Readonly<{ ok: true; visible: IndexedWidget[]; totalMatches: number }>
+  | Readonly<{ ok: false; error: DashboardReadError }>
+> {
+  const canonical = new Map(value.entityFeed.entries.map((entry, index) => [
+    widgetIdentity(entry), { widget: value.window.widgets[index], index },
+  ]));
+  const visible: IndexedWidget[] = [];
+  let offset = 0;
+  let totalMatches = 0;
+  do {
+    // eslint-disable-next-line no-await-in-loop -- each queried page follows the actual received prefix
+    const page = await readPage({
+      entityId,
+      query,
+      ...(offset > 0 ? { limit: limit - offset, offset } : {}),
+    });
+    if (!page.ok) return { ok: false, error: { kind: 'entity-feed', error: page.error } };
+    totalMatches = page.value.total;
+    if (page.value.entries.length === 0 && offset < totalMatches) return invalidFeed('response');
+    for (const entry of page.value.entries.slice(0, limit - visible.length)) {
+      const match = canonical.get(widgetIdentity(entry));
+      if (!match?.widget) return invalidFeed('widget-entry');
+      visible.push({ widget: match.widget, index: match.index });
+    }
+    offset += page.value.entries.length;
+  } while (offset < totalMatches && visible.length < limit);
+  return { ok: true, visible, totalMatches };
 }
 
 /** Renders the Widget Snippet of every shown match that has none yet, as dashboard view does for its page. */
@@ -136,15 +180,23 @@ export async function filterStoredDashboard(
   const value = restoreDashboardArtifactPayload(artifact.payload);
   if (!value) return { ok: false, error: { kind: 'artifact-payload-not-found', ref: namespace } };
   let changed = false;
+  let visible: readonly IndexedWidget[];
+  let totalMatches: number;
   if (value.kind === 'entity-feed') {
     const { entityId } = value.window;
     if (!entityId) return { ok: false, error: { kind: 'artifact-payload-not-found', ref: namespace } };
-    const hydration = await hydrateEntityFeed(value.window, entityId, dependencies.readEntityFeedPage);
+    const hydration = await hydrateEntityFeed(value, entityId, dependencies.readEntityFeedPage);
     if (!hydration.ok) return hydration;
     changed = hydration.changed;
+    const queried = await queriedWidgets(value, entityId, query, limit, dependencies.readEntityFeedPage);
+    if (!queried.ok) return queried;
+    visible = queried.visible;
+    totalMatches = queried.totalMatches;
+  } else {
+    const matched = matchingWidgets(value.window.widgets, query);
+    visible = matched.slice(0, limit);
+    totalMatches = matched.length;
   }
-  const matched = matchingWidgets(value.window.widgets, query);
-  const visible = matched.slice(0, limit);
   const enrichment = await enrichMatches(value, visible, dependencies.widgets);
   if (!enrichment.ok) return enrichment;
   if (changed || enrichment.changed) {
@@ -178,7 +230,7 @@ export async function filterStoredDashboard(
       payload: value,
       refs: persistedRefs,
       matches: collected.matches,
-      totalMatches: matched.length,
+      totalMatches,
     },
   };
 }

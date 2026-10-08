@@ -1,20 +1,10 @@
 import type {
-  EntityFeedEntry,
-  EntityFeedError,
+  EntityFeedPageReader,
   EntityFeedModule,
 } from './types.js';
 import type { Transport } from '../transport/index.js';
 import { createEntityFeedProductionAdapter } from './adapters/production.js';
 import { createEntityFeedModuleFromAdapter } from './module.js';
-
-export type EntityFeedPageReader = (input: Readonly<{
-  entityId: string;
-  limit: number;
-  offset?: number;
-}>) => Promise<
-  | { ok: true; value: { entries: readonly EntityFeedEntry[]; total: number } }
-  | { ok: false; error: EntityFeedError }
->;
 
 export type EntityFeedComposition = Readonly<{
   entityFeed: EntityFeedModule;
@@ -27,8 +17,9 @@ export function createEntityFeedComposition(
   const adapter = createEntityFeedProductionAdapter(transport);
   return Object.freeze({
     entityFeed: createEntityFeedModuleFromAdapter({ adapter }),
-    readPage: ({ entityId, limit, offset }) => adapter.page(entityId, {
-      limit,
+    readPage: ({ entityId, limit, offset, query }) => adapter.page(entityId, {
+      ...(limit !== undefined ? { limit } : {}),
+      ...(query !== undefined ? { query } : {}),
       ...(offset !== undefined ? { offset } : {}),
     }),
   });

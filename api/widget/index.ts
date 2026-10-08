@@ -31,15 +31,14 @@ export class WidgetApi {
     return this.requester.request(get(widgetPath(widgetId)), query === undefined ? undefined : { query });
   }
 
-  // The Widgets that feed one entity context, optionally one page of them, without filters as
-  // Web requests them.
-  getWidgets({ context, limit, offset }: Readonly<{
+  getWidgets({ context, limit, offset, query }: Readonly<{
     context: string;
     limit?: number | undefined;
     offset?: number | undefined;
+    query?: string | undefined;
   }>): Promise<unknown> {
     return this.requester.request(WidgetApi.widgets, {
-      query: { context, limit, offset, includeFilters: false },
+      query: { context, limit, offset, ...(query !== undefined ? { query } : {}), includeFilters: query !== undefined },
     });
   }
 

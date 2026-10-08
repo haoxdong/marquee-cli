@@ -15,6 +15,17 @@ const unexpectedRender: MarketViewWidgetOperations = {
   },
 };
 
+function entry(widgetId: string, configurationId?: string) {
+  return {
+    widgetId: widgetId as WidgetId,
+    ...(configurationId ? { configurationId: configurationId as ConfigId } : {}),
+    title: widgetId,
+    widgetDefinition: { id: widgetId },
+    widgetParameterOverrides: [],
+    selectedContext: null,
+  };
+}
+
 describe('stored Entity Feed filtering', () => {
   let refsDir: string | undefined;
 
@@ -39,7 +50,7 @@ describe('stored Entity Feed filtering', () => {
       },
       payload: {
         kind: 'entity-feed',
-        entityFeed: { entries: [] },
+        entityFeed: { entries: Array.from({ length: 17 }, (_, index) => ({ widgetId: index === 16 ? 'MW_SKEW' : `MW_OTHER_${index + 1}` })) },
         cursor: { page: 1, pageSize: 10, total: 17 },
         browserTarget: 'https://marquee.gs.com/s/marketview/EURUSD',
         window: {
@@ -74,9 +85,7 @@ describe('stored Entity Feed filtering', () => {
 
     const result = await filterStoredDashboard('d1', 'skew', {
       registry,
-      readEntityFeedPage: async () => {
-        throw new Error('unexpected Entity Feed page read');
-      },
+      readEntityFeedPage: async () => ({ ok: true, value: { entries: [entry('MW_SKEW')], total: 1 } }),
       widgets: unexpectedRender,
     });
 
@@ -102,7 +111,7 @@ describe('stored Entity Feed filtering', () => {
     expect(updateRefs).not.toHaveBeenCalled();
   });
 
-  it('stops at an empty Entity Feed page without rewriting the payload', async () => {
+  it('fails on an empty incomplete Entity Feed page without rewriting the payload', async () => {
     refsDir = mkdtempSync(join(tmpdir(), 'dashboard-filter-'));
     const registry = createArtifactRegistry(refsDir, process.ppid);
     registry.storeArtifact({
@@ -137,7 +146,7 @@ describe('stored Entity Feed filtering', () => {
       widgets: unexpectedRender,
     });
 
-    expect(result).toMatchObject({ ok: true, value: { matches: [] } });
+    expect(result).toEqual({ ok: false, error: { kind: 'entity-feed', error: { kind: 'invalid-feed', problem: 'response' } } });
     expect(readEntityFeedPage).toHaveBeenCalledOnce();
     expect(setPayload).not.toHaveBeenCalled();
   });
@@ -150,7 +159,7 @@ describe('stored Entity Feed filtering', () => {
       root: { type: 'entity-feed', entityId: 'MA_EURUSD', entityKind: 'asset' },
       payload: {
         kind: 'entity-feed',
-        entityFeed: { entries: [] },
+        entityFeed: { entries: [entry('MW_TARGET', 'WC_OLD')] },
         cursor: { page: 1, pageSize: 1, total: 2 },
         browserTarget: 'https://marquee.gs.com/s/marketview/EURUSD',
         window: {
@@ -174,7 +183,8 @@ describe('stored Entity Feed filtering', () => {
 
     const result = await filterStoredDashboard('d1', 'target', {
       registry,
-      readEntityFeedPage: async () => {
+      readEntityFeedPage: async ({ query }) => {
+        if (query !== undefined) return { ok: true, value: { entries: [entry('MW_TARGET', 'WC_OLD')], total: 1 } };
         registry.setRefs('d1', {
           'd1.w1': {
             type: 'widget',
@@ -230,7 +240,7 @@ describe('stored Entity Feed filtering', () => {
         refs: {},
         payload: {
           kind,
-          ...(kind === 'dashboard' ? { dashboard: { children: [] } } : { entityFeed: { entries: [] } }),
+          ...(kind === 'dashboard' ? { dashboard: { children: [] } } : { entityFeed: { entries: [entry('MW_CARRY')] } }),
           cursor: { page: 1, pageSize: 10, total: 1 },
           browserTarget: 'https://marquee.gs.com/s/marketview/dashboards/MD_CARRY',
           window: {
@@ -290,7 +300,7 @@ describe('stored Entity Feed filtering', () => {
       const registry = storeCarryDashboard('entity-feed');
       const widgets = renderer();
 
-      await filterStoredDashboard('d1', 'carry', { registry, readEntityFeedPage: noPageRead, widgets });
+      await filterStoredDashboard('d1', 'carry', { registry, readEntityFeedPage: async () => ({ ok: true, value: { entries: [entry('MW_CARRY')], total: 1 } }), widgets });
 
       expect(widgets.renderDashboardWidget).toHaveBeenCalledWith(
         { id: 'MW_CARRY' },
@@ -332,7 +342,7 @@ describe('stored Entity Feed filtering', () => {
     ) {
       return {
         kind: 'entity-feed',
-        entityFeed: { entries: [] },
+        entityFeed: { entries: widgets },
         cursor: { page: 1, pageSize: 10, total },
         browserTarget: 'https://marquee.gs.com/s/marketview/asset/MA_EURUSD',
         window: {
@@ -405,11 +415,11 @@ describe('stored Entity Feed filtering', () => {
 
     it('loads the missing Entity Feed widgets in pages of at most 250 and stores them', async () => {
       const registry = storedRegistry(feedPayload([], 260));
-      const readEntityFeedPage = vi.fn(async (input: { limit: number; offset?: number }) => ({
+      const readEntityFeedPage = vi.fn(async (input: { limit?: number; offset?: number; query?: string }) => ({
         ok: true as const,
         value: {
-          entries: Array.from({ length: input.limit }, (_, index) => feedEntry((input.offset ?? 0) + index + 1)),
-          total: 260,
+          entries: Array.from({ length: input.query !== undefined ? 0 : input.limit ?? 0 }, (_, index) => feedEntry((input.offset ?? 0) + index + 1)),
+          total: input.query !== undefined ? 0 : 260,
         },
       }));
 
@@ -422,6 +432,7 @@ describe('stored Entity Feed filtering', () => {
       expect(readEntityFeedPage.mock.calls).toEqual([
         [{ entityId: 'MA_EURUSD', limit: 250, offset: 0 }],
         [{ entityId: 'MA_EURUSD', limit: 10, offset: 250 }],
+        [{ entityId: 'MA_EURUSD', query: 'no such widget' }],
       ]);
       expect(result).toMatchObject({ ok: true, value: { matches: [], totalMatches: 0 } });
       expect(registry.getPayload('d1')).toMatchObject({
@@ -431,11 +442,11 @@ describe('stored Entity Feed filtering', () => {
 
     it('loads only the Entity Feed widgets after those already stored', async () => {
       const registry = storedRegistry(feedPayload(Array.from({ length: 250 }, (_, index) => feedEntry(index + 1)), 260));
-      const readEntityFeedPage = vi.fn(async (input: { limit: number; offset?: number }) => ({
+      const readEntityFeedPage = vi.fn(async (input: { limit?: number; offset?: number; query?: string }) => ({
         ok: true as const,
         value: {
-          entries: Array.from({ length: input.limit }, (_, index) => feedEntry((input.offset ?? 0) + index + 1)),
-          total: 260,
+          entries: Array.from({ length: input.query !== undefined ? 0 : input.limit ?? 0 }, (_, index) => feedEntry((input.offset ?? 0) + index + 1)),
+          total: input.query !== undefined ? 0 : 260,
         },
       }));
 
@@ -447,7 +458,91 @@ describe('stored Entity Feed filtering', () => {
 
       expect(readEntityFeedPage.mock.calls).toEqual([
         [{ entityId: 'MA_EURUSD', limit: 10, offset: 250 }],
+        [{ entityId: 'MA_EURUSD', query: 'no such widget' }],
       ]);
+    });
+
+    it('completes short unfiltered pages using actual offsets before querying', async () => {
+      const registry = storedRegistry(feedPayload([], 3));
+      const readEntityFeedPage = vi.fn<EntityFeedPageReader>()
+        .mockResolvedValueOnce({ ok: true, value: { entries: [feedEntry(1)], total: 3 } })
+        .mockResolvedValueOnce({ ok: true, value: { entries: [feedEntry(2)], total: 3 } })
+        .mockResolvedValueOnce({ ok: true, value: { entries: [feedEntry(3)], total: 3 } })
+        .mockResolvedValueOnce({ ok: true, value: { entries: [], total: 0 } });
+      const result = await filterStoredDashboard('d1', 'none', { registry, readEntityFeedPage, widgets: unexpectedRender });
+      expect(result).toMatchObject({ ok: true, value: { matches: [], totalMatches: 0 } });
+      expect(readEntityFeedPage.mock.calls).toEqual([
+        [{ entityId: 'MA_EURUSD', limit: 3, offset: 0 }],
+        [{ entityId: 'MA_EURUSD', limit: 2, offset: 1 }],
+        [{ entityId: 'MA_EURUSD', limit: 1, offset: 2 }],
+        [{ entityId: 'MA_EURUSD', query: 'none' }],
+      ]);
+      expect(registry.getPayload('d1')).toMatchObject({ entityFeed: { entries: { length: 3 } }, window: { widgets: { length: 3 } } });
+    });
+
+    it('rebuilds a legacy original tail while preserving enriched stored widgets', async () => {
+      const payload = feedPayload([
+        { ...feedEntry(1), snippet: snippet('One') },
+        { ...feedEntry(2), configurationId: 'WC_RENDERED', snippet: snippet('Two') },
+      ], 2);
+      payload.entityFeed.entries = [feedEntry(1)];
+      const registry = storedRegistry(payload);
+      const readEntityFeedPage = vi.fn<EntityFeedPageReader>()
+        .mockResolvedValueOnce({ ok: true, value: { entries: [feedEntry(2)], total: 2 } })
+        .mockResolvedValue({ ok: true, value: { entries: [feedEntry(2)], total: 1 } });
+      const first = await filterStoredDashboard('d1', 'carry 3m', { registry, readEntityFeedPage, widgets: unexpectedRender });
+      expect(first).toMatchObject({ ok: true, value: { matches: [{ ref: 'd1.w2', title: 'Two' }], refs: { 'd1.w2': { configurationId: 'WC_RENDERED' } } } });
+      const second = await filterStoredDashboard('d1', 'carry 3m', { registry, readEntityFeedPage, widgets: unexpectedRender });
+      expect(second).toMatchObject({ ok: true, value: { matches: [{ ref: 'd1.w2', title: 'Two' }] } });
+      expect(readEntityFeedPage.mock.calls).toEqual([
+        [{ entityId: 'MA_EURUSD', limit: 1, offset: 1 }],
+        [{ entityId: 'MA_EURUSD', query: 'carry 3m' }],
+        [{ entityId: 'MA_EURUSD', query: 'carry 3m' }],
+      ]);
+    });
+
+    it('selects configured variants by original identity across repeated snippet enrichment', async () => {
+      const originals = [entry('MW_CARRY', 'WC_1M'), entry('MW_CARRY', 'WC_3M')];
+      const registry = storedRegistry(feedPayload(originals, 2));
+      const readEntityFeedPage = vi.fn<EntityFeedPageReader>()
+        .mockResolvedValue({ ok: true, value: { entries: [entry('MW_CARRY', 'WC_3M')], total: 1 } });
+      const widgets = { renderDashboardWidget: vi.fn(async () => ({ ok: true as const, value: { snippet: snippet('Carry three months'), configurationId: 'WC_RENDERED' as ConfigId } })) };
+      const first = await filterStoredDashboard('d1', 'carry 3m', { registry, readEntityFeedPage, widgets });
+      expect(first).toMatchObject({ ok: true, value: { matches: [{ index: 1, ref: 'd1.w2', title: 'Carry three months' }], refs: { 'd1.w2': { configurationId: 'WC_RENDERED' } } } });
+      const second = await filterStoredDashboard('d1', 'carry 3m', { registry, readEntityFeedPage, widgets });
+      expect(second).toMatchObject({ ok: true, value: { matches: [{ index: 1, ref: 'd1.w2', title: 'Carry three months' }] } });
+      expect(widgets.renderDashboardWidget).toHaveBeenCalledOnce();
+      expect(registry.getPayload('d1')).toMatchObject({ entityFeed: { entries: [{ configurationId: 'WC_1M' }, { configurationId: 'WC_3M' }] } });
+    });
+
+    it('pages queried matches by actual received count and reports the server total', async () => {
+      const registry = storedRegistry(feedPayload([1, 2, 3, 4].map((index) => ({ ...feedEntry(index), snippet: snippet(`Stored ${index}`) })), 4));
+      const readEntityFeedPage = vi.fn<EntityFeedPageReader>()
+        .mockResolvedValueOnce({ ok: true, value: { entries: [feedEntry(4)], total: 4 } })
+        .mockResolvedValueOnce({ ok: true, value: { entries: [feedEntry(2)], total: 4 } })
+        .mockResolvedValueOnce({ ok: true, value: { entries: [feedEntry(1)], total: 4 } });
+      const result = await filterStoredDashboard('d1', 'carry 3m', { registry, readEntityFeedPage, widgets: unexpectedRender }, 3);
+      expect(result).toMatchObject({ ok: true, value: { matches: [{ ref: 'd1.w4' }, { ref: 'd1.w2' }, { ref: 'd1.w1' }], totalMatches: 4 } });
+      expect(readEntityFeedPage.mock.calls).toEqual([
+        [{ entityId: 'MA_EURUSD', query: 'carry 3m' }],
+        [{ entityId: 'MA_EURUSD', query: 'carry 3m', limit: 2, offset: 1 }],
+        [{ entityId: 'MA_EURUSD', query: 'carry 3m', limit: 1, offset: 2 }],
+      ]);
+      expect(registry.getPayload('d1')).toMatchObject({ window: { widgets: [{ widgetId: 'MW_FEED_1' }, { widgetId: 'MW_FEED_2' }, { widgetId: 'MW_FEED_3' }, { widgetId: 'MW_FEED_4' }] } });
+    });
+
+    it.each([
+      { name: 'a dependency failure', page: { ok: false, error: { kind: 'dependency', source: 'feed', failure: { kind: 'timeout' } } }, error: { kind: 'dependency', source: 'feed', failure: { kind: 'timeout' } } },
+      { name: 'an incomplete empty page', page: { ok: true, value: { entries: [], total: 2 } }, error: { kind: 'invalid-feed', problem: 'response' } },
+      { name: 'an unknown configured identity', page: { ok: true, value: { entries: [entry('MW_FEED_2', 'WC_UNKNOWN')], total: 2 } }, error: { kind: 'invalid-feed', problem: 'widget-entry' } },
+    ] as const)('fails loudly on $name in a later queried page', async ({ page, error }) => {
+      const registry = storedRegistry(feedPayload([1, 2].map((index) => ({ ...feedEntry(index), snippet: snippet(`Stored ${index}`) })), 2));
+      const readEntityFeedPage = vi.fn<EntityFeedPageReader>()
+        .mockResolvedValueOnce({ ok: true, value: { entries: [feedEntry(1)], total: 2 } })
+        .mockResolvedValueOnce(page);
+      const result = await filterStoredDashboard('d1', 'carry 3m', { registry, readEntityFeedPage, widgets: unexpectedRender }, 2);
+      expect(result).toEqual({ ok: false, error: { kind: 'entity-feed', error } });
+      expect(registry.resolveRef('d1.w1' as Ref)).toBeUndefined();
     });
 
     it('returns an Entity Feed page failure', async () => {
@@ -467,7 +562,7 @@ describe('stored Entity Feed filtering', () => {
 
       await expect(filterStoredDashboard('d1', 'feed', {
         registry,
-        readEntityFeedPage: vi.fn(),
+        readEntityFeedPage: async () => ({ ok: true, value: { entries: [feedEntry(1)], total: 1 } }),
         widgets: { renderDashboardWidget: async () => ({ ok: false, error }) },
       })).resolves.toEqual({
         ok: false,
@@ -475,7 +570,7 @@ describe('stored Entity Feed filtering', () => {
       });
     });
 
-    it('matches titles and Widget IDs case-insensitively and shows at most the limit', async () => {
+    it('uses server membership and order while retaining canonical titles and indices', async () => {
       const registry = storedRegistry(feedPayload([
         { ...feedEntry(1), title: 'Untitled', snippet: snippet('EURUSD Skew') },
         { ...feedEntry(2), title: 'Skew raw', snippet: snippet('Carry') },
@@ -485,7 +580,7 @@ describe('stored Entity Feed filtering', () => {
 
       const result = await filterStoredDashboard('d1', 'SKEW', {
         registry,
-        readEntityFeedPage: vi.fn(),
+        readEntityFeedPage: async () => ({ ok: true, value: { entries: [{ ...feedEntry(3), widgetId: 'MW_SKEW_3' as WidgetId }, feedEntry(1), feedEntry(4)], total: 3 } }),
         widgets: unexpectedRender,
       }, 2);
 
@@ -493,14 +588,14 @@ describe('stored Entity Feed filtering', () => {
         ok: true,
         value: {
           matches: [
-            { index: 0, ref: 'd1.w1', title: 'EURUSD Skew' },
             { index: 2, ref: 'd1.w3', title: 'Feed 3' },
+            { index: 0, ref: 'd1.w1', title: 'EURUSD Skew' },
           ],
           totalMatches: 3,
         },
       });
       if (!result.ok) throw new Error('expected the filter to succeed');
-      expect(Object.keys(result.value.refs)).toEqual(['d1.w1', 'd1.w3']);
+      expect(Object.keys(result.value.refs)).toEqual(['d1.w3', 'd1.w1']);
     });
 
     it('shows thirty matches by default', async () => {
@@ -511,7 +606,7 @@ describe('stored Entity Feed filtering', () => {
 
       const result = await filterStoredDashboard('d1', 'feed', {
         registry,
-        readEntityFeedPage: vi.fn(),
+        readEntityFeedPage: async () => ({ ok: true, value: { entries: Array.from({ length: 31 }, (_, index) => feedEntry(index + 1)), total: 31 } }),
         widgets: unexpectedRender,
       });
 
@@ -531,7 +626,7 @@ describe('stored Entity Feed filtering', () => {
 
       await filterStoredDashboard('d1', 'feed', {
         registry,
-        readEntityFeedPage: vi.fn(),
+        readEntityFeedPage: async () => ({ ok: true, value: { entries: [{ ...feedEntry(1), configurationId: 'WC_FEED_1' as ConfigId }], total: 1 } }),
         widgets: unexpectedRender,
       });
 

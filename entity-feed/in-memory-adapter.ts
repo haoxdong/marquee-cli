@@ -29,13 +29,14 @@ export function createEntityFeedInMemoryAdapter(
       };
     },
     async page(entityId, input) {
+      if (input.query !== undefined) return { ok: false, error: { kind: 'invalid-feed', problem: 'response' } };
       const feed = feeds.get(entityId);
       const entries = feed?.entries ?? [];
       const offset = input.offset ?? 0;
       return {
         ok: true,
         value: {
-          entries: entries.slice(offset, offset + input.limit),
+          entries: entries.slice(offset, offset + (input.limit ?? 100)),
           total: feed?.total ?? entries.length,
         },
       };

@@ -5,10 +5,8 @@ import type { DashboardModule } from '../dashboard/index.js';
 import type { DocumentModule } from '../document/index.js';
 import type { EntityModule } from '../entity/index.js';
 import type {
-  EntityFeedEntry,
-  EntityFeedError,
-  EntityFeedModule,
-} from '../entity-feed/index.js';
+  EntityFeedComposition,
+} from '../entity-feed/composition.js';
 import type { MarketView } from '../marketview/index.js';
 import type { Writer } from '../presentation/index.js';
 import type { WidgetModule } from '../widget/index.js';
@@ -38,17 +36,7 @@ export interface ProgramDependencies {
   browserRuntime?: AgentBrowserRuntime;
   controlGroup?: ControlGroupModule;
   entity?: EntityModule;
-  entityFeed?: Readonly<{
-    entityFeed: EntityFeedModule;
-    readPage(input: Readonly<{
-      entityId: string;
-      limit: number;
-      offset?: number;
-    }>): Promise<
-      | { ok: true; value: { entries: readonly EntityFeedEntry[]; total: number } }
-      | { ok: false; error: EntityFeedError }
-    >;
-  }>;
+  entityFeed?: EntityFeedComposition;
   widget?: WidgetModule;
   marketView?: MarketView;
   document?: DocumentModule;

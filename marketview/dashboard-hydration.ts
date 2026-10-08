@@ -1,7 +1,4 @@
-import type {
-  EntityFeedEntry,
-  EntityFeedError,
-} from '../entity-feed/index.js';
+export type { EntityFeedPageReader } from '../entity-feed/index.js';
 import type { Entity } from '../entity/index.js';
 import type {
   DashboardPresentationWidget,
@@ -15,15 +12,6 @@ type PreparedContextDashboardWidgets = {
   title: string;
   identityLine: string;
 };
-
-export type EntityFeedPageReader = (input: Readonly<{
-  entityId: string;
-  limit: number;
-  offset?: number;
-}>) => Promise<
-  | { ok: true; value: { entries: readonly EntityFeedEntry[]; total: number } }
-  | { ok: false; error: EntityFeedError }
->;
 
 function contextIdentityLine(entity: Entity, identifier: string): string {
   if (entity.kind === 'country') return '';

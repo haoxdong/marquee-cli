@@ -18,7 +18,7 @@ export interface EntityFeedAdapter {
   read(entityId: string): Promise<EntityFeedResult<EntityFeedSource>>;
   page(
     entityId: string,
-    input: { limit: number; offset?: number },
+    input: { limit?: number; offset?: number; query?: string },
   ): Promise<EntityFeedResult<EntityFeedPage>>;
 }
 

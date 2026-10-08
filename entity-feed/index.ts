@@ -7,6 +7,7 @@ export type {
   EntityFeed,
   EntityFeedError,
   EntityFeedModule,
+  EntityFeedPageReader,
 } from './types.js';
 
 export function createEntityFeedModule(

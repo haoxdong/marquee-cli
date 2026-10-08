@@ -23,8 +23,8 @@ import type {
   EntityFeed,
   EntityFeedError,
   EntityFeedModule,
+  EntityFeedPageReader,
 } from '../entity-feed/index.js';
-import type { EntityFeedPageReader } from '../entity-feed/composition.js';
 import type { Transport } from '../transport/index.js';
 import type {
   WidgetModule,

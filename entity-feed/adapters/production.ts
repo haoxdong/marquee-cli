@@ -234,13 +234,14 @@ export function createEntityFeedProductionAdapter(
   });
   const readWidgetPage = async (
     entityId: string,
-    page?: { limit: number; offset?: number },
+    page?: { limit?: number; offset?: number; query?: string },
   ) => {
     try {
       const raw = await feed.getWidgets({
         context: entityId,
         limit: page?.limit,
         offset: page?.offset,
+        query: page?.query,
       });
       return decodeWidgets(raw, entityId);
     } catch (error) {

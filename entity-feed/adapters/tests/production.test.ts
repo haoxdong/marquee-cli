@@ -248,6 +248,16 @@ describe('Entity Feed production adapter', () => {
     });
   });
 
+  it('preserves configured identity in server query results', async () => {
+    const request = vi.fn(async () => ({
+      total_results: 1,
+      results: [{ id: 'MW_CARRY', configurationId: 'WC_3M', title: 'Carry' }],
+    }));
+    const adapter = createEntityFeedProductionAdapter({ request });
+    const result = await adapter.page('MA_EURUSD', { query: 'carry 3m' });
+    expect(result).toMatchObject({ ok: true, value: { total: 1, entries: [{ widgetId: 'MW_CARRY', configurationId: 'WC_3M' }] } });
+  });
+
   it.each([
     ['asset', 'MA_AAPL', 'Asset'],
     ['country', 'US', 'Country'],

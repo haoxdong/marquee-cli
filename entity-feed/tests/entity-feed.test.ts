@@ -4,6 +4,16 @@ import { createEntityFeedInMemoryAdapter } from '../in-memory-adapter.js';
 import { createEntityFeedModuleFromAdapter, type EntityFeedAdapter } from '../module.js';
 import type { EntityFeedEntry, EntityFeedResult } from '../types.js';
 
+describe('in-memory Entity Feed paging', () => {
+  it('uses a bounded default page and fails unsupported server queries', async () => {
+    const entries = Array.from({ length: 101 }, () => ({ widgetId: 'MW_TEST' as import('../../widget/index.js').WidgetId, title: 'Test', widgetDefinition: {}, widgetParameterOverrides: [], selectedContext: null }));
+    const adapter = createEntityFeedInMemoryAdapter({ feeds: [{ entityId: 'MA_TEST', entries }] });
+    const result = await adapter.page('MA_TEST', {});
+    expect(result).toMatchObject({ ok: true, value: { entries: { length: 100 }, total: 101 } });
+    await expect(adapter.page('MA_TEST', { query: 'carry 3m' })).resolves.toEqual({ ok: false, error: { kind: 'invalid-feed', problem: 'response' } });
+  });
+});
+
 describe('Entity Feed', () => {
   it('returns an empty read-only feed for an Entity with no matching Widgets', async () => {
     const entity: Entity = {

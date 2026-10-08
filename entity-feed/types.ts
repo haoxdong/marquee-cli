@@ -48,3 +48,13 @@ export type EntityFeedResult<T> =
 export interface EntityFeedModule {
   get(input: EntityFeedGetInput): Promise<EntityFeedResult<EntityFeed>>;
 }
+
+export type EntityFeedPageReader = (input: Readonly<{
+  entityId: string;
+  limit?: number;
+  query?: string;
+  offset?: number;
+}>) => Promise<
+  | { ok: true; value: { entries: readonly EntityFeedEntry[]; total: number } }
+  | { ok: false; error: EntityFeedError }
+>;
