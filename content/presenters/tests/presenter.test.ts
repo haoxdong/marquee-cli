@@ -420,9 +420,15 @@ describe('Content search presentation', () => {
     [{ from: '2026-06-01' }, '--published ">=2026-06-01"'],
     [{ to: '2026-06-15' }, '--published "<=2026-06-15"'],
   ])('carries a one-sided range %o into its hints', async (range, published) => {
-    const presentation = await presentContentSearch(searched(page({ query: 'cpi', results: [result('Note')], ...range })), {});
-    expect(presentation.output.split('\n').slice(-2)).toEqual([
+    const presentation = await presentContentSearch(searched(page({
+      query: 'cpi',
+      results: [result('Note')],
+      facets: [{ field: 'source', label: 'Source', isSelected: false, values: [{ name: 'Research', count: 1, isSelected: false }] }],
+      ...range,
+    })), {});
+    expect(presentation.output.split('\n').slice(-3)).toEqual([
       `To sort by relevance, try: marquee content search cpi ${published} --sort relevance`,
+      `To narrow results, try: marquee content search cpi ${published} --source Research`,
       '',
     ]);
   });
