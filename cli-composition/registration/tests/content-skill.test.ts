@@ -8,7 +8,7 @@ const skill = readFileSync(new URL('../../../skills/marquee/SKILL.md', import.me
 
 it('resolves every documented command through the registered marquee tree', () => {
   const section = skill.split('## Commands\n')[1]?.split('\n## ')[0];
-  const block = section?.match(/```\n([\s\S]*?)```/)?.[1];
+  const block = [...(section ?? '').matchAll(/^```(\w*)\n([\s\S]*?)^```$/gm)].find(([, language]) => !language)?.[2];
   assert(block, 'the Commands section needs a command block');
   const { program } = createProgram();
   const resolved: string[] = [];
