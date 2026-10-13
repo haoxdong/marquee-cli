@@ -19,6 +19,12 @@ Refs like `@s1.c1` are CLI plumbing; keep them out of the answer.
 ## Commands
 
 `marquee` is a gh-style CLI.
+Run independent commands at the same time to cut latency: background each with `&` and end with `wait`:
+
+```bash
+marquee marketview search "<query one>" & marquee marketview search "<query two>" & marquee content search "<query three>" & wait
+marquee marketview widget view <ref one> & marquee marketview widget view <ref two> & marquee content view <ref three> & wait
+```
 
 ```
 marquee marketview search "query"            # widgets and dashboards
@@ -34,7 +40,7 @@ marquee browser open <url>
 
 ## Search
 
-Search by topic, publication or author name. Default searches are keyword-based and return 10 results: fan out parallel searches, rewriting the query and covering different angles.
+Search by topic, publication or author name. Default searches are keyword-based and return 10 results: fan out searches, rewriting the query and covering different angles.
 
 ## Browser
 
