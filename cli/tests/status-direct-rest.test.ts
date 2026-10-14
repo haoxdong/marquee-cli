@@ -99,8 +99,8 @@ describe('status direct REST auth', () => {
       expect.objectContaining({
         headers: expect.objectContaining({
           Authorization: 'Bearer signed-invocation',
-          'X-MarqueeBot-Account-Id': 'acct-1',
-          'X-MarqueeBot-Session-Id': 'thread-1',
+          'X-BotCube-Account-Id': 'acct-1',
+          'X-BotCube-Session-Id': 'thread-1',
         }),
       }),
     );

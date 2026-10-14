@@ -181,7 +181,7 @@ describe('transport interface', () => {
       expect.objectContaining({
         headers: expect.objectContaining({
           Authorization: 'Bearer invocation-token',
-          'X-MarqueeBot-Account-Id': 'account-1',
+          'X-BotCube-Account-Id': 'account-1',
         }),
       }),
     );

@@ -75,8 +75,8 @@ describe('ProxyHttpTransport', () => {
     );
     expect(init.headers).toMatchObject({
       Authorization: 'Bearer signed-invocation',
-      'X-MarqueeBot-Account-Id': 'acct-1',
-      'X-MarqueeBot-Session-Id': 'thread-1',
+      'X-BotCube-Account-Id': 'acct-1',
+      'X-BotCube-Session-Id': 'thread-1',
       Accept: 'application/json',
     });
     expect((init.headers as Record<string, string>).Cookie).toBeUndefined();
@@ -125,8 +125,8 @@ describe('ProxyHttpTransport', () => {
     expect(init.headers).toMatchObject({
       Accept: 'application/prs.gir-search-service.v2+json;charset=UTF-8',
       Authorization: 'Bearer signed-invocation',
-      'X-MarqueeBot-Account-Id': 'acct-1',
-      'X-MarqueeBot-Session-Id': 'thread-1',
+      'X-BotCube-Account-Id': 'acct-1',
+      'X-BotCube-Session-Id': 'thread-1',
       'Content-Type': 'application/json;charset=utf-8',
     });
     expect(
@@ -157,8 +157,8 @@ describe('ProxyHttpTransport', () => {
     );
     expect(init.headers).toMatchObject({
       Authorization: 'Bearer signed-invocation',
-      'X-MarqueeBot-Account-Id': 'acct-1',
-      'X-MarqueeBot-Session-Id': 'thread-1',
+      'X-BotCube-Account-Id': 'acct-1',
+      'X-BotCube-Session-Id': 'thread-1',
     });
   });
 

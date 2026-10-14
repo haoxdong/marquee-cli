@@ -13,7 +13,7 @@ describe('account-session transport', () => {
   it('sends only the opaque session and disables redirects', async () => {
     const fetchFn = vi.fn(async () => new Response('{"login":"synthetic"}'));
     await expect(session(fetchFn).request(target, { headers: {
-      Authorization: 'spoof', Cookie: 'spoof', 'x-marqueebot-account-id': 'other', 'X-MarqueeBot-Session-Id': 'other',
+      Authorization: 'spoof', Cookie: 'spoof', 'x-botcube-account-id': 'other', 'X-BotCube-Session-Id': 'other',
     } })).resolves.toEqual({ login: 'synthetic' });
     expect(fetchFn).toHaveBeenCalledWith('https://gateway.example/marquee/v1/users/self', expect.objectContaining({
       redirect: 'manual', headers: { Accept: 'application/json', Cookie: 'marqueebot_session=sess_synthetic' },

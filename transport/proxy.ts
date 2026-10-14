@@ -161,8 +161,8 @@ export class ProxyHttpTransport {
         ? { Cookie: `marqueebot_session=${this.authentication.token}` }
         : {
             Authorization: `Bearer ${this.authentication.token}`,
-            'X-MarqueeBot-Account-Id': this.authentication.accountId,
-            'X-MarqueeBot-Session-Id': this.authentication.sessionId,
+            'X-BotCube-Account-Id': this.authentication.accountId,
+            'X-BotCube-Session-Id': this.authentication.sessionId,
           }),
     };
     if (init.body !== undefined) {
@@ -256,7 +256,7 @@ function stripCallerCredentialHeaders(
       return (
         normalized !== 'authorization' &&
         normalized !== 'cookie' &&
-        !(session && normalized.startsWith('x-marqueebot-'))
+        !(session && normalized.startsWith('x-botcube-'))
       );
     })
   );
