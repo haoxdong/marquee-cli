@@ -1,3 +1,9 @@
+// ADR 0044: npm lifecycle installs a durable skill by copying our own directory,
+// not linking it (uninstall and npx cache cleanup can leave dangling links).
+// Overwrite only package-owned skills; warn and skip a foreign skills/marquee.
+// Install silently for Claude Code and for other supported hosts whose config exists;
+// MARQUEE_SKILL_TARGETS overrides selection. The host registry is implementation
+// policy: adding a supported host does not require an ADR amendment.
 import {
   cpSync,
   existsSync,
