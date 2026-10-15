@@ -106,7 +106,7 @@ function paramRow(param: WidgetParameter): readonly TextCell[] {
   ];
 }
 
-/** The fixed Data preview (ADR 0071): date-ordered rows newest first, other tables in provider order. */
+/** The fixed Data preview (ADR 0047): date-ordered rows newest first, other tables in provider order. */
 function previewRows(table: WidgetChartText['data']): WidgetChartText['data']['rows'] {
   const ordered = table.dateOrdered ? [...table.rows].reverse() : table.rows;
   return ordered.slice(0, PREVIEW_ROWS);

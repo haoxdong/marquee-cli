@@ -3918,10 +3918,12 @@ describe('Widget interface', () => {
     expect(chartReads).toBe(1);
     expect(configurationReads).toBe(1);
     expect(runnerBodies).toHaveLength(1);
-    expect(requests.slice(0, 4)).toEqual([
+    expect(requests.slice(0, 3)).toEqual([
       { path: '/v1/marketview/widgets/MW_OVERRIDE', method: 'GET' },
       { path: '/v1/marketview/widgets/configurations', method: 'GET' },
       { path: '/v1/marketview/widgets/configurations', method: 'POST' },
+    ]);
+    expect(requests.filter(({ path }) => path === '/v1/marketview/dashboards')).toEqual([
       { path: '/v1/marketview/dashboards', method: 'GET' },
     ]);
     const runnerBody = runnerBodies[0] as {

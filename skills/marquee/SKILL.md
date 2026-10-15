@@ -5,12 +5,12 @@ description: Use when the user asks about markets, research or anything on Marqu
 
 ## Answering
 
-When you give a view, name what would flip it: the key risk, or the condition under which the narrative changes.
+When the answer carries a view, state its conviction and what would flip it: the key risk, or the condition under which the narrative changes.
 Refs like `@s1.c1` are CLI plumbing; keep them out of the answer.
 
 ## What's in Marquee
 
-- **Widgets**: live charts and tables: prices, curves, vol and skew; positioning (CFTC); GIR forecasts and scenario projections; event calendars (macro releases, weekly earnings).
+- **Widgets**: tables and charts (time series, scatter, heatmap, spider, etc.) of equity and FICC markets, cash and derivatives, live, historical and forward: prices, curves, vol (skews, smiles, surfaces) and correlation; market-implied pricing; positioning (CFTC); polls; GIR forecasts and scenario projections; event calendars (macro releases, weekly earnings).
 - **Dashboards**: sets of widgets for an asset, a country, a theme, or one of the user's portfolios.
 - **Research**: GS Research: company notes with rating and price-target changes, the Early Morning Research Recap, economics (US Daily, Data Comment), strategy, commodities and credit.
 - **Desk commentary**: trader notes through the day: the Morning Wrap, market and regional wraps (GS HK Market Wrap, GS LatAm Daily), sector previews.

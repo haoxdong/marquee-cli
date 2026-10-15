@@ -39,7 +39,7 @@ export function parsePlotToolWindow(chart: PlotToolWindowFields): PlotToolWindow
   const end = chart.relativeEndDate === undefined
     ? undefined
     : parseEnd(chart.relativeEndDate);
-  /* c8 ignore next -- data-layer-ignore: plot-window-token-assert */
+  /* c8 ignore next -- Recording-unreachable: every recorded Chart window parses; focused codec tests pin both refusals. */
   if (start === null || end === null) return { ok: false, reason: `unsupported relative ${start === null ? `start ${chart.relativeStartDate}` : `end ${chart.relativeEndDate}`}` };
   return {
     ok: true,
@@ -110,7 +110,7 @@ export function plotToolWindowDashboardToken(window: PlotToolWindow): Readonly<
 > {
   if (window.isForward || window.startDate) return { ok: true, value: undefined };
   const start = window.start;
-  /* c8 ignore next -- data-layer-ignore: plot-window-dashboard-start-assert */
+  /* c8 ignore next -- Recording-unreachable: every recorded Chart without relativeStartDate carries a startDate, and the only recorded forward start has a forward end; focused codec tests pin both refusals. */
   if (!start || (start.kind === 'offset' && start.direction === 'forward')) return { ok: false, reason: `${start ? 'unsupported' : 'missing'} relativeStartDate` };
   if (start.kind === 'offset') return { ok: true, value: `${start.amount}${start.unit}` };
   // Web's Add To Dashboard sends no relativeDate for `ytd`, `-max` or `0d` Charts.

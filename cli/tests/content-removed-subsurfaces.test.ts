@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { afterEach, describe, expect, it } from 'vitest';
 import { createProgram } from '../../cli-composition/index.js';
 
-// ADR 0049 §1: the content markets / content research
+// ADR 0070 §1: the content markets / content research
 // subsurfaces are deleted; old spellings get the §1-style typed error naming
 // the folded path — never commander's generic unknown-command error — and
 // never reach a router action.

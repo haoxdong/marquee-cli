@@ -110,7 +110,7 @@ type ResolvedPlotToolControls = Readonly<{
 const ENTITY_GET_LIMIT = 40;
 
 export class PlotToolLaneDecodeError extends Error {
-  /* c8 ignore next -- data-layer-ignore: plot-lane-error-name-assert */
+  /* c8 ignore next -- Recording-unreachable as a class-field initializer branch; focused PlotTool Pro pipeline tests pin the typed failure. */
   override readonly name = 'PlotToolLaneDecodeError';
 }
 
@@ -126,9 +126,11 @@ export async function renderPlotToolLane(
     ...init,
     headers: cardPayloadHeaders(input.widgetId, { ...init.headers }),
   });
-  const resolved = await resolvePlotToolControls(payloadRequest, input.controls);
-  const rawDefinition = input.definition
-    ?? await readPlotToolChartDefinition(request, input.widgetId, input.targetId);
+  const [resolved, rawDefinition] = await Promise.all([
+    resolvePlotToolControls(payloadRequest, input.controls),
+    input.definition
+      ?? readPlotToolChartDefinition(request, input.widgetId, input.targetId),
+  ]);
   const decodedDefinition = requiredRecord(rawDefinition, 'Chart definition');
   const definition = input.intervalOverride === undefined
     ? decodedDefinition
@@ -147,7 +149,7 @@ export async function renderPlotToolLane(
     relativeEndDate: optionalString(definition.relativeEndDate, 'Chart relative end date'),
     ...(typeof definition.startDate === 'string' ? { startDate: definition.startDate } : {}),
   });
-  /* c8 ignore next -- data-layer-ignore: plot-lane-window-assert */
+  /* c8 ignore next -- Recording-unreachable: every recorded Chart window parses; focused lane and codec tests pin the typed rejection. */
   if (!window.ok) throw new RangeError(window.reason, { cause: 'unsupported-window' });
   const dateWindow = input.dateOverride === undefined ? window.value : undefined;
   const usePost = shouldPostPlotToolRunner({
@@ -230,7 +232,7 @@ function resolvePlotToolLaneDates(
     ...(timeSettings !== undefined ? { timeSettings } : {}),
   };
   const resolved = resolvePlotToolDateRange(chart, now);
-  /* c8 ignore next -- data-layer-ignore: plot-lane-date-resolution-assert */
+  /* c8 ignore next -- Recording-unreachable for supported chart dates; focused date-resolution tests pin the typed rejection. */
   if (!resolved.ok) throw new RangeError(resolved.error.reason, { cause: resolved.error.problem });
   return {
     start: resolved.value.start,
@@ -261,13 +263,17 @@ export async function resolvePlotToolControls(
   const lookups = entityLookups(expanded);
   if (lookups.size === 0) return { controls: expanded, entities: {} };
 
-  decodeCountrySeed(await new EntityApi({ request }).getCountries());
+  const [, batches] = await Promise.all([
+    new EntityApi({ request }).getCountries().then(decodeCountrySeed),
+    Promise.all([...lookups].map(async ([type, ids]) => {
+      const response = await requestEntityBatch(request, type, ids);
+      const key = entityResponseKey(type);
+      const values = requiredArray(requiredRecord(response, 'PlotTool Pro entity response')[key], key);
+      return { key, values };
+    })),
+  ]);
   const entities: Record<string, readonly unknown[]> = {};
-  for (const [type, ids] of lookups) {
-    // eslint-disable-next-line no-await-in-loop -- stops at the first failure without sending the rest
-    const response = await requestEntityBatch(request, type, ids);
-    const key = entityResponseKey(type);
-    const values = requiredArray(requiredRecord(response, 'PlotTool Pro entity response')[key], key);
+  for (const { key, values } of batches) {
     entities[key] = [...(entities[key] ?? []), ...values];
   }
   return { controls: expanded, entities };
@@ -366,7 +372,7 @@ export function encodePlotToolInterval(interval: string): string | undefined {
   if (interval === 'Tick') return undefined;
   const minutes = /^(\d+) min$/.exec(interval)?.[1];
   if (minutes) return minutes === '60' ? '1h' : `${minutes}m`;
-  /* c8 ignore start -- data-layer-ignore: plot-interval-shape-assert */
+  /* c8 ignore start -- Recording-unreachable for supported charts; focused PlotTool Pro tests pin named, wire-form, realtime, and malformed intervals. */
   return unsupportedPlotToolResponse(`Unsupported PlotTool Pro interval: ${interval}`);
 }
 /* c8 ignore stop */
@@ -593,7 +599,7 @@ function timeZoneOffsetMillis(date: Date, timeZone: string): number {
   }, timeZone).find((part) => part.type === 'timeZoneName')?.value;
   const normalized = String(value).replace(/^GMT$/, 'GMT+0').replace(/^(GMT[+-]\d{1,2})$/, '$1:00');
   const match = /^GMT([+-])(\d{1,2}):(\d{2})$/.exec(normalized);
-  /* c8 ignore start -- data-layer-ignore: plot-time-zone-offset-assert */
+  /* c8 ignore start -- Recording-unreachable for supported runtime timezone offsets; focused timezone tests pin the typed failure. */
   // Stryker disable next-line StringLiteral: Intl's shortOffset is always GMT, GMT±h or GMT±h:mm, so this never throws
   if (!match) return unsupportedPlotToolResponse(`Unsupported PlotTool Pro time zone: ${timeZone}`);
   /* c8 ignore stop */
@@ -613,7 +619,7 @@ function localDate(value: Date | string): string {
 
 function dateValue(value: Date | string, label: string): Date {
   const date = new Date(value);
-  /* c8 ignore next -- data-layer-ignore: plot-date-shape-assert */
+  /* c8 ignore next -- Recording-unreachable for supported provider dates; focused encoding tests pin the typed invalid-date failure. */
   if (Number.isNaN(date.getTime())) return unsupportedPlotToolResponse(`${label} is invalid`);
   return date;
 }
@@ -625,9 +631,9 @@ function formatZonedParts(
 ): Intl.DateTimeFormatPart[] {
   try {
     return new Intl.DateTimeFormat('en-US', options).formatToParts(date);
-  /* c8 ignore next -- data-layer-ignore: plot-time-zone-shape-assert */
+  /* c8 ignore next -- Recording-unreachable for supported provider timezones; focused encoding tests pin the typed invalid-timezone failure. */
   } catch {
-    /* c8 ignore start -- data-layer-ignore: plot-time-zone-error-body */
+    /* c8 ignore start -- Recording-unreachable for supported provider timezones; focused encoding tests pin the typed invalid-timezone failure body. */
     return unsupportedPlotToolResponse(`Unsupported PlotTool Pro time zone: ${timeZone}`);
   }
 }
@@ -674,7 +680,7 @@ function entityResponseKey(type: string): string {
     Control_Group: 'control_groups',
   };
   const key = keys[type];
-  /* c8 ignore start -- data-layer-ignore: plot-entity-type-assert */
+  /* c8 ignore start -- Recording-unreachable because entityLookups admits only the four supported types; focused control-resolution tests pin the closed mapping. */
   // Stryker disable next-line StringLiteral: entity lookups hold only the four types keyed above, so this never throws
   if (!key) return unsupportedPlotToolResponse(`Unsupported PlotTool Pro entity type: ${type}`);
   /* c8 ignore stop */
@@ -693,7 +699,7 @@ function requiredRecord(
   value: unknown,
   label: string,
 ): Readonly<Record<string, unknown>> {
-  /* c8 ignore start -- data-layer-ignore: plot-required-record-shape-assert */
+  /* c8 ignore start -- Recording-unreachable for supported responses; focused malformed-response tests pin the typed decoder failure. */
   if (typeof value !== 'object' || value === null || Array.isArray(value)) {
     return unsupportedPlotToolResponse(`${label} is not a record`);
   }
@@ -702,14 +708,14 @@ function requiredRecord(
 }
 
 function requiredArray(value: unknown, label: string): readonly unknown[] {
-  /* c8 ignore start -- data-layer-ignore: plot-required-array-shape-assert */
+  /* c8 ignore start -- Recording-unreachable for supported responses; focused malformed-response and control-group tests pin the typed decoder failure family. */
   if (!Array.isArray(value)) return unsupportedPlotToolResponse(`${label} is not an array`);
   /* c8 ignore stop */
   return value;
 }
 
 function requiredString(value: unknown, label: string): string {
-  /* c8 ignore start -- data-layer-ignore: plot-required-string-shape-assert */
+  /* c8 ignore start -- Recording-unreachable for supported responses; focused malformed-response tests pin the typed decoder failure. */
   if (typeof value !== 'string' || value.length === 0) {
     return unsupportedPlotToolResponse(`${label} is not a string`);
   }
@@ -719,7 +725,7 @@ function requiredString(value: unknown, label: string): string {
 
 function optionalString(value: unknown, label: string): string | undefined {
   if (value === undefined || value === null) return undefined;
-  /* c8 ignore start -- data-layer-ignore: plot-optional-string-shape-assert */
+  /* c8 ignore start -- Recording-unreachable for supported definitions; focused malformed-response tests pin the typed decoder family. */
   if (typeof value !== 'string') {
     return unsupportedPlotToolResponse(`${label} is not a string`);
   }
@@ -737,7 +743,7 @@ function optionalTimeSettings(value: unknown): PlotToolDateRangeChart['timeSetti
   };
 }
 
-/* c8 ignore start -- data-layer-ignore: plot-unsupported-response-assert */
+/* c8 ignore start -- Recording-unreachable body for supported responses; focused malformed-response, interval, date, and timezone tests pin the error. */
 function unsupportedPlotToolResponse(reason: string): never {
   throw new PlotToolLaneDecodeError(
     `Unsupported PlotTool Pro response shape: ${reason}; record a Scenario before accepting this fallback.`,

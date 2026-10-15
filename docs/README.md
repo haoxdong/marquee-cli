@@ -40,3 +40,9 @@ Command-specific Ref allocation and reuse policy is owned by the surface facades
 ### Session verification
 
 The Executable ADR Inventory rule `Ref state is scoped to one interaction session` (checker `ref-session-scope`) proves automatic identity acquisition for Claude Code, Codex, AgentCore/DeepAgents, and human terminals; sharing across main-agent, subagent, foreground, and background command environments; agent-over-terminal precedence; sharing inside one human terminal; isolation across new conversations and terminals regardless of cwd or PID reuse; concurrent unique allocation and lossless updates; whole-session inactive expiry; and namespace-atomic capacity eviction.
+
+## CLI outcomes and dashboard mutation order
+
+Exit codes are `0` success, `1` failure, `2` cancelled by SIGINT, and `4` authentication required. Errors go to stderr as text; authentication errors name `marquee auth login`.
+
+Dashboard edits apply removes, adds, added sections and ordering sequentially. The first failure aborts the remainder; output distinguishes applied, failed and unattempted changes without rollback. Creation remains explicit. Current verbs and flags are owned by CLI registration and its help Contracts; output projection belongs to ADR 0070.

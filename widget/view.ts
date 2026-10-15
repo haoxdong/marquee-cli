@@ -137,7 +137,7 @@ async function resolveRenderedPlotToolEntities(
   }
   for (const [index, requested] of identifiers.entries()) {
     const entityValue = result.value[index] as Exclude<EntityResolveValue, { status: 'not-found' }> | undefined;
-    /* c8 ignore start -- data-layer-ignore: widget-rendered-series-kind-assert */
+    /* c8 ignore start -- Recording-unreachable by construction: Entity.resolve preserves each requested kind; a focused interface test injects a mismatched Control Group result and pins the malformed-definition failure. */
     if (entityValue?.kind !== requested.kind) {
       return failRenderedPlotToolEntityResolution(widgetId, {
         kind: 'malformed-entity',
@@ -273,7 +273,9 @@ export async function buildFullWidgetProjection(
   const targetMetadata = widgetRenderTargetMetadata(target);
   const isDV = target.kind === 'data-viz';
   const renderTargetDataViz = (): Promise<DataVizResult> => renderDataViz(
-    request,
+    (endpoint, init) => endpoint.method === 'POST'
+      ? resolvedEntitiesPromise.then(() => request(endpoint, init))
+      : request(endpoint, init),
     widgetRaw,
     configurationId,
     presentDataVizError,

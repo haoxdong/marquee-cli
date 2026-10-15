@@ -2415,7 +2415,9 @@ describe('Widget', () => {
         identifier: { kind: 'asset', value: missingAssetId },
       },
     });
-    expect(adapter.calls.slice(callsBeforeRequiredMiss)).toEqual([
+    const failedCalls = adapter.calls.slice(callsBeforeRequiredMiss);
+    expect(failedCalls).toHaveLength(3);
+    expect(failedCalls).toEqual(expect.arrayContaining([
       expect.objectContaining({
         path: '/v1/data/visualizations/DV_MISSING_OPTION',
       }),
@@ -2426,10 +2428,7 @@ describe('Widget', () => {
         path: '/v1/plots/entities',
         init: { method: 'GET', query: { ids: [missingAssetId] } },
       },
-      expect.objectContaining({
-        path: '/v1/data/visualizations/DV_MISSING_OPTION/render',
-      }),
-    ]);
+    ]));
   });
 
   it('resolves Dashboard persistence anchors behind the Widget seam', async () => {

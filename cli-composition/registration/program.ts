@@ -346,7 +346,7 @@ class ReservedVerbError extends Error {
   readonly code = 'marquee.reservedVerb';
 }
 
-// ADR 0049 §1: deleted subsurfaces whose old spellings
+// ADR 0070 §1: deleted subsurfaces whose old spellings
 // get the §1-style typed pointer to the folded path, not commander's generic
 // unknown-command error.
 const REMOVED_SUBSURFACES = new Map<string, string>([

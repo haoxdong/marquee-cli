@@ -39,12 +39,16 @@ export async function renderDataVizLane(
   api: DataVizApi,
   input: DataVizLaneInput,
 ): Promise<unknown> {
-  if (input.mode === 'base-component') {
-    await api.getComponent(input.targetId);
-    return api.renderComponent(input.targetId, dataVizRenderBody(input));
-  }
-  await api.getVisualization(input.targetId);
-  return api.renderVisualization(input.targetId, dataVizRenderBody(input));
+  const spec = input.mode === 'base-component'
+    ? api.getComponent(input.targetId)
+    : api.getVisualization(input.targetId);
+  const [, rendered] = await Promise.all([
+    spec,
+    (async () => input.mode === 'base-component'
+      ? api.renderComponent(input.targetId, dataVizRenderBody(input))
+      : api.renderVisualization(input.targetId, dataVizRenderBody(input)))(),
+  ]);
+  return rendered;
 }
 
 function dataVizRenderBody(

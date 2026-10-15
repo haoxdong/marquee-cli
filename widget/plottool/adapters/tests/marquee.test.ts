@@ -294,7 +294,7 @@ describe('PlotTool Pro runner encodings', () => {
 });
 
 describe('PlotTool Pro control resolution', () => {
-  it('expands groups, seeds countries, then performs entity lookup', async () => {
+  it('expands groups before seeding countries and looking up entities', async () => {
     const request = vi.fn(async ({ path }: Endpoint) => {
       if (path === '/v1/marketview/constituents') {
         return {
@@ -337,6 +337,25 @@ describe('PlotTool Pro control resolution', () => {
         },
       ],
     ]);
+  });
+
+  it('looks up entities while the country seed is pending and propagates seed failure', async () => {
+    let rejectSeed!: (reason: Error) => void;
+    const seed = new Promise<never>((_, reject) => { rejectSeed = reject; });
+    const request = vi.fn(async ({ path }: Endpoint) => {
+      if (path === '/v1/countries') return seed;
+      if (path === '/v1/plots/entities') return { assets: [{ id: 'MA_ONE' }] };
+      throw new Error(`Unexpected path ${path}`);
+    });
+    const failure = new Error('country seed unavailable');
+    const assertion = expect(resolvePlotToolControls(request, [
+      { id: 'asset', type: 'Asset', value: 'MA_ONE' },
+    ])).rejects.toBe(failure);
+    expect(request.mock.calls.map(([endpoint]) => endpoint.path)).toEqual([
+      '/v1/countries', '/v1/plots/entities',
+    ]);
+    rejectSeed(failure);
+    await assertion;
   });
 
   it('keeps Enum controls local without a country seed or entity lookup', async () => {

@@ -166,7 +166,7 @@ function widgetConfigurationResult(
   if (id && isRecord(record)) {
     const returnedWidgetId = cleanRecordText(record.widgetId);
     const returnedTargetId = cleanRecordText(record.underlyingChartId);
-    /* c8 ignore start -- data-layer-ignore: widget-config-mint-identity-assert */
+    /* c8 ignore start -- Recording-unreachable by construction for supported Config creation: 134 provider-derived response bodies plus fresh PlotTool Pro and DataViz live probes retained the requested identities; mismatch permutations are pinned at the production-adapter seam. */
     assert(
       ['', widgetId.toUpperCase()].includes(returnedWidgetId.toUpperCase())
       && ['', targetId.toUpperCase()].includes(returnedTargetId.toUpperCase()),
@@ -425,7 +425,7 @@ function validateWidgetDefinition(
   allowMissingTarget = false,
 ): string {
   const returnedWidgetId = cleanRecordText(widget.id);
-  /* c8 ignore start -- data-layer-ignore: widget-definition-identity-assert */
+  /* c8 ignore start -- Recording-unreachable by construction for supported reads: the requested Widget endpoint returns that Widget, while the mismatched response is pinned at the production-adapter seam. */
   assert(
     ['', requestedWidgetId.toUpperCase()].includes(returnedWidgetId.toUpperCase()),
     new WidgetSemanticFailure({
@@ -440,10 +440,10 @@ function validateWidgetDefinition(
   /* c8 ignore stop */
   const targetId = executionTargetId(widget);
   if (!targetId && allowMissingTarget) return '';
-  /* c8 ignore start -- data-layer-ignore: widget-definition-missing-target-assert */
+  /* c8 ignore start -- Recording-unreachable by construction for supported reads: executable Widgets identify a target, while the missing-target response is pinned at the production-adapter seam. */
   assert(targetId, new WidgetSemanticFailure(missingWidgetTarget(requestedWidgetId)));
   /* c8 ignore stop */
-  /* c8 ignore start -- data-layer-ignore: widget-definition-unsupported-target-assert */
+  /* c8 ignore start -- Recording-unreachable by construction for supported reads: executable Widgets use CH or DV targets, while the unsupported-target response is pinned at the production-adapter seam. */
   assert(
     /^(?:CH|DV)/.test(targetId),
     new WidgetSemanticFailure(unsupportedWidgetExecutionTarget(requestedWidgetId, targetId)),
@@ -470,7 +470,7 @@ function validateConfigurationDetail(
       configurationId: input.configurationId,
     },
   });
-  /* c8 ignore start -- data-layer-ignore: widget-configuration-detail-identity-assert */
+  /* c8 ignore start -- Recording-unreachable by construction for supported reads: configuration detail retains its requested identities, while mismatch permutations are pinned at the production-adapter seam. */
   assert(
     ['', input.configurationId.toUpperCase()].includes(returnedConfigurationId.toUpperCase()),
     mismatch,
@@ -750,13 +750,13 @@ function widgetEntityLabels(
   const metadata = isRecord(widget.metadata) ? widget.metadata : undefined;
   const rawEntities = metadata?.entityMetadata;
   if (rawEntities === undefined || rawEntities === null) return [];
-  /* c8 ignore start -- data-layer-ignore: widget-snippet-entity-metadata-container-assert */
+  /* c8 ignore start -- Recording-unreachable by construction: the fresh #1563 live scan returned only absent or record-shaped entity metadata; the malformed provider shape is pinned at the Widget interface seam. */
   if (!isRecord(rawEntities)) {
     return unsupportedWidgetModuleShape('widget', 'entity-metadata-not-record');
   }
   /* c8 ignore stop */
   return Object.entries(rawEntities).map(([identity, value], index) => {
-    /* c8 ignore start -- data-layer-ignore: widget-snippet-entity-metadata-entry-assert */
+    /* c8 ignore start -- Recording-unreachable by construction: the fresh #1563 live scan returned only record-shaped entries; the malformed provider shape is pinned at the Widget interface seam. */
     if (!isRecord(value)) {
       return unsupportedWidgetModuleEntry(
         'widget',
@@ -766,7 +766,7 @@ function widgetEntityLabels(
     }
     /* c8 ignore stop */
     const label = cleanRecordText(value.name);
-    /* c8 ignore start -- data-layer-ignore: widget-snippet-entity-metadata-name-assert */
+    /* c8 ignore start -- Recording-unreachable by construction: the fresh #1563 live scan returned named entity metadata entries; the malformed provider shape is pinned at the Widget interface seam. */
     if (!label) {
       return unsupportedWidgetModuleEntry(
         'widget',
@@ -1153,7 +1153,7 @@ async function resolveSemanticAssignment(
   echo?: string;
 }>>> {
   const input = widget.inputs.get(assignment.field);
-  /* c8 ignore next 3 -- data-layer-ignore: widget-public-render-passthrough-assignment-input */
+  /* c8 ignore next 3 -- Recording-unreachable: this branch is selected by the in-process assignment name; CLI --param names are rejected as unknown inputs earlier, and focused interface tests pin unknown assignments. */
   if (!input) {
     return { ok: true, value: { assignment } };
   }
@@ -1286,7 +1286,7 @@ function semanticRenderInputError(
   selectedContext: string | null,
   inputSource: SemanticInputSource,
 ): WidgetError | undefined {
-  /* c8 ignore start -- data-layer-ignore: widget-public-render-context-validation-input */
+  /* c8 ignore start -- Recording-unreachable: both arms are selected by the in-process Widget Definition, Selected Context, and assignment arguments; focused interface and adapter tests pin the typed failures. */
   if (
     inputSource === 'identity'
     && isQuickPollWidget(input.widget)
@@ -1768,7 +1768,7 @@ function applySemanticParameterResolutions(
 ): void {
   for (const [index, resolution] of pending.entries()) {
     const resolved = resolvedValues[index];
-    /* c8 ignore start -- data-layer-ignore: widget-render-entity-result-assert */
+    /* c8 ignore start -- Recording-unreachable by construction: production Entity.resolve validates and restores the requested order before returning; focused Widget interface tests inject missing and malformed results to pin the closed failure. */
     if (!resolved || resolved.kind !== resolution.input.kind) {
       throw new WidgetSnippetDisplayError(resolution.uses[0].field);
     }
@@ -2229,7 +2229,7 @@ function semanticPlotToolControls(
 }
 
 function plotToolNow(): Date {
-  /* c8 ignore next -- data-layer-ignore: widget-plot-now-input */
+  /* c8 ignore next -- The branch is process-environment control rather than provider data; contract and interface tests pin deterministic clock use. */
   return process.env.MARQUEE_NOW ? new Date(process.env.MARQUEE_NOW) : new Date();
 }
 
@@ -2607,7 +2607,7 @@ export function createWidgetProductionModule(
     const assignments: Readonly<{ field: string; value: unknown }>[] = [];
     for (const assignment of visibleRequested) {
       const definition = byName.get(assignment.field);
-      /* c8 ignore start -- data-layer-ignore: widget-render-unknown-assignment */
+      /* c8 ignore start -- Recording-unreachable in this expansion: standalone Widget.get resolves CLI fields before render, while focused interface tests pin the closed direct-render failure. */
       if (!definition) {
         return {
           ok: false,
@@ -2645,7 +2645,7 @@ export function createWidgetProductionModule(
       input,
       selected,
     );
-    /* c8 ignore next -- data-layer-ignore: widget-render-applied-input */
+    /* c8 ignore next -- Recording-unreachable: the branch is selected by an invocation-local --param field or value rejected before any request; the production-adapter test pins an unknown full-read parameter. */
     if (!assignments.ok) return assignments;
     const configurationChanged = needsSemanticConfiguration(input, assignments.value);
     const effectiveAssignments = configurationChanged
@@ -2957,7 +2957,7 @@ export function createWidgetProductionModule(
         : [],
     });
     const detail = configurationRecordFromResponse(created);
-    /* c8 ignore start -- data-layer-ignore: widget-default-config-mint-assert */
+    /* c8 ignore start -- Recording-unreachable by construction for supported default resolution: successful Config creation returns an identity, while the malformed response is pinned at the production-adapter seam. */
     const configurationId = detail ? cleanRecordText(detail.id) : '';
     if (!detail || !configurationId) {
       throw new WidgetSemanticFailure(

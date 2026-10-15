@@ -22,7 +22,7 @@
   },
   "scripts": {
     "clean": "node -e \"const fs = require('node:fs'); for (const path of ['dist', 'tsconfig.tsbuildinfo']) fs.rmSync(path, { recursive: true, force: true })\"",
-    "build": "npm run clean && esbuild cli-composition/main.ts --bundle --platform=node --format=esm --minify --external:agent-browser --external:tinycolor2 --external:@opentelemetry/* --banner:js=\"import{createRequire}from'node:module';const require=createRequire(import.meta.url);\" --outfile=dist/cli.js && node -e \"require('node:fs').chmodSync('dist/cli.js', 0o755)\"",
+    "build": "npm run clean && esbuild cli-composition/main.ts --bundle --platform=node --format=esm --external:agent-browser --external:tinycolor2 --external:@opentelemetry/* --banner:js=\"import{createRequire as __marqueeCreateRequire}from'node:module';const require=__marqueeCreateRequire(import.meta.url);\" --outfile=dist/cli.js && node -e \"require('node:fs').chmodSync('dist/cli.js', 0o755)\"",
     "build:coverage": "npm run clean && tsc -p tsconfig.json && node -e \"const fs = require('node:fs'); fs.writeFileSync('dist/cli.js', ['#!/usr/bin/env node', \\\"import './cli-composition/main.js';\\\", ''].join('\\n')); fs.chmodSync('dist/cli.js', 0o755)\"",
     "postinstall": "node scripts/install-skill.mjs",
     "prepack": "npm run build",

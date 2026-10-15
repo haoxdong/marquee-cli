@@ -15,7 +15,7 @@ function dataVizApi(request: Mock): DataVizApi {
 const rendered = { renderData: { data: [], layout: {} } };
 
 describe('Widget render pipeline DataViz lane', () => {
-  it('fetches the visualization spec before rendering a Widget', async () => {
+  it('fetches the visualization spec and renders a Widget', async () => {
     const request = vi.fn()
       .mockResolvedValueOnce({ parameters: {} })
       .mockResolvedValueOnce(rendered);
@@ -23,15 +23,15 @@ describe('Widget render pipeline DataViz lane', () => {
     await expect(
       renderDataVizLane(dataVizApi(request), {
         mode: 'widget',
-        targetId: 'DV_SEQUENTIAL',
+        targetId: 'DV_RENDER',
         widget: { parameters: [] },
       }),
     ).resolves.toBe(rendered);
 
     expect(request.mock.calls).toEqual([
-      ['/v1/data/visualizations/DV_SEQUENTIAL'],
+      ['/v1/data/visualizations/DV_RENDER'],
       [
-        '/v1/data/visualizations/DV_SEQUENTIAL/render',
+        '/v1/data/visualizations/DV_RENDER/render',
         {
           method: 'POST',
           body: {
@@ -42,6 +42,37 @@ describe('Widget render pipeline DataViz lane', () => {
         },
       ],
     ]);
+  });
+
+  it.each(['widget', 'base-component'] as const)(
+    'renders %s while its spec response is pending and propagates spec failure',
+    async (mode) => {
+      let rejectSpec!: (reason: Error) => void;
+      const spec = new Promise<never>((_, reject) => { rejectSpec = reject; });
+      const request = vi.fn().mockReturnValueOnce(spec).mockResolvedValueOnce(rendered);
+      const result = renderDataVizLane(dataVizApi(request), mode === 'widget'
+        ? { mode, targetId: 'DV_RENDER', widget: { parameters: [] } }
+        : { mode, targetId: 'DV_COMPONENT' });
+      const failure = new Error('spec unavailable');
+      const assertion = expect(result).rejects.toBe(failure);
+      expect(request.mock.calls).toHaveLength(2);
+      rejectSpec(failure);
+      await assertion;
+    },
+  );
+
+  it('propagates a render failure even while the spec response is pending', async () => {
+    let resolveSpec!: (value: unknown) => void;
+    const spec = new Promise((resolve) => { resolveSpec = resolve; });
+    const failure = new Error('render unavailable');
+    const request = vi.fn().mockReturnValueOnce(spec).mockRejectedValueOnce(failure);
+    try {
+      await expect(renderDataVizLane(dataVizApi(request), {
+        mode: 'widget', targetId: 'DV_RENDER', widget: { parameters: [] },
+      })).rejects.toBe(failure);
+    } finally {
+      resolveSpec({});
+    }
   });
 
   it('lets saved render params preempt the entire Widget body cascade', async () => {

@@ -95,7 +95,7 @@ export function formatDefaultDisplay(param: WidgetParameter): string {
   }
   // Show the rule with the date it currently resolves to (the freshest same-rule
   // option, which matches what the widget actually renders — see the relative
-  // `Date` default note in docs/api/marquee-rest-api-reference.md). The stale
+  // `Date` default note in docs/reference/marquee-rest-api.md). The stale
   // metadata concrete is non-behavioral, so it is not surfaced.
   const concreteDisplay = currentConcreteDateOption(param, rawDefault) ?? rawDefault.concrete;
   return `${baseDisplay} [${concreteDisplay}]`;

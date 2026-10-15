@@ -87,7 +87,7 @@ function widgetComponent(widget: WidgetPayload): Record<string, unknown> {
 }
 
 function parameterField(param: Record<string, unknown>): string {
-  /* c8 ignore start -- data-layer-ignore: widget-params-field-assert */
+  /* c8 ignore start -- Recording-unreachable by construction for supported Widgets: parameter definitions carry non-empty string fields; malformed response shapes are pinned by the buildWidgetParams unit tests. */
   assertWidgetPayloadShape(
     typeof param.field === 'string' && param.field.length > 0,
     'parameter field is missing or not a string',
@@ -98,7 +98,7 @@ function parameterField(param: Record<string, unknown>): string {
 
 function requiredControlField(control: Record<string, unknown>): string {
   const field = controlField(control);
-  /* c8 ignore start -- data-layer-ignore: widget-control-field-assert */
+  /* c8 ignore start -- Recording-unreachable by construction for supported Widgets: visible controls carry non-empty string fields; malformed response shapes are pinned by the buildWidgetParams unit tests. */
   assertWidgetPayloadShape(
     typeof field === 'string' && field.length > 0,
     'control field is missing',
@@ -384,7 +384,7 @@ function definedParameters(
   for (const param of widgetParameters(widget)) {
     const field = parameterField(param);
     if (claimed.has(field) || params.some((defined) => defined.field === field)) continue;
-    /* c8 ignore next -- data-layer-ignore: widget-params-ch-asset-suppression-assert */
+    /* c8 ignore next -- Recording-unreachable by construction: the call throws only for the unsupported CH asset-number shape that the Replay corpus and live scan never emit. */
     assertWidgetPayloadShape(isDV || !hasControls || !/^asset\d+$/i.test(field), 'CH asset# parameter requires suppression');
     const rawValues = responseOptionValues(param, 'parameter');
     const rawDefault = parameterDefault(param, component[field]);
