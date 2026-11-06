@@ -1,0 +1,292 @@
+{
+  "status": 200,
+  "body": {
+    "results": [
+      {
+        "name": "add",
+        "group": "algebra",
+        "description": "Example description of add.",
+        "parameters": [
+          {
+            "name": "x",
+            "variadic": false
+          },
+          {
+            "name": "y",
+            "variadic": false
+          },
+          {
+            "name": "method",
+            "variadic": false,
+            "default": "step",
+            "values": ["intersect", "step", "nan", "zero", "time"]
+          }
+        ],
+        "returns": {
+          "type": "series"
+        }
+      },
+      {
+        "name": "correlation",
+        "group": "statistics",
+        "description": "Example description of correlation.",
+        "parameters": [
+          {
+            "name": "x",
+            "variadic": false
+          },
+          {
+            "name": "y",
+            "variadic": false
+          },
+          {
+            "name": "w",
+            "variadic": false
+          }
+        ],
+        "returns": {
+          "type": "series"
+        }
+      },
+      {
+        "name": "moving_average",
+        "group": "technicals",
+        "description": "Example description of moving_average.",
+        "parameters": [
+          {
+            "name": "x",
+            "variadic": false
+          },
+          {
+            "name": "w",
+            "variadic": false
+          }
+        ],
+        "returns": {
+          "type": "series"
+        }
+      },
+      {
+        "name": "zscores",
+        "group": "statistics",
+        "description": "Example description of zscores.",
+        "parameters": [
+          {
+            "name": "x",
+            "variadic": false
+          },
+          {
+            "name": "w",
+            "variadic": false
+          }
+        ],
+        "returns": {
+          "type": "series"
+        }
+      }
+    ],
+    "classes": [
+      {
+        "name": "Dataset",
+        "group": "constructors",
+        "description": "Example description of Dataset.",
+        "parameters": [
+          {
+            "name": "id_",
+            "variadic": false
+          }
+        ],
+        "returns": {
+          "type": "Dataset",
+          "methods": [
+            {
+              "name": "ask_price",
+              "description": "Example description of ask_price.",
+              "parameters": [
+                {
+                  "name": "asset",
+                  "variadic": false
+                }
+              ],
+              "returns": {
+                "type": "series"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "FRED",
+        "group": "constructors",
+        "description": "Example description of FRED.",
+        "parameters": [
+          {
+            "name": "id_",
+            "variadic": false
+          }
+        ],
+        "returns": {
+          "type": "FRED",
+          "methods": [
+            {
+              "name": "value",
+              "description": "Example description of value.",
+              "parameters": [],
+              "returns": {
+                "type": "series"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "HAVER",
+        "group": "constructors",
+        "description": "Example description of HAVER.",
+        "parameters": [
+          {
+            "name": "id_",
+            "variadic": false
+          },
+          {
+            "name": "database_",
+            "variadic": false
+          }
+        ],
+        "returns": {
+          "type": "HAVER",
+          "methods": [
+            {
+              "name": "value",
+              "description": "Example description of value.",
+              "parameters": [],
+              "returns": {
+                "type": "series"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "IRSwap",
+        "group": "Instruments",
+        "description": "Example description of IRSwap.",
+        "parameters": [
+          {
+            "name": "notional_currency",
+            "variadic": false,
+            "default": "USD"
+          },
+          {
+            "name": "pay_or_receive",
+            "variadic": false,
+            "default": "pay",
+            "values": ["pay", "receive"]
+          },
+          {
+            "name": "termination_date",
+            "variadic": false,
+            "default": "10y"
+          },
+          {
+            "name": "fixed_rate_reference",
+            "variadic": false,
+            "default": "atmf",
+            "values": ["absolute", "atmf", "premium"]
+          },
+          {
+            "name": "relative_fixed_rate",
+            "variadic": false,
+            "default": 0.0
+          },
+          {
+            "name": "effective_date",
+            "variadic": false,
+            "default": "0b"
+          },
+          {
+            "name": "notional_amount",
+            "variadic": false,
+            "default": 10000.0
+          }
+        ],
+        "returns": {
+          "type": "IRSwap",
+          "methods": [
+            {
+              "name": "annuity_value",
+              "description": "Example description of annuity_value.",
+              "parameters": [],
+              "returns": {
+                "type": "series"
+              }
+            },
+            {
+              "name": "delta",
+              "description": "Example description of delta.",
+              "parameters": [],
+              "returns": {
+                "type": "series"
+              }
+            },
+            {
+              "name": "fixed_rate_level",
+              "description": "Example description of fixed_rate_level.",
+              "parameters": [],
+              "returns": {
+                "type": "series"
+              }
+            },
+            {
+              "name": "forward",
+              "description": "Example description of forward.",
+              "parameters": [],
+              "returns": {
+                "type": "series"
+              }
+            },
+            {
+              "name": "price",
+              "description": "Example description of price.",
+              "parameters": [],
+              "returns": {
+                "type": "series"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "MarketCoordinate",
+        "group": "constructors",
+        "description": "Example description of MarketCoordinate.",
+        "parameters": [
+          {
+            "name": "coordinate",
+            "variadic": false
+          }
+        ],
+        "returns": {
+          "type": "MarketCoordinate",
+          "methods": [
+            {
+              "name": "value",
+              "description": "Example description of value.",
+              "parameters": [
+                {
+                  "name": "location",
+                  "variadic": false,
+                  "default": "NYC",
+                  "values": ["NYC", "LDN", "TKO", "HKG"]
+                }
+              ],
+              "returns": {
+                "type": "series"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

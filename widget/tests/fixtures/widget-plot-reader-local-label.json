@@ -1,0 +1,200 @@
+{
+  "definition": {
+    "chartType": "line",
+    "expressions": [
+      {
+        "color": "#83868b",
+        "fill": "None",
+        "lineDrawType": "Lines",
+        "lineType": "Solid",
+        "lineWidth": 2,
+        "hasYGrid": true,
+        "axis": "Right",
+        "label": "NKY Spot",
+        "hide": false
+      },
+      {
+        "color": "#279c9c",
+        "fill": "None",
+        "lineDrawType": "Lines",
+        "lineType": "Solid",
+        "lineWidth": 1,
+        "hasYGrid": true,
+        "axis": "Right",
+        "label": "nky close",
+        "hide": true
+      },
+      {
+        "color": "#ac71f0",
+        "fill": "None",
+        "lineDrawType": "Lines",
+        "lineType": "Solid",
+        "lineWidth": 1,
+        "hasYGrid": true,
+        "axis": "Right",
+        "label": "",
+        "hide": true
+      },
+      {
+        "color": "#279c9c",
+        "fill": "None",
+        "lineDrawType": "Lines",
+        "lineType": "Solid",
+        "lineWidth": 1,
+        "hasYGrid": false,
+        "axis": "Right2",
+        "label": "NKY 1m 110 Call vs 90 Put",
+        "hide": true
+      },
+      {
+        "color": "#d9a514",
+        "fill": "None",
+        "lineDrawType": "Lines",
+        "lineType": "Solid",
+        "lineWidth": 1,
+        "axis": "Right",
+        "label": "",
+        "hide": true
+      },
+      {
+        "color": "#23254d",
+        "fill": "None",
+        "lineDrawType": "Lines",
+        "lineType": "Solid",
+        "lineWidth": 1,
+        "axis": "Right",
+        "label": "",
+        "hide": true
+      },
+      {
+        "color": "#0d4ea6",
+        "fill": "None",
+        "lineDrawType": "Lines",
+        "lineType": "Solid",
+        "lineWidth": 2,
+        "axis": "Right2",
+        "label": "NKY 1m 110 call vs 90 put ",
+        "hide": false
+      },
+      {
+        "color": "#e82727",
+        "fill": "None",
+        "lineDrawType": "Lines",
+        "lineType": "Solid",
+        "lineWidth": 2,
+        "axis": "Right3",
+        "label": "1m ATM Implied Vol",
+        "hide": false
+      }
+    ],
+    "timeSettings": {
+      "start": "00:00:00",
+      "end": "23:59:59",
+      "timezone": "Asia/Hong_Kong"
+    },
+    "yAxesSettings": [
+      {
+        "decimalPrecision": 2,
+        "id": "Right",
+        "label": "",
+        "labelFormat": "none",
+        "showGridLines": true,
+        "hide": false
+      },
+      {
+        "decimalPrecision": 2,
+        "id": "Right2",
+        "label": "",
+        "labelFormat": "none",
+        "showGridLines": true,
+        "hide": false
+      },
+      {
+        "decimalPrecision": 2,
+        "id": "Right3",
+        "label": "",
+        "labelFormat": "none",
+        "showGridLines": true,
+        "hide": false
+      },
+      {
+        "decimalPrecision": 2,
+        "id": "Left",
+        "label": "",
+        "labelFormat": "none",
+        "showGridLines": true,
+        "hide": false
+      },
+      {
+        "decimalPrecision": 2,
+        "id": "Left2",
+        "label": "",
+        "labelFormat": "none",
+        "showGridLines": true,
+        "hide": false
+      },
+      {
+        "decimalPrecision": 2,
+        "id": "Left3",
+        "label": "",
+        "labelFormat": "none",
+        "showGridLines": true,
+        "hide": false
+      }
+    ]
+  },
+  "results": [
+    {
+      "type": "series",
+      "values": {
+        "2026-10-08T03:00:00Z": 50000.4
+      }
+    },
+    {
+      "type": "series",
+      "values": {}
+    },
+    {
+      "type": "series",
+      "values": {}
+    },
+    {
+      "type": "series",
+      "values": {}
+    },
+    {
+      "type": "series",
+      "values": {
+        "2026-10-08T03:21:37Z": 20.12345678
+      }
+    },
+    {
+      "type": "series",
+      "values": {
+        "2026-10-08T03:21:37Z": 25.12345678
+      }
+    },
+    {
+      "type": "series",
+      "values": {
+        "2026-10-08T03:21:37Z": 0.80098765
+      }
+    },
+    {
+      "type": "series",
+      "values": {
+        "2026-10-08T03:21:37Z": 22.12345678
+      }
+    }
+  ],
+  "expressions": [
+    "NKY.spot()",
+    "call = EqOption(NKY, call,1m, spot,110).implied_volatility()",
+    "put = EqOption(NKY,put,1m,spot,90).implied_volatility()",
+    "call / put",
+    "cimp = NKY.implied_volatility(1m, spot,110)",
+    "pimp = NKY.implied_volatility(1m,spot,90)",
+    "cimp/pimp",
+    "NKY.implied_volatility(tenor=1m,strike_reference=spot,relative_strike=100)"
+  ]
+}

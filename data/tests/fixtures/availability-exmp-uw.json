@@ -1,0 +1,273 @@
+{
+  "status": 200,
+  "body": {
+    "measures": [
+      {
+        "name": "spot",
+        "description": "Example description of spot.",
+        "datasets": [],
+        "parameters": [],
+        "restrictions": {
+          "asset_class": ["Equity", "FX"]
+        }
+      },
+      {
+        "name": "factset_estimates",
+        "description": "Example description of factset_estimates.",
+        "datasets": [],
+        "parameters": [
+          {
+            "name": "metric",
+            "variadic": false,
+            "default": "Earnings Per Share",
+            "values": [
+              "Earnings Per Share",
+              "Consolidated EPS",
+              "Sales",
+              "Total Debt"
+            ]
+          },
+          {
+            "name": "statistic",
+            "variadic": false,
+            "default": "Mean",
+            "values": ["Mean", "Median", "High", "Low", "Actual"]
+          },
+          {
+            "name": "report_basis",
+            "variadic": false,
+            "default": "Annual",
+            "values": [
+              "Annual",
+              "Quarterly",
+              "Semi annual",
+              "Next Twelve Months",
+              "Second Twelve Months"
+            ]
+          },
+          {
+            "name": "period",
+            "variadic": false,
+            "default": 1
+          }
+        ],
+        "restrictions": {
+          "asset_class": ["Equity"],
+          "asset_type": ["Single Stock"]
+        }
+      },
+      {
+        "name": "forward_vol",
+        "description": "Example description of forward_vol.",
+        "datasets": [],
+        "parameters": [
+          {
+            "name": "tenor",
+            "variadic": false
+          },
+          {
+            "name": "forward_start_date",
+            "variadic": false
+          },
+          {
+            "name": "strike_reference",
+            "variadic": false,
+            "values": [
+              "delta_call",
+              "delta_put",
+              "delta_neutral",
+              "normalized",
+              "spot",
+              "forward"
+            ]
+          },
+          {
+            "name": "relative_strike",
+            "variadic": false
+          }
+        ],
+        "restrictions": {
+          "asset_class": ["Equity", "FX"]
+        },
+        "autocomplete": [
+          {
+            "name": "tenor",
+            "values": [
+              {
+                "conditions": {
+                  "assetClass": ["FX"]
+                },
+                "default": "1y",
+                "allowed": [
+                  "1m",
+                  "2m",
+                  "3m",
+                  "4m",
+                  "5m",
+                  "6m",
+                  "7m",
+                  "8m",
+                  "9m",
+                  "10m",
+                  "11m",
+                  "1y",
+                  "15m",
+                  "18m",
+                  "21m",
+                  "2y",
+                  "27m",
+                  "30m",
+                  "3y",
+                  "42m",
+                  "4y",
+                  "54m"
+                ]
+              },
+              {
+                "conditions": {
+                  "assetClass": ["Equity"]
+                },
+                "default": "1m",
+                "allowed": [
+                  "1m",
+                  "2m",
+                  "3m",
+                  "4m",
+                  "5m",
+                  "6m",
+                  "7m",
+                  "8m",
+                  "9m",
+                  "1y",
+                  "13m",
+                  "14m",
+                  "15m",
+                  "18m",
+                  "21m",
+                  "2y",
+                  "27m",
+                  "30m",
+                  "3y",
+                  "4y",
+                  "5y",
+                  "6y",
+                  "7y",
+                  "8y",
+                  "9y"
+                ]
+              }
+            ]
+          },
+          {
+            "name": "forward_start_date",
+            "values": [
+              {
+                "conditions": {
+                  "assetClass": ["FX"]
+                },
+                "default": "1y"
+              },
+              {
+                "conditions": {
+                  "assetClass": ["Equity"]
+                },
+                "default": "1m"
+              }
+            ]
+          },
+          {
+            "name": "relative_strike",
+            "values": [
+              {
+                "conditions": {
+                  "strike_reference": ["spot", "forward"],
+                  "assetClass": ["FX"]
+                },
+                "default": 100,
+                "allowed": [100]
+              },
+              {
+                "conditions": {
+                  "strike_reference": ["spot", "forward"],
+                  "assetClass": ["Equity"]
+                },
+                "default": 100,
+                "allowed": [
+                  40, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 97.5, 100, 102.5,
+                  105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 175, 200
+                ]
+              },
+              {
+                "conditions": {
+                  "strike_reference": ["delta_call", "delta_put"],
+                  "assetClass": ["FX"]
+                },
+                "default": 50,
+                "allowed": [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
+              },
+              {
+                "conditions": {
+                  "strike_reference": ["delta_call", "delta_put"],
+                  "assetClass": ["Equity"]
+                },
+                "default": 50,
+                "allowed": [
+                  5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80,
+                  85, 90, 95
+                ]
+              },
+              {
+                "conditions": {
+                  "strike_reference": "normalized"
+                },
+                "default": 0,
+                "allowed": [
+                  -0.25, -0.5, -0.75, -1, -1.5, -2, -2.5, -3, -3.5, -4, 0, 0.25,
+                  0.5, 0.75, 1, 1.5, 2, 2.5, 3, 3.5, 4
+                ]
+              },
+              {
+                "conditions": {
+                  "strike_reference": ["delta_neutral"],
+                  "assetClass": ["FX"]
+                },
+                "default": 0,
+                "allowed": [0]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "var_swap",
+        "description": "Example description of var_swap.",
+        "datasets": [],
+        "parameters": [
+          {
+            "name": "tenor",
+            "variadic": false,
+            "default": "1y"
+          }
+        ],
+        "restrictions": {
+          "asset_class": ["Equity"]
+        }
+      },
+      {
+        "name": "fx_swap_rate",
+        "description": "Example description of fx_swap_rate.",
+        "datasets": [],
+        "parameters": [
+          {
+            "name": "tenor",
+            "variadic": false,
+            "default": "1y"
+          }
+        ],
+        "restrictions": {
+          "asset_class": ["FX"]
+        }
+      }
+    ]
+  }
+}

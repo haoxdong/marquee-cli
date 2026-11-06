@@ -1,0 +1,214 @@
+{
+  "requestBody": {
+    "expressions": [
+      "FRED(UNRATE).value()",
+      "FRED('UNRATE').value()",
+      "EXMP.spot()",
+      "XFUZ8.price()",
+      "IRSwap(USD, pay, 5y, atmf, 0, 5y).swap_rate()",
+      "EXMP UW.factset_estimates(EPS, Mean, Annual, 1)",
+      "EXMP UW.swap_rate()",
+      "MarketCoordinate(\"IR_USD_EXAMPLE_DEC26.PRICE\").value(XYZ)",
+      "zscores()",
+      "XFUZ8 Comdty.price()"
+    ],
+    "statistics": true,
+    "realTime": false,
+    "hints": [],
+    "variables": {},
+    "interval": "1D",
+    "startDate": "2025-10-16",
+    "endDate": "2026-10-16"
+  },
+  "status": 404,
+  "body": {
+    "results": [
+      {
+        "type": "series",
+        "values": {
+          "2025-11-01": 4.5,
+          "2025-12-01": 4.4,
+          "2026-01-01": 4.3,
+          "2026-02-01": 4.4,
+          "2026-03-01": 4.3,
+          "2026-04-01": 4.3,
+          "2026-05-01": 4.3,
+          "2026-06-01": 4.2,
+          "2026-07-01": 4.1,
+          "2026-08-01": 4.1,
+          "2026-09-01": 4.2
+        }
+      },
+      {
+        "error": "Error",
+        "message": "Bad Request (unparsable expression FRED('UNRATE').value(): No terminal matches ''' in the current parser context, at line 1 col 6) (Historical mode)",
+        "statusCode": 400
+      },
+      {
+        "error": "Error",
+        "message": "Not Found (did not find any entities for EXMP) (Historical mode)",
+        "statusCode": 404
+      },
+      {
+        "error": "Error",
+        "message": "Not Found (did not find any entities for XFUZ8) (Historical mode)",
+        "statusCode": 404
+      },
+      {
+        "error": "Error",
+        "message": "Bad Request (object does not have attribute: swap_rate) (Historical mode)",
+        "statusCode": 400
+      },
+      {
+        "error": "Error",
+        "message": "Bad Request (EPS is not valid; allowed values are [Earnings Per Share, Consolidated EPS, Sales, Total Debt]) (Historical mode)",
+        "statusCode": 400
+      },
+      {
+        "error": "Error",
+        "message": "Not Found (Markets endpoint: 00000000-0000-4000-8000-000000000021 DataSet not found for entity with id: MA_SYNTHETIC_EXMP_UW ,EXMP UW) (Historical mode)",
+        "statusCode": 404
+      },
+      {
+        "error": "Error",
+        "message": "Bad Request (XYZ is not valid; allowed values are [NYC, LDN, TKO, HKG]) (Historical mode)",
+        "statusCode": 400
+      },
+      {
+        "error": "Error",
+        "message": "Bad Request (zscores(): zscores() missing 1 required positional argument: 'x') (Historical mode)",
+        "statusCode": 400
+      },
+      {
+        "error": "Error",
+        "message": "Not Found (Markets endpoint: 00000000-0000-4000-8000-000000000022 DataSet not found for entity with id: MA_SYNTHETIC_XFUZ8 ,XFUZ8 Comdty) (Historical mode)",
+        "statusCode": 404
+      }
+    ],
+    "statistics": [
+      {
+        "low": {
+          "value": 4.1,
+          "keys": ["2026-07-01", "2026-08-01"]
+        },
+        "high": {
+          "value": 4.5,
+          "keys": ["2025-11-01"]
+        },
+        "first": {
+          "value": 4.5,
+          "keys": ["2025-11-01"]
+        },
+        "last": {
+          "value": 4.2,
+          "keys": ["2026-09-01"]
+        },
+        "median": {
+          "value": 4.3
+        },
+        "avg": {
+          "value": 4.281818181818182
+        },
+        "stdDev": {
+          "value": 0.12504544628399578
+        },
+        "zscore": {
+          "value": -0.6543075677650942
+        },
+        "percentile": {
+          "value": 31.81818181818182
+        }
+      },
+      {
+        "error": "Error",
+        "message": "No statistics for non-series object."
+      },
+      {
+        "error": "Error",
+        "message": "No statistics for non-series object."
+      },
+      {
+        "error": "Error",
+        "message": "No statistics for non-series object."
+      },
+      {
+        "error": "Error",
+        "message": "No statistics for non-series object."
+      },
+      {
+        "error": "Error",
+        "message": "No statistics for non-series object."
+      },
+      {
+        "error": "Error",
+        "message": "No statistics for non-series object."
+      },
+      {
+        "error": "Error",
+        "message": "No statistics for non-series object."
+      },
+      {
+        "error": "Error",
+        "message": "No statistics for non-series object."
+      },
+      {
+        "error": "Error",
+        "message": "No statistics for non-series object."
+      }
+    ],
+    "asset_ids": ["MA_SYNTHETIC_EXMP_UW", "MA_SYNTHETIC_XFUZ8"],
+    "entities": [
+      [],
+      [],
+      [],
+      [],
+      [],
+      [
+        {
+          "entityName": "EXMP UW",
+          "mqid": "MA_SYNTHETIC_EXMP_UW",
+          "type": "asset",
+          "assetName": "Example Corp",
+          "properties": {
+            "assetClass": "Equity",
+            "description": "",
+            "assetType": "Single Stock",
+            "region": null
+          }
+        }
+      ],
+      [
+        {
+          "entityName": "EXMP UW",
+          "mqid": "MA_SYNTHETIC_EXMP_UW",
+          "type": "asset",
+          "assetName": "Example Corp",
+          "properties": {
+            "assetClass": "Equity",
+            "description": "",
+            "assetType": "Single Stock",
+            "region": null
+          }
+        }
+      ],
+      [],
+      [],
+      [
+        {
+          "entityName": "Example Rate Future DEC28",
+          "mqid": "MA_SYNTHETIC_XFUZ8",
+          "type": "asset",
+          "assetName": "Example Rate Future DEC28",
+          "properties": {
+            "assetClass": "Commod",
+            "description": "",
+            "assetType": "Future",
+            "region": null
+          }
+        }
+      ]
+    ],
+    "datasets": ["FRED"],
+    "tsdb_symbols": []
+  }
+}

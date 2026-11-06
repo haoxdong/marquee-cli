@@ -1,0 +1,51 @@
+{
+  "measures": [
+    {
+      "origin": "market_data",
+      "returns": {
+        "type": "series",
+        "description": "date-based time series of absolute value"
+      },
+      "datasets": [
+        {
+          "id": "FXVOL_SYNTHETIC",
+          "linkable": true,
+          "vendor": "Example Vendor"
+        }
+      ],
+      "group": "measures",
+      "frequency": "End Of Day",
+      "apparent_frequency": "End Of Day",
+      "name": "implied_volatility",
+      "description": "Volatility of an asset implied by observations of market prices.",
+      "parameters": [
+        {
+          "name": "assetId",
+          "variadic": false,
+          "type": "string",
+          "description": "Marquee unique asset identifier."
+        },
+        {
+          "name": "tenor",
+          "variadic": false,
+          "type": "string",
+          "description": "Tenor of instrument."
+        },
+        {
+          "name": "deltaStrike",
+          "variadic": false,
+          "type": "string",
+          "description": "Option strike price expressed in terms of delta * 100."
+        }
+      ],
+      "autocomplete": [
+        {
+          "name": "deltaStrike",
+          "default": "25DC",
+          "values": ["25DC", "DN", "25DP"]
+        }
+      ]
+    }
+  ],
+  "requestId": "synthetic-request"
+}

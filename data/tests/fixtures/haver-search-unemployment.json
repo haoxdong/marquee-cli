@@ -1,0 +1,240 @@
+{
+  "results": {
+    "data": [
+      {
+        "haverid": "X01LST",
+        "database": "EXDB",
+        "description": "Exampleland: Long-term unemployment as a % of unemployment (NSA, %)",
+        "groupdescription": "Exampleland: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X01ULT",
+        "database": "EXDB",
+        "description": "Exampleland: Long-term unemployment as a % of active population (NSA, %)",
+        "groupdescription": "Exampleland: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X01UVF",
+        "database": "EXDB",
+        "description": "Exampleland: Very long-term unemployment as a % active population: Females (NSA, %)",
+        "groupdescription": "Exampleland: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X01ULM",
+        "database": "EXDB",
+        "description": "Exampleland: Long-term unemployment as a % of active population: Males (NSA, %)",
+        "groupdescription": "Exampleland: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X01LSF",
+        "database": "EXDB",
+        "description": "Exampleland: Long-term unemployment as a % of unemployment: Females (NSA, %)",
+        "groupdescription": "Exampleland: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X01LSM",
+        "database": "EXDB",
+        "description": "Exampleland: Long-term unemployment as a % of unemployment: Males (NSA, %)",
+        "groupdescription": "Exampleland: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X01UVM",
+        "database": "EXDB",
+        "description": "Exampleland: Very long-term unemployment as a % active population: Males (NSA, %)",
+        "groupdescription": "Exampleland: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X01UVT",
+        "database": "EXDB",
+        "description": "Exampleland: Very long-term unemployment as a % active population (NSA, %)",
+        "groupdescription": "Exampleland: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X01ULF",
+        "database": "EXDB",
+        "description": "Exampleland: Long-term unemployment as a % of active population: Females (NSA, %)",
+        "groupdescription": "Exampleland: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X01LSY",
+        "database": "EXDB",
+        "description": "Exampleland: Youth unemployment as a % of unemployment (NSA, %)",
+        "groupdescription": "Exampleland: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X01UYT",
+        "database": "EXDB",
+        "description": "Exampleland: Youth unemployment as a % of active population (NSA, %)",
+        "groupdescription": "Exampleland: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X01UYM",
+        "database": "EXDB",
+        "description": "Exampleland: Youth unemployment as a % of active population: Males (NSA, %)",
+        "groupdescription": "Exampleland: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X01UYF",
+        "database": "EXDB",
+        "description": "Exampleland: Youth unemployment as a % of active population: Females (NSA, %)",
+        "groupdescription": "Exampleland: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X02LST",
+        "database": "EXDB",
+        "description": "Samplestan: Long-term unemployment as a % of unemployment (NSA, %)",
+        "groupdescription": "Samplestan: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X02ULT",
+        "database": "EXDB",
+        "description": "Samplestan: Long-term unemployment as a % of active population (NSA, %)",
+        "groupdescription": "Samplestan: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X02UVF",
+        "database": "EXDB",
+        "description": "Samplestan: Very long-term unemployment as a % active population: Females (NSA, %)",
+        "groupdescription": "Samplestan: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X02ULM",
+        "database": "EXDB",
+        "description": "Samplestan: Long-term unemployment as a % of active population: Males (NSA, %)",
+        "groupdescription": "Samplestan: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X02LSF",
+        "database": "EXDB",
+        "description": "Samplestan: Long-term unemployment as a % of unemployment: Females (NSA, %)",
+        "groupdescription": "Samplestan: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X02LSM",
+        "database": "EXDB",
+        "description": "Samplestan: Long-term unemployment as a % of unemployment: Males (NSA, %)",
+        "groupdescription": "Samplestan: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X02UVM",
+        "database": "EXDB",
+        "description": "Samplestan: Very long-term unemployment as a % active population: Males (NSA, %)",
+        "groupdescription": "Samplestan: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X02UVT",
+        "database": "EXDB",
+        "description": "Samplestan: Very long-term unemployment as a % active population (NSA, %)",
+        "groupdescription": "Samplestan: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X02ULF",
+        "database": "EXDB",
+        "description": "Samplestan: Long-term unemployment as a % of active population: Females (NSA, %)",
+        "groupdescription": "Samplestan: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X02LSY",
+        "database": "EXDB",
+        "description": "Samplestan: Youth unemployment as a % of unemployment (NSA, %)",
+        "groupdescription": "Samplestan: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X02UYT",
+        "database": "EXDB",
+        "description": "Samplestan: Youth unemployment as a % of active population (NSA, %)",
+        "groupdescription": "Samplestan: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X02UYM",
+        "database": "EXDB",
+        "description": "Samplestan: Youth unemployment as a % of active population: Males (NSA, %)",
+        "groupdescription": "Samplestan: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X02UYF",
+        "database": "EXDB",
+        "description": "Samplestan: Youth unemployment as a % of active population: Females (NSA, %)",
+        "groupdescription": "Samplestan: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X03LST",
+        "database": "EXDB",
+        "description": "Testonia: Long-term unemployment as a % of unemployment (NSA, %)",
+        "groupdescription": "Testonia: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X03ULT",
+        "database": "EXDB",
+        "description": "Testonia: Long-term unemployment as a % of active population (NSA, %)",
+        "groupdescription": "Testonia: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X03UVF",
+        "database": "EXDB",
+        "description": "Testonia: Very long-term unemployment as a % active population: Females (NSA, %)",
+        "groupdescription": "Testonia: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X03ULM",
+        "database": "EXDB",
+        "description": "Testonia: Long-term unemployment as a % of active population: Males (NSA, %)",
+        "groupdescription": "Testonia: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X03LSF",
+        "database": "EXDB",
+        "description": "Testonia: Long-term unemployment as a % of unemployment: Females (NSA, %)",
+        "groupdescription": "Testonia: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X03LSM",
+        "database": "EXDB",
+        "description": "Testonia: Long-term unemployment as a % of unemployment: Males (NSA, %)",
+        "groupdescription": "Testonia: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X03UVM",
+        "database": "EXDB",
+        "description": "Testonia: Very long-term unemployment as a % active population: Males (NSA, %)",
+        "groupdescription": "Testonia: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X03UVT",
+        "database": "EXDB",
+        "description": "Testonia: Very long-term unemployment as a % active population (NSA, %)",
+        "groupdescription": "Testonia: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X03ULF",
+        "database": "EXDB",
+        "description": "Testonia: Long-term unemployment as a % of active population: Females (NSA, %)",
+        "groupdescription": "Testonia: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X03LSY",
+        "database": "EXDB",
+        "description": "Testonia: Youth unemployment as a % of unemployment (NSA, %)",
+        "groupdescription": "Testonia: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X03UYT",
+        "database": "EXDB",
+        "description": "Testonia: Youth unemployment as a % of active population (NSA, %)",
+        "groupdescription": "Testonia: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X03UYM",
+        "database": "EXDB",
+        "description": "Testonia: Youth unemployment as a % of active population: Males (NSA, %)",
+        "groupdescription": "Testonia: Labour Market, Example Statistics Office, Quarterly"
+      },
+      {
+        "haverid": "X03UYF",
+        "database": "EXDB",
+        "description": "Testonia: Youth unemployment as a % of active population: Females (NSA, %)",
+        "groupdescription": "Testonia: Labour Market, Example Statistics Office, Quarterly"
+      }
+    ]
+  }
+}

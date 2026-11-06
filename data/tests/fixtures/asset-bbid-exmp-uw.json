@@ -1,0 +1,12 @@
+{
+  "totalResults": 1,
+  "results": [
+    {
+      "id": "MA_SYNTHETIC_EXMP_UW",
+      "bbid": "EXMP UW",
+      "name": "Example Corp",
+      "type": "Single Stock",
+      "assetClass": "Equity"
+    }
+  ]
+}

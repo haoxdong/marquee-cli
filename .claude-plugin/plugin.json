@@ -1,0 +1,12 @@
+{
+  "name": "marquee",
+  "displayName": "Marquee",
+  "description": "Navigate Marquee product surfaces with the marquee CLI and grounded workflows.",
+  "author": {
+    "name": "haoxdong",
+    "url": "https://github.com/haoxdong"
+  },
+  "repository": "https://github.com/haoxdong/marquee-cli",
+  "skills": "./skills/",
+  "keywords": ["marquee", "marketview", "research"]
+}

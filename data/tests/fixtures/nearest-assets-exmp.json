@@ -1,0 +1,40 @@
+{
+  "status": 200,
+  "body": {
+    "assets": {
+      "totalResults": 5,
+      "results": [
+        {
+          "id": "MA_SYNTHETIC_EXMP_UW",
+          "name": "Example Corp",
+          "type": "Single Stock",
+          "bbid": "EXMP UW"
+        },
+        {
+          "id": "MA_SYNTHETIC_EXMP_UP",
+          "name": "Example Corp",
+          "type": "Single Stock",
+          "bbid": "EXMP UP"
+        },
+        {
+          "id": "MA_SYNTHETIC_BOND_1",
+          "name": "EXMP 2.650 02/08/2051",
+          "type": "Bond",
+          "bbid": "BX000001"
+        },
+        {
+          "id": "MA_SYNTHETIC_BOND_2",
+          "name": "EXMP 2.375 02/08/2041",
+          "type": "Bond",
+          "bbid": "BX000002"
+        },
+        {
+          "id": "MA_SYNTHETIC_BOND_3",
+          "name": "EXMP 2.400 05/03/2023",
+          "type": "Bond",
+          "bbid": "BX000003"
+        }
+      ]
+    }
+  }
+}

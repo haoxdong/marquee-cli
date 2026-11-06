@@ -1,0 +1,46 @@
+{
+  "status": 200,
+  "body": {
+    "measures": [
+      {
+        "name": "cai",
+        "description": "Example description of cai.",
+        "frequency": "End Of Day",
+        "datasets": [
+          {
+            "id": "CAI",
+            "vendor": "Example Research"
+          }
+        ],
+        "autocomplete": [
+          {
+            "name": "metricName",
+            "default": "CAI_HEADLINE",
+            "values": [
+              "CAI_HEADLINE",
+              "CAI_CONTRIBUTION_SECTOR_LABOR",
+              "CAI_CONTRIBUTION_TYPE_HARD"
+            ]
+          }
+        ],
+        "restrictions": {
+          "entityType": "COUNTRY"
+        }
+      },
+      {
+        "name": "population",
+        "description": "Example description of population.",
+        "frequency": "End Of Day",
+        "datasets": [
+          {
+            "id": "EXAMPLE_COUNTRY_DAILY",
+            "vendor": "Example Research"
+          }
+        ],
+        "restrictions": {
+          "entityType": "COUNTRY"
+        }
+      }
+    ]
+  }
+}

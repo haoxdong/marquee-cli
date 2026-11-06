@@ -1,0 +1,21 @@
+{
+  "assets": {
+    "totalResults": 2,
+    "results": [
+      {
+        "id": "MA_SYNTHETIC_EXMP_UW",
+        "name": "Example Corp",
+        "type": "Single Stock",
+        "assetClass": "Equity",
+        "bbid": "EXMP UW"
+      },
+      {
+        "id": "MA_SYNTHETIC_EXMP_UP",
+        "name": "Example Corp",
+        "type": "Single Stock",
+        "assetClass": "Equity",
+        "bbid": "EXMP UP"
+      }
+    ]
+  }
+}

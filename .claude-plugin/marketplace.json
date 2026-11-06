@@ -1,0 +1,14 @@
+{
+  "name": "marquee-private",
+  "description": "Distribution of the Marquee CLI workflow plugin.",
+  "owner": {
+    "name": "haoxdong"
+  },
+  "plugins": [
+    {
+      "name": "marquee",
+      "source": "./",
+      "description": "Navigate Marquee product surfaces with the marquee CLI and grounded workflows."
+    }
+  ]
+}

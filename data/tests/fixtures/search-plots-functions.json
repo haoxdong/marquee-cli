@@ -1,0 +1,216 @@
+{
+  "results": [],
+  "classes": [
+    {
+      "name": "FRED",
+      "parameters": [
+        {
+          "name": "id_",
+          "variadic": false,
+          "description": "Example description of id_."
+        }
+      ],
+      "group": "constructors",
+      "functionSignature": "FRED(id_)",
+      "returns": {
+        "type": "FRED",
+        "methods": [
+          {
+            "name": "value",
+            "parameters": [],
+            "functionSignature": "value()",
+            "returns": {
+              "type": "series",
+              "description": "Example description of value."
+            },
+            "description": "Example description of value.",
+            "descriptionHtml": null
+          }
+        ],
+        "description": "Example description of FRED."
+      },
+      "description": "Example description of FRED.",
+      "descriptionHtml": null
+    },
+    {
+      "name": "HAVER",
+      "parameters": [
+        {
+          "name": "id_",
+          "variadic": false,
+          "description": "Example description of id_."
+        },
+        {
+          "name": "database_",
+          "variadic": false,
+          "description": "Example description of database_."
+        }
+      ],
+      "group": "constructors",
+      "functionSignature": "HAVER(id_, database_)",
+      "returns": {
+        "type": "HAVER",
+        "methods": [
+          {
+            "name": "value",
+            "parameters": [],
+            "functionSignature": "value()",
+            "returns": {
+              "type": "series",
+              "description": "Example description of value."
+            },
+            "description": "Example description of value.",
+            "descriptionHtml": null
+          }
+        ],
+        "description": ""
+      },
+      "description": "Example description of HAVER.",
+      "descriptionHtml": null
+    },
+    {
+      "name": "TSDB",
+      "parameters": [
+        {
+          "name": "symbol",
+          "variadic": false,
+          "description": "Example description of symbol."
+        }
+      ],
+      "group": "constructors",
+      "functionSignature": "TSDB(symbol)",
+      "returns": {
+        "type": "TSDB",
+        "methods": [
+          {
+            "name": "value",
+            "parameters": [
+              {
+                "name": "modifier",
+                "variadic": false,
+                "default": "",
+                "description": "Example description of modifier."
+              }
+            ],
+            "functionSignature": "value(modifier='')",
+            "returns": {
+              "type": "series",
+              "description": "Example description of value."
+            },
+            "description": "Example description of value.",
+            "descriptionHtml": null
+          }
+        ],
+        "description": ""
+      },
+      "entitlements": "{'internal'}",
+      "description": "Example description of TSDB.",
+      "descriptionHtml": null
+    },
+    {
+      "name": "MarketCoordinate",
+      "parameters": [
+        {
+          "name": "coordinate",
+          "variadic": false,
+          "type": "string",
+          "description": "Example description of coordinate."
+        }
+      ],
+      "group": "constructors",
+      "functionSignature": "MarketCoordinate(coordinate)",
+      "returns": {
+        "type": "Coordinate",
+        "methods": [
+          {
+            "name": "actual_data_quality",
+            "parameters": [],
+            "functionSignature": "actual_data_quality()",
+            "returns": {
+              "type": "series",
+              "description": "Example description of actual_data_quality."
+            },
+            "description": "Example description of actual_data_quality.",
+            "descriptionHtml": null
+          },
+          {
+            "name": "ask",
+            "parameters": [],
+            "functionSignature": "ask()",
+            "returns": {
+              "type": "series",
+              "description": "Example description of ask."
+            },
+            "description": "Example description of ask.",
+            "descriptionHtml": null
+          },
+          {
+            "name": "bid",
+            "parameters": [],
+            "functionSignature": "bid()",
+            "returns": {
+              "type": "series",
+              "description": "Example description of bid."
+            },
+            "description": "Example description of bid.",
+            "descriptionHtml": null
+          },
+          {
+            "name": "expected_data_quality",
+            "parameters": [],
+            "functionSignature": "expected_data_quality()",
+            "returns": {
+              "type": "series",
+              "description": "Example description of expected_data_quality."
+            },
+            "description": "Example description of expected_data_quality.",
+            "descriptionHtml": null
+          },
+          {
+            "name": "value",
+            "parameters": [
+              {
+                "name": "location",
+                "variadic": false,
+                "default": "NYC",
+                "type": "enum string",
+                "values": ["NYC", "LDN", "TKO", "HKG"],
+                "description": "Example description of location."
+              }
+            ],
+            "functionSignature": "value(location='NYC')",
+            "returns": {
+              "type": "series",
+              "description": "Example description of value."
+            },
+            "description": "Example description of value.",
+            "descriptionHtml": null
+          }
+        ],
+        "description": "Example description of MarketCoordinate."
+      },
+      "hidden": true,
+      "hide_targets": ["external"],
+      "description": "Example description of MarketCoordinate.",
+      "descriptionHtml": null
+    },
+    {
+      "name": "Dataset",
+      "parameters": [
+        {
+          "name": "id_",
+          "variadic": false,
+          "description": "Example description of id_."
+        }
+      ],
+      "group": "constructors",
+      "functionSignature": "Dataset(id_)",
+      "returns": {
+        "type": "PlotDataset",
+        "methods": []
+      },
+      "description": "Example description of Dataset.",
+      "descriptionHtml": null
+    }
+  ]
+}

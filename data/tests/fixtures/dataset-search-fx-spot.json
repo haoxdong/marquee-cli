@@ -1,0 +1,234 @@
+{
+  "results": [
+    {
+      "id": "EXFX_SPOT_SAMPLE",
+      "name": "Example FX Spot",
+      "description": "End-of-day example FX spot levels for synthetic crosses.",
+      "shortDescription": "Synthetic spot values for example FX crosses.",
+      "vendor": "Example Pricing Co",
+      "dataProduct": "Example FX Spot",
+      "parameters": {
+        "frequency": "Daily",
+        "assetClass": "FX"
+      },
+      "dimensions": {
+        "timeField": "date",
+        "symbolDimensions": ["assetId"],
+        "measures": [
+          {
+            "field": "spot",
+            "column": "SPOT"
+          }
+        ],
+        "entityDimension": "assetId"
+      }
+    },
+    {
+      "id": "EXFX_SPOT_STANDARD_SAMPLE",
+      "name": "Example FX Spot",
+      "description": "End-of-day example FX spot levels for synthetic crosses.",
+      "shortDescription": "Synthetic spot values for example FX crosses.",
+      "vendor": "Example Pricing Co",
+      "dataProduct": "Example FX Spot",
+      "parameters": {
+        "frequency": "Daily",
+        "assetClass": "FX"
+      },
+      "dimensions": {
+        "timeField": "date",
+        "symbolDimensions": ["assetId"],
+        "measures": [
+          {
+            "field": "spot",
+            "column": "SPOT"
+          }
+        ],
+        "entityDimension": "assetId"
+      }
+    },
+    {
+      "id": "EXFX_SPOT_PREMIUM_SAMPLE",
+      "name": "Example FX Spot",
+      "description": "End-of-day example FX spot levels for synthetic crosses.",
+      "shortDescription": "Synthetic spot values for example FX crosses.",
+      "vendor": "Example Pricing Co",
+      "dataProduct": "Example FX Spot",
+      "parameters": {
+        "frequency": "Daily",
+        "assetClass": "FX"
+      },
+      "dimensions": {
+        "timeField": "date",
+        "symbolDimensions": ["assetId"],
+        "measures": [
+          {
+            "field": "spot",
+            "column": "SPOT"
+          }
+        ],
+        "entityDimension": "assetId"
+      }
+    },
+    {
+      "id": "EXFX_SPOT_DEV",
+      "name": "Example FX Spot",
+      "description": "End-of-day example FX spot levels for synthetic crosses.",
+      "shortDescription": "Synthetic spot values for example FX crosses.",
+      "dataProduct": "Example FX Spot",
+      "parameters": {
+        "frequency": "Daily",
+        "assetClass": "FX"
+      },
+      "dimensions": {
+        "timeField": "date",
+        "symbolDimensions": ["assetId"],
+        "measures": [
+          {
+            "field": "spot",
+            "column": "SPOT"
+          }
+        ],
+        "entityDimension": "assetId"
+      }
+    },
+    {
+      "id": "EXFX_SPOT_PREMIUM",
+      "name": "Example FX Spot",
+      "description": "End-of-day example FX spot levels for synthetic crosses.",
+      "shortDescription": "Synthetic spot values for example FX crosses.",
+      "vendor": "Example Pricing Co",
+      "dataProduct": "Example FX Spot",
+      "parameters": {
+        "frequency": "Daily",
+        "assetClass": "FX"
+      },
+      "dimensions": {
+        "timeField": "date",
+        "symbolDimensions": ["assetId"],
+        "measures": [
+          {
+            "field": "spot",
+            "column": "SPOT"
+          }
+        ],
+        "entityDimension": "assetId"
+      }
+    },
+    {
+      "id": "EXFX_SPOT_CLOUD",
+      "name": "Example FX Spot",
+      "description": "End-of-day example FX spot levels for synthetic crosses.",
+      "shortDescription": "Synthetic spot values for example FX crosses.",
+      "vendor": "Example Pricing Co",
+      "dataProduct": "Example FX Spot",
+      "parameters": {
+        "frequency": "Daily",
+        "assetClass": "FX"
+      },
+      "dimensions": {
+        "timeField": "date",
+        "symbolDimensions": ["assetId"],
+        "measures": [
+          {
+            "field": "spot",
+            "column": "SPOT"
+          }
+        ],
+        "entityDimension": "assetId"
+      }
+    },
+    {
+      "id": "EXFX_SPOT_STANDARD",
+      "name": "Example FX Spot",
+      "description": "End-of-day example FX spot levels for synthetic crosses.",
+      "shortDescription": "Synthetic spot values for example FX crosses.",
+      "vendor": "Example Pricing Co",
+      "dataProduct": "Example FX Spot",
+      "parameters": {
+        "frequency": "Daily",
+        "assetClass": "FX"
+      },
+      "dimensions": {
+        "timeField": "date",
+        "symbolDimensions": ["assetId"],
+        "measures": [
+          {
+            "field": "spot",
+            "column": "SPOT"
+          }
+        ],
+        "entityDimension": "assetId"
+      }
+    },
+    {
+      "id": "EXINDEXFXSPOT",
+      "name": "Example Index FX Spot",
+      "description": "End-of-day example FX spot levels for synthetic crosses.",
+      "shortDescription": "Synthetic spot values for example FX crosses.",
+      "vendor": "Example Index Co",
+      "dataProduct": "Example Index FX Spot",
+      "parameters": {
+        "frequency": "Daily",
+        "assetClass": "FX"
+      },
+      "dimensions": {
+        "timeField": "date",
+        "symbolDimensions": ["assetId"],
+        "measures": [
+          {
+            "field": "spot",
+            "column": "SPOT"
+          }
+        ],
+        "entityDimension": "assetId"
+      }
+    },
+    {
+      "id": "EXWIRE_FXSPOT",
+      "name": "Example Wire FX Spot",
+      "description": "End-of-day example FX spot levels for synthetic crosses.",
+      "shortDescription": "Synthetic spot values for example FX crosses.",
+      "vendor": "Example Wire Services",
+      "dataProduct": "Example Wire FX Spot",
+      "parameters": {
+        "frequency": "Intraday",
+        "assetClass": "FX"
+      },
+      "dimensions": {
+        "timeField": "date",
+        "symbolDimensions": ["assetId"],
+        "measures": [
+          {
+            "field": "spot",
+            "column": "SPOT"
+          }
+        ],
+        "entityDimension": "assetId"
+      }
+    },
+    {
+      "id": "EXFX_SPOT_ARCHIVE",
+      "name": "Example FX Spot",
+      "description": "End-of-day example FX spot levels for synthetic crosses.",
+      "shortDescription": "Synthetic spot values for example FX crosses.",
+      "vendor": "Example Pricing Co",
+      "dataProduct": "Example FX Spot",
+      "parameters": {
+        "frequency": "Daily",
+        "assetClass": "FX"
+      },
+      "dimensions": {
+        "timeField": "date",
+        "symbolDimensions": ["assetId"],
+        "measures": [
+          {
+            "field": "spot",
+            "column": "SPOT"
+          }
+        ],
+        "entityDimension": "assetId"
+      }
+    }
+  ],
+  "totalResults": 681
+}

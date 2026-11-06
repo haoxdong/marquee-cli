@@ -1,0 +1,186 @@
+{
+  "type": "SearchSymbolsResponse",
+  "success": true,
+  "descriptors": [
+    {
+      "key": {
+        "namespace": "TSDB",
+        "symbol": "exv"
+      },
+      "source": "Example Market Data",
+      "description": "EXV Mid Term Structure",
+      "isIntraday": false
+    },
+    {
+      "key": {
+        "namespace": "TSDB",
+        "symbol": "EXV120d"
+      },
+      "source": "Example Strategies Group",
+      "description": "EXV120d",
+      "isIntraday": false
+    },
+    {
+      "key": {
+        "namespace": "TSDB",
+        "symbol": "EXV120d_rt"
+      },
+      "source": "Example Strategies Group",
+      "description": "EXV120d_rt",
+      "isIntraday": true
+    },
+    {
+      "key": {
+        "namespace": "TSDB",
+        "symbol": "EXV150d"
+      },
+      "source": "Example Strategies Group",
+      "description": "EXV150d",
+      "isIntraday": false
+    },
+    {
+      "key": {
+        "namespace": "TSDB",
+        "symbol": "EXV150d_rt"
+      },
+      "source": "Example Strategies Group",
+      "description": "EXV150d_rt",
+      "isIntraday": true
+    },
+    {
+      "key": {
+        "namespace": "TSDB",
+        "symbol": "EXV180d"
+      },
+      "source": "Example Strategies Group",
+      "description": "EXV180d",
+      "isIntraday": false
+    },
+    {
+      "key": {
+        "namespace": "TSDB",
+        "symbol": "EXV180d_rt"
+      },
+      "source": "Example Strategies Group",
+      "description": "EXV180d_rt",
+      "isIntraday": true
+    },
+    {
+      "key": {
+        "namespace": "TSDB",
+        "symbol": "EXV1D_CLOSE"
+      },
+      "source": "Example Vendor",
+      "description": "EXV1D Index Close",
+      "isIntraday": false
+    },
+    {
+      "key": {
+        "namespace": "TSDB",
+        "symbol": "EXV30d"
+      },
+      "source": "Example Strategies Group",
+      "description": "EXV30d",
+      "isIntraday": false
+    },
+    {
+      "key": {
+        "namespace": "TSDB",
+        "symbol": "EXV30d_LDN_1700"
+      },
+      "source": "Example Strategies Group",
+      "description": "EXV30d_LDN_1700",
+      "isIntraday": false
+    },
+    {
+      "key": {
+        "namespace": "TSDB",
+        "symbol": "EXV30d_NYC_0800"
+      },
+      "source": "Example Strategies Group",
+      "description": "EXV30d_NYC_0800",
+      "isIntraday": false
+    },
+    {
+      "key": {
+        "namespace": "TSDB",
+        "symbol": "EXV30d_NYC_0900"
+      },
+      "source": "Example Strategies Group",
+      "description": "EXV30d_NYC_0900",
+      "isIntraday": false
+    },
+    {
+      "key": {
+        "namespace": "TSDB",
+        "symbol": "EXV30d_NYC_1000"
+      },
+      "source": "Example Strategies Group",
+      "description": "EXV30d_NYC_1000",
+      "isIntraday": false
+    },
+    {
+      "key": {
+        "namespace": "TSDB",
+        "symbol": "EXV30d_NYC_1100"
+      },
+      "source": "Example Strategies Group",
+      "description": "EXV30d_NYC_1100",
+      "isIntraday": false
+    },
+    {
+      "key": {
+        "namespace": "TSDB",
+        "symbol": "EXV30d_NYC_1200"
+      },
+      "source": "Example Strategies Group",
+      "description": "EXV30d_NYC_1200",
+      "isIntraday": false
+    },
+    {
+      "key": {
+        "namespace": "TSDB",
+        "symbol": "EXV30d_NYC_1300"
+      },
+      "source": "Example Strategies Group",
+      "description": "EXV30d_NYC_1300",
+      "isIntraday": false
+    },
+    {
+      "key": {
+        "namespace": "TSDB",
+        "symbol": "EXV30d_NYC_1400"
+      },
+      "source": "Example Strategies Group",
+      "description": "EXV30d_NYC_1400",
+      "isIntraday": false
+    },
+    {
+      "key": {
+        "namespace": "TSDB",
+        "symbol": "EXV30d_NYC_1500"
+      },
+      "source": "Example Strategies Group",
+      "description": "EXV30d_NYC_1500",
+      "isIntraday": false
+    },
+    {
+      "key": {
+        "namespace": "TSDB",
+        "symbol": "EXV30d_NYC_1600"
+      },
+      "source": "Example Strategies Group",
+      "description": "EXV30d_NYC_1600",
+      "isIntraday": false
+    },
+    {
+      "key": {
+        "namespace": "TSDB",
+        "symbol": "EXV30d_rt"
+      },
+      "source": "Example Strategies Group",
+      "description": "EXV30d_rt",
+      "isIntraday": true
+    }
+  ]
+}

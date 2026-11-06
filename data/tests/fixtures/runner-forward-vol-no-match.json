@@ -1,0 +1,47 @@
+{
+  "requestBody": {
+    "expressions": ["EXMP UW.forward_vol(7w)"],
+    "statistics": true,
+    "realTime": false,
+    "hints": [],
+    "variables": {},
+    "interval": "1D",
+    "startDate": "2025-10-16",
+    "endDate": "2026-10-16"
+  },
+  "status": 400,
+  "body": {
+    "results": [
+      {
+        "error": "Error",
+        "message": "Specified arguments did not match any asset in the dataset{'asset_class': 'Equity', 'type': 'Single Stock', 'asset_parameters_expiration_date': '7w'} (Historical mode)",
+        "statusCode": 400
+      }
+    ],
+    "statistics": [
+      {
+        "error": "Error",
+        "message": "No statistics for non-series object."
+      }
+    ],
+    "asset_ids": ["MA_SYNTHETIC_EXMP_UW"],
+    "entities": [
+      [
+        {
+          "entityName": "EXMP UW",
+          "mqid": "MA_SYNTHETIC_EXMP_UW",
+          "type": "asset",
+          "assetName": "Example Corp",
+          "properties": {
+            "assetClass": "Equity",
+            "description": "",
+            "assetType": "Single Stock",
+            "region": null
+          }
+        }
+      ]
+    ],
+    "datasets": [],
+    "tsdb_symbols": []
+  }
+}

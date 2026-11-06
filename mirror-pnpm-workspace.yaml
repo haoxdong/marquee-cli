@@ -1,0 +1,8 @@
+# The marquee-cli mirror's install settings, which .github/ci.sh puts at the tree's root; pnpm warns about a
+# pnpm-workspace.yaml in a member of the private workspace, where the root's governs instead.
+# Build approvals match the root's, so the mirror installs and builds what the private workspace does.
+allowBuilds:
+  agent-browser: true
+  esbuild: true
+  msw: false
+  protobufjs: false

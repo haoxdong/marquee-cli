@@ -1,0 +1,82 @@
+{
+  "assets": {
+    "totalResults": 10,
+    "results": [
+      {
+        "id": "MA_SYNTHETIC_EXMP_UW",
+        "bbid": "EXMP UW",
+        "name": "Example Corp",
+        "type": "Single Stock",
+        "assetClass": "Equity"
+      },
+      {
+        "id": "MA_SYNTHETIC_HEDGE_1",
+        "bbid": "EXHEDGE1",
+        "name": "Example Hedge",
+        "type": "Custom Basket",
+        "assetClass": "Equity"
+      },
+      {
+        "id": "MA_SYNTHETIC_HEDGE_2",
+        "bbid": "EXHEDGE2",
+        "name": "Test Hedge",
+        "type": "Custom Basket",
+        "assetClass": "Equity"
+      },
+      {
+        "id": "MA_SYNTHETIC_EXMP_UP",
+        "bbid": "EXMP UP",
+        "name": "Example Corp",
+        "type": "Single Stock",
+        "assetClass": "Equity"
+      },
+      {
+        "id": "MA_SYNTHETIC_BOND_1",
+        "bbid": "BX000001",
+        "name": "EXMP 2.650 02/08/2051",
+        "type": "Bond",
+        "assetClass": "Credit",
+        "cusip": "EX0000001"
+      },
+      {
+        "id": "MA_SYNTHETIC_BOND_2",
+        "bbid": "BX000002",
+        "name": "EXMP 2.375 02/08/2041",
+        "type": "Bond",
+        "assetClass": "Credit",
+        "cusip": "EX0000002"
+      },
+      {
+        "id": "MA_SYNTHETIC_BOND_3",
+        "bbid": "BX000003",
+        "name": "EXMP 2.400 05/03/2023",
+        "type": "Bond",
+        "assetClass": "Rates"
+      },
+      {
+        "id": "MA_SYNTHETIC_BOND_4",
+        "bbid": "BX000004",
+        "name": "EXMP 2.800 02/08/2061",
+        "type": "Bond",
+        "assetClass": "Credit",
+        "cusip": "EX0000004"
+      },
+      {
+        "id": "MA_SYNTHETIC_BOND_5",
+        "bbid": "BX000005",
+        "name": "EXMP 1.000 11/10/2022",
+        "type": "Bond",
+        "assetClass": "Credit",
+        "cusip": "EX0000005"
+      },
+      {
+        "id": "MA_SYNTHETIC_BOND_6",
+        "bbid": "BX000006",
+        "name": "EXMP 1.650 02/08/2031",
+        "type": "Bond",
+        "assetClass": "Credit",
+        "cusip": "EX0000006"
+      }
+    ]
+  }
+}

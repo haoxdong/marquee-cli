@@ -1,0 +1,59 @@
+---
+name: marquee
+description: Use when the user asks about markets, research or anything on Marquee. Also use when asked to open, read or interact with any web page; `marquee browser` is your browser.
+---
+
+## Answering
+
+When the answer carries a view, state its conviction and what would flip it: the key risk, or the condition under which the narrative changes.
+Refs like `@s1.c1` are CLI plumbing; keep them out of the answer.
+
+## What's in Marquee
+
+- **Widgets**: tables and charts (time series, scatter, heatmap, spider, etc.) of equity and FICC markets, cash and derivatives, live, historical and forward: prices, curves, vol (skews, smiles, surfaces) and correlation; market-implied pricing; positioning (CFTC); polls; GIR forecasts and scenario projections; event calendars (macro releases, weekly earnings).
+- **Dashboards**: sets of widgets for an asset, a country, a theme, or one of the user's portfolios.
+- **Research**: GS Research: company notes with rating and price-target changes, daily recaps, economics, strategy, commodities and credit.
+- **Desk commentary**: trader notes through the day: morning, market and regional wraps, sector previews.
+- **Browser-only apps**: Visual Structuring (option trade ideas and payoffs), My Portfolios and Workbench (portfolio risk), Backtesting, Bond Screener, Neuron (who reads the user's content, trending themes), MarketPoll (client polls), Data Catalog.
+
+## Commands
+
+`marquee` is a gh-style CLI.
+Run independent commands at the same time to cut latency: background each with `&` and end with `wait`:
+
+```bash
+marquee marketview search "<query one>" & marquee marketview search "<query two>" & marquee content search "<query three>" & wait
+marquee marketview widget view <ref one> & marquee marketview widget view <ref two> & marquee content view <ref three> & wait
+```
+
+```
+marquee marketview search "query"            # widgets and dashboards
+marquee marketview widget view <id|ref>
+marquee marketview dashboard view <id|ref>
+marquee marketview dashboard edit|create …
+marquee content search "query"               # research and desk commentary
+marquee content view <id|url|ref>
+marquee browser open <url>
+marquee data eval '<expression>' …           # time series and their statistics
+```
+
+`dashboard edit` and `create` change the user's dashboards: confirm with the user first.
+
+## Data
+
+A figure or a series (a level, a change, a spread, a fair value, a vol, a curve's points, an indicator) comes from `marquee data eval`. A price, yield, rate or vol that a [data.md](data.md) template writes runs as that eval alone. For anything else, such as a curve or an id you would guess, run a widget search in the same step, as a widget holds what the eval doesn't find:
+
+```bash
+marquee data eval '<expression>' & marquee marketview search "<the question's words>" & wait
+```
+
+Answer from the eval when it returns the figure; open a search result only for what the eval did not return. Before any `marquee data` command, read [data.md](data.md): Expression templates, windows, how to read the rows and how to look up what you don't know.
+
+## Search
+
+Search by topic, publication or author name. Default searches are keyword-based and return 10 results: fan out searches, rewriting the query and covering different angles.
+
+## Browser
+
+`marquee browser` is agent-browser, signed in as the user. When the CLI can't reach what the user asks for, offer the browser and wait for their yes. Parallel subagents pass a unique `--session <name>` on every browser command and close only their own session.
+For consequential actions (submit, save, delete, share, send), stop and ask the user to Take over.

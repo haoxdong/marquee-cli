@@ -1,0 +1,135 @@
+{
+  "totalResults": 3,
+  "results": [
+    {
+      "id": "CL_SYNTHETIC_FX",
+      "name": "Quickstart - FX",
+      "type": "collection",
+      "subType": "quickstart",
+      "entities": [
+        {
+          "id": "CL_SYNTHETIC_FX_SPOT",
+          "name": "FX - Spot",
+          "type": "collection",
+          "subType": "folder",
+          "entities": [
+            {
+              "id": "CH_SYNTHETIC_CARRY",
+              "name": "Forward Points, Spot, Carry",
+              "folderName": "FX - Spot",
+              "description": "EURUSD.forward_point(3m, NYC)\nEURUSD.spot(NYC)# @label(EURUSD Spot [RHS])\n"
+            },
+            {
+              "id": "CH_SYNTHETIC_FAIR_VALUE",
+              "name": "Fair Value (FX) ",
+              "folderName": "FX - Spot",
+              "description": "spot = EURUSD.spot(NYC)\nfair_value = repeat(EURUSD.fair_value(gsdeer), 1)\nspot / fair_value - 1"
+            }
+          ]
+        },
+        {
+          "id": "CL_SYNTHETIC_FX_VOL",
+          "name": "FX - Vol",
+          "type": "collection",
+          "subType": "folder",
+          "entities": [
+            {
+              "id": "CH_SYNTHETIC_VOL",
+              "name": "G10 Vols (3m, USD-base)",
+              "folderName": "FX - Vol",
+              "description": "EURUSD.implied_volatility(3m, delta_neutral)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CL_SYNTHETIC_ALL",
+      "name": "Quickstart",
+      "type": "collection",
+      "subType": "quickstart",
+      "entities": [
+        {
+          "id": "CL_SYNTHETIC_FX_SPOT",
+          "name": "FX - Spot",
+          "type": "collection",
+          "subType": "folder",
+          "entities": [
+            {
+              "id": "CH_SYNTHETIC_CARRY",
+              "name": "Forward Points, Spot, Carry",
+              "folderName": "FX - Spot",
+              "description": "EURUSD.forward_point(3m, NYC)\nEURUSD.spot(NYC)# @label(EURUSD Spot [RHS])\n"
+            },
+            {
+              "id": "CH_SYNTHETIC_FAIR_VALUE",
+              "name": "Fair Value (FX) ",
+              "folderName": "FX - Spot",
+              "description": "spot = EURUSD.spot(NYC)\nfair_value = repeat(EURUSD.fair_value(gsdeer), 1)\nspot / fair_value - 1"
+            }
+          ]
+        },
+        {
+          "id": "CL_SYNTHETIC_EQUITY_OPTIONS",
+          "name": "Equity - Options",
+          "type": "collection",
+          "subType": "folder",
+          "entities": [
+            {
+              "id": "CH_SYNTHETIC_PUT",
+              "name": "SPX 6m 95% put",
+              "folderName": "Equity - Options",
+              "description": "EqOption(SPX, put, 6m, spot, 95).price()"
+            }
+          ]
+        },
+        {
+          "id": "CL_SYNTHETIC_FX_OWN",
+          "name": "FX",
+          "type": "collection",
+          "subType": "folder",
+          "entities": [
+            {
+              "id": "CH_SYNTHETIC_INTRADAY",
+              "name": "FX Intraday Forward Points",
+              "folderName": "FX",
+              "description": "EURUSD.forward_point(1m, NYC)\nUSDJPY.forward_point(1m, NYC)\n"
+            },
+            {
+              "id": "CH_SYNTHETIC_UNTITLED",
+              "name": "Untitled",
+              "folderName": "FX",
+              "description": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CL_SYNTHETIC_EQUITY",
+      "name": "Quickstart - Equity",
+      "type": "collection",
+      "subType": "quickstart",
+      "entities": [
+        {
+          "id": "CL_SYNTHETIC_EQUITY_OPTIONS",
+          "name": "Equity - Options",
+          "type": "collection",
+          "subType": "folder",
+          "entities": [
+            {
+              "id": "CH_SYNTHETIC_PUT",
+              "name": "SPX 6m 95% put",
+              "folderName": "Equity - Options",
+              "description": "EqOption(SPX, put, 6m, spot, 95).price()"
+            }
+          ]
+        },
+        {
+          "id": "CL_SYNTHETIC_MISSING",
+          "httpStatus": 404
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,606 @@
+{
+  "results": {
+    "data": [
+      {
+        "haverid": "R001",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 1 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R002",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 2 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R003",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 3 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R004",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 4 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R005",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 5 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R006",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 6 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R007",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 7 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R008",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 8 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R009",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 9 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R010",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 10 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R011",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 11 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R012",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 12 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R013",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 13 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R014",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 14 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R015",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 15 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R016",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 16 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R017",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 17 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R018",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 18 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R019",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 19 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R020",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 20 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R021",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 21 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R022",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 22 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R023",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 23 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R024",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 24 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R025",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 25 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R026",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 26 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R027",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 27 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R028",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 28 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R029",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 29 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R030",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 30 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R031",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 31 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R032",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 32 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R033",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 33 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R034",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 34 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R035",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 35 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R036",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 36 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R037",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 37 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R038",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 38 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R039",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 39 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R040",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 40 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R041",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 41 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R042",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 42 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R043",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 43 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R044",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 44 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R045",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 45 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R046",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 46 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R047",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 47 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R048",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 48 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R049",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 49 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R050",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 50 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R051",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 51 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R052",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 52 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R053",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 53 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R054",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 54 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R055",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 55 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R056",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 56 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R057",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 57 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R058",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 58 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R059",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 59 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R060",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 60 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R061",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 61 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R062",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 62 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R063",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 63 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R064",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 64 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R065",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 65 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R066",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 66 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R067",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 67 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R068",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 68 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R069",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 69 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R070",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 70 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R071",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 71 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R072",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 72 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R073",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 73 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R074",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 74 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R075",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 75 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R076",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 76 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R077",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 77 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R078",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 78 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R079",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 79 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R080",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 80 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R081",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 81 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R082",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 82 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R083",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 83 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R084",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 84 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R085",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 85 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R086",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 86 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R087",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 87 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R088",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 88 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R089",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 89 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R090",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 90 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R091",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 91 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R092",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 92 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R093",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 93 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R094",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 94 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R095",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 95 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R096",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 96 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R097",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 97 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R098",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 98 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R099",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 99 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      },
+      {
+        "haverid": "R100",
+        "database": "EXDB",
+        "description": "Exampleland: Policy Rate Corridor 100 (EOP, %)",
+        "groupdescription": "Exampleland: Monetary Policy, Example Central Bank, Monthly"
+      }
+    ]
+  }
+}

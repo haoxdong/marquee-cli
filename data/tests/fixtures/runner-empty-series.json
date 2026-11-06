@@ -1,0 +1,92 @@
+{
+  "requestBody": {
+    "expressions": [
+      "FRED(UNRATE).value()",
+      "FRED(GOLDAMGBD228NLBM).value()",
+      "FRED(NOTAREALSERIESXYZ).value()"
+    ],
+    "statistics": true,
+    "realTime": false,
+    "hints": [],
+    "variables": {},
+    "interval": "1D",
+    "startDate": "2025-10-16",
+    "endDate": "2026-10-16"
+  },
+  "status": 200,
+  "body": {
+    "results": [
+      {
+        "type": "series",
+        "values": {
+          "2025-11-01": 4.5,
+          "2025-12-01": 4.4,
+          "2026-01-01": 4.3,
+          "2026-02-01": 4.4,
+          "2026-03-01": 4.3,
+          "2026-04-01": 4.3,
+          "2026-05-01": 4.3,
+          "2026-06-01": 4.2,
+          "2026-07-01": 4.1,
+          "2026-08-01": 4.1,
+          "2026-09-01": 4.2
+        }
+      },
+      {
+        "type": "sortedSeries",
+        "values": []
+      },
+      {
+        "type": "sortedSeries",
+        "values": []
+      }
+    ],
+    "statistics": [
+      {
+        "low": {
+          "value": 4.1,
+          "keys": ["2026-07-01", "2026-08-01"]
+        },
+        "high": {
+          "value": 4.5,
+          "keys": ["2025-11-01"]
+        },
+        "first": {
+          "value": 4.5,
+          "keys": ["2025-11-01"]
+        },
+        "last": {
+          "value": 4.2,
+          "keys": ["2026-09-01"]
+        },
+        "median": {
+          "value": 4.3
+        },
+        "avg": {
+          "value": 4.281818181818182
+        },
+        "stdDev": {
+          "value": 0.12504544628399578
+        },
+        "zscore": {
+          "value": -0.6543075677650942
+        },
+        "percentile": {
+          "value": 31.81818181818182
+        }
+      },
+      {
+        "error": "Error",
+        "message": "No statistics for non-series object."
+      },
+      {
+        "error": "Error",
+        "message": "No statistics for non-series object."
+      }
+    ],
+    "asset_ids": [],
+    "entities": [[], [], []],
+    "datasets": ["FRED"],
+    "tsdb_symbols": []
+  }
+}

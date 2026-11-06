@@ -1,0 +1,9 @@
+{
+  "status": 200,
+  "body": {
+    "assets": {
+      "totalResults": 0,
+      "results": []
+    }
+  }
+}

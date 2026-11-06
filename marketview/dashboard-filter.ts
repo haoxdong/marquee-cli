@@ -1,0 +1,235 @@
+import type { MarketViewDashboardFilterMatch } from './types.js';
+import type { EntityFeedEntry } from '../entity-feed/index.js';
+import type { ReferentRef, ReferentRegistry } from '../referent-registry/index.js';
+import {
+  enrichContextDashboardWidgets,
+  type EntityFeedPageReader,
+} from './dashboard-hydration.js';
+import { dashboardWidgetReferent } from './dashboard-referent-policy.js';
+import { enrichDashboardWidgets } from './dashboard-widget-enrichment.js';
+import type { MarketViewWidgetOperations } from './dashboard-widget-operations.js';
+import type {
+  DashboardPresentationWidget,
+  DashboardReadError,
+} from './dashboard-presentation.js';
+import { createEntityFeedDashboardWidget } from './dashboard-widget-projection.js';
+import { compactDashboardReferentPayload, restoreDashboardReferentPayload } from './dashboard-referent-payload.js';
+import {
+  isMarketViewDashboardReferentPayload,
+  type MarketViewDashboardReferentPayload,
+} from './facade.js';
+
+const FILTER_RESULT_LIMIT = 30;
+const FILTER_FETCH_LIMIT = 250;
+
+function widgetTitle(widget: DashboardPresentationWidget): string {
+  return widget.snippet?.title || widget.title;
+}
+
+async function hydrateEntityFeed(
+  value: Extract<MarketViewDashboardReferentPayload, { kind: 'entity-feed' }>,
+  entityId: string,
+  readEntityFeedPage: EntityFeedPageReader,
+): Promise<
+  | Readonly<{ ok: true; changed: boolean }>
+  | Readonly<{ ok: false; error: DashboardReadError }>
+> {
+  let changed = false;
+  const { window, entityFeed } = value;
+  while (entityFeed.entries.length < window.total) {
+    const offset = entityFeed.entries.length;
+    // eslint-disable-next-line no-await-in-loop -- pagination: each page starts at the first widget still missing
+    const page = await readEntityFeedPage({
+      entityId,
+      limit: Math.min(FILTER_FETCH_LIMIT, window.total - offset),
+      offset,
+    });
+    if (!page.ok) {
+      return { ok: false, error: { kind: 'entity-feed', error: page.error } };
+    }
+    if (page.value.entries.length === 0) return invalidFeed('response');
+    const storedPrefix = Math.max(0, window.widgets.length - offset);
+    entityFeed.entries = [...entityFeed.entries, ...page.value.entries];
+    window.widgets.push(...page.value.entries.slice(storedPrefix).map(createEntityFeedDashboardWidget));
+    changed = true;
+  }
+  return { ok: true, changed };
+}
+
+export type StoredDashboardFilterError =
+  | Readonly<{ kind: 'referent-payload-not-found'; ref: string }>
+  | DashboardReadError;
+
+export type StoredDashboardFilterValue = Readonly<{
+  payload: MarketViewDashboardReferentPayload;
+  refs: Readonly<Record<string, ReferentRef>>;
+  matches: readonly MarketViewDashboardFilterMatch[];
+  totalMatches: number;
+}>;
+
+type IndexedWidget = Readonly<{ widget: DashboardPresentationWidget; index: number }>;
+
+function matchingWidgets(
+  widgets: readonly DashboardPresentationWidget[],
+  query: string,
+): IndexedWidget[] {
+  const lowerQuery = query.toLowerCase();
+  return widgets
+    .map((widget, index) => ({ widget, index }))
+    .filter(({ widget }) => (
+      widgetTitle(widget).toLowerCase().includes(lowerQuery)
+      || widget.widgetId.toLowerCase().includes(lowerQuery)
+    ));
+}
+
+function invalidFeed(problem: 'response' | 'widget-entry'): Readonly<{ ok: false; error: DashboardReadError }> {
+  return { ok: false, error: { kind: 'entity-feed', error: { kind: 'invalid-feed', problem } } };
+}
+
+function widgetIdentity(widget: Pick<EntityFeedEntry, 'widgetId' | 'configurationId'>): string {
+  return JSON.stringify([widget.widgetId, widget.configurationId ?? null]);
+}
+
+async function queriedWidgets(
+  value: Extract<MarketViewDashboardReferentPayload, { kind: 'entity-feed' }>,
+  entityId: string,
+  query: string,
+  limit: number,
+  readPage: EntityFeedPageReader,
+): Promise<
+  | Readonly<{ ok: true; visible: IndexedWidget[]; totalMatches: number }>
+  | Readonly<{ ok: false; error: DashboardReadError }>
+> {
+  const canonical = new Map(value.entityFeed.entries.map((entry, index) => [
+    widgetIdentity(entry), { widget: value.window.widgets[index], index },
+  ]));
+  const visible: IndexedWidget[] = [];
+  let offset = 0;
+  let totalMatches = 0;
+  do {
+    // eslint-disable-next-line no-await-in-loop -- each queried page follows the actual received prefix
+    const page = await readPage({
+      entityId,
+      query,
+      ...(offset > 0 ? { limit: limit - offset, offset } : {}),
+    });
+    if (!page.ok) return { ok: false, error: { kind: 'entity-feed', error: page.error } };
+    totalMatches = page.value.total;
+    if (page.value.entries.length === 0 && offset < totalMatches) return invalidFeed('response');
+    for (const entry of page.value.entries.slice(0, limit - visible.length)) {
+      const match = canonical.get(widgetIdentity(entry));
+      if (!match?.widget) return invalidFeed('widget-entry');
+      visible.push({ widget: match.widget, index: match.index });
+    }
+    offset += page.value.entries.length;
+  } while (offset < totalMatches && visible.length < limit);
+  return { ok: true, visible, totalMatches };
+}
+
+async function enrichMatches(
+  value: MarketViewDashboardReferentPayload,
+  visible: readonly IndexedWidget[],
+  operations: MarketViewWidgetOperations,
+): Promise<Readonly<{ ok: true; changed: boolean }> | Readonly<{ ok: false; error: DashboardReadError }>> {
+  const widgets = visible.map(({ widget }) => widget).filter((widget) => !widget.snippet);
+  if (widgets.length === 0) return { ok: true, changed: false };
+  const error = value.kind === 'entity-feed'
+    ? await enrichContextDashboardWidgets(widgets, operations, value.window.title)
+    : await enrichDashboardWidgets(widgets, operations);
+  return error ? { ok: false, error } : { ok: true, changed: true };
+}
+
+function collectFilterMatches(
+  namespace: string,
+  visible: readonly IndexedWidget[],
+  owner: ReferentRef | undefined,
+  existingRefs: Readonly<Record<string, ReferentRef>>,
+): Readonly<{
+  refs: Record<string, ReferentRef>;
+  matches: MarketViewDashboardFilterMatch[];
+}> {
+  const refs: Record<string, ReferentRef> = {};
+  const matches: MarketViewDashboardFilterMatch[] = [];
+  const dashboardId = owner?.type === 'dashboard' ? owner.dashboardId : undefined;
+  for (const { widget, index } of visible) {
+    const ref = `${namespace}.w${index + 1}`;
+    refs[ref] = existingRefs[ref] ?? dashboardWidgetReferent(widget, dashboardId);
+    matches.push({ index, ref, title: widgetTitle(widget) });
+  }
+  return { refs, matches };
+}
+
+export async function filterStoredDashboard(
+  namespace: string,
+  query: string,
+  dependencies: Readonly<{
+    registry: ReferentRegistry;
+    readEntityFeedPage: EntityFeedPageReader;
+    widgets: MarketViewWidgetOperations;
+  }>,
+  limit = FILTER_RESULT_LIMIT,
+): Promise<
+  | Readonly<{ ok: true; value: StoredDashboardFilterValue }>
+  | Readonly<{ ok: false; error: StoredDashboardFilterError }>
+> {
+  const referent = dependencies.registry.getReferent(namespace);
+  if (!referent || !isMarketViewDashboardReferentPayload(referent.payload)) {
+    return { ok: false, error: { kind: 'referent-payload-not-found', ref: namespace } };
+  }
+  const value = restoreDashboardReferentPayload(referent.payload);
+  if (!value) return { ok: false, error: { kind: 'referent-payload-not-found', ref: namespace } };
+  let changed = false;
+  let visible: readonly IndexedWidget[];
+  let totalMatches: number;
+  if (value.kind === 'entity-feed') {
+    const { entityId } = value.window;
+    if (!entityId) return { ok: false, error: { kind: 'referent-payload-not-found', ref: namespace } };
+    const hydration = await hydrateEntityFeed(value, entityId, dependencies.readEntityFeedPage);
+    if (!hydration.ok) return hydration;
+    changed = hydration.changed;
+    const queried = await queriedWidgets(value, entityId, query, limit, dependencies.readEntityFeedPage);
+    if (!queried.ok) return queried;
+    visible = queried.visible;
+    totalMatches = queried.totalMatches;
+  } else {
+    const matched = matchingWidgets(value.window.widgets, query);
+    visible = matched.slice(0, limit);
+    totalMatches = matched.length;
+  }
+  const enrichment = await enrichMatches(value, visible, dependencies.widgets);
+  if (!enrichment.ok) return enrichment;
+  if (changed || enrichment.changed) {
+    dependencies.registry.setPayload(namespace, compactDashboardReferentPayload(value));
+  }
+  const collected = collectFilterMatches(
+    namespace,
+    visible,
+    referent.root,
+    referent.refs,
+  );
+  const newRefs = Object.entries(collected.refs)
+    .filter(([ref]) => referent.refs[ref] === undefined);
+  const newRefNames = newRefs.map(([ref]) => ref);
+  let persistedRefs = collected.refs;
+  if (newRefNames.length > 0) {
+    const latestRefs = { ...collected.refs };
+    dependencies.registry.updateRefs(newRefNames, (currentRefs) => Object.fromEntries(
+      newRefs.flatMap(([ref, collectedRef]) => {
+        const current = currentRefs[ref];
+        if (!current) return [[ref, collectedRef]];
+        latestRefs[ref] = current;
+        return [];
+      }),
+    ));
+    persistedRefs = latestRefs;
+  }
+  return {
+    ok: true,
+    value: {
+      payload: value,
+      refs: persistedRefs,
+      matches: collected.matches,
+      totalMatches,
+    },
+  };
+}

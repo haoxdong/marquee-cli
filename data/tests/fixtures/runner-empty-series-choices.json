@@ -1,0 +1,107 @@
+{
+  "requestBody": {
+    "expressions": [
+      "EXMP UW.forward_vol(1m, 1m, forward, 101)",
+      "EXMP UW.var_swap(13w)",
+      "EX.cai(FOO)",
+      "HAVER(NOTACODE, EXECON).value()",
+      "MarketCoordinate(\"IR_EXMP_FOO.PRICE\").value()"
+    ],
+    "statistics": true,
+    "realTime": false,
+    "hints": [],
+    "variables": {},
+    "interval": "1D",
+    "startDate": "2025-10-16",
+    "endDate": "2026-10-16"
+  },
+  "status": 200,
+  "body": {
+    "results": [
+      {
+        "type": "sortedSeries",
+        "values": []
+      },
+      {
+        "type": "sortedSeries",
+        "values": []
+      },
+      {
+        "type": "sortedSeries",
+        "values": []
+      },
+      {
+        "type": "sortedSeries",
+        "values": []
+      },
+      {
+        "type": "sortedSeries",
+        "values": []
+      }
+    ],
+    "statistics": [
+      {
+        "error": "Error",
+        "message": "No statistics for empty series."
+      },
+      {
+        "error": "Error",
+        "message": "No statistics for empty series."
+      },
+      {
+        "error": "Error",
+        "message": "No statistics for empty series."
+      },
+      {
+        "error": "Error",
+        "message": "No statistics for empty series."
+      },
+      {
+        "error": "Error",
+        "message": "No statistics for empty series."
+      }
+    ],
+    "asset_ids": ["MA_SYNTHETIC_EXMP_UW"],
+    "entities": [
+      [
+        {
+          "entityName": "EXMP UW",
+          "mqid": "MA_SYNTHETIC_EXMP_UW",
+          "type": "asset",
+          "assetName": "Example Corp",
+          "properties": {
+            "assetClass": "Equity",
+            "description": "",
+            "assetType": "Single Stock",
+            "region": null
+          }
+        }
+      ],
+      [
+        {
+          "entityName": "EXMP UW",
+          "mqid": "MA_SYNTHETIC_EXMP_UW",
+          "type": "asset",
+          "assetName": "Example Corp",
+          "properties": {
+            "assetClass": "Equity",
+            "description": "",
+            "assetType": "Single Stock",
+            "region": null
+          }
+        }
+      ],
+      [
+        {
+          "entityName": "Example Country",
+          "mqid": "EX",
+          "type": "country"
+        }
+      ],
+      [],
+      []
+    ],
+    "datasets": ["EDRVOL_PERCENT", "CAI", "HAVER_ALL_SERIES_V2"],
+    "tsdb_symbols": []
+  }
+}

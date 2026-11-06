@@ -1,0 +1,18 @@
+{
+  "requestBody": {
+    "name": "FRED(UNRATE).value()",
+    "title": "FRED(UNRATE).value()",
+    "description": "FRED(UNRATE).value()",
+    "folderName": "Scratch",
+    "chartType": "line",
+    "expressions": [
+      { "axis": "Right", "label": "", "hide": false, "disable": false }
+    ],
+    "relativeStartDate": "-1y",
+    "relativeEndDate": "0d",
+    "interval": "Daily",
+    "realTime": false
+  },
+  "status": 200,
+  "body": { "id": "CH_SYNTHETIC_SAVED", "name": "FRED(UNRATE).value()" }
+}

@@ -1,0 +1,77 @@
+{
+  "assets": {
+    "totalResults": 10,
+    "results": [
+      {
+        "id": "MA_SYNTHETIC_EXMP_UW",
+        "bbid": "EXMP UW",
+        "name": "Example Corp",
+        "type": "Single Stock",
+        "assetClass": "Equity"
+      },
+      {
+        "id": "MA_SYNTHETIC_EXMP_UP",
+        "bbid": "EXMP UP",
+        "name": "Example Corp",
+        "type": "Single Stock",
+        "assetClass": "Equity"
+      },
+      {
+        "id": "MA_SYNTHETIC_BASKET_1",
+        "bbid": "EXBSKT1",
+        "name": "Example Suppliers",
+        "type": "Research Basket",
+        "assetClass": "Equity"
+      },
+      {
+        "id": "MA_SYNTHETIC_EXMP_UN",
+        "bbid": "EXMP UN",
+        "name": "Example Corp",
+        "type": "Single Stock",
+        "assetClass": "Equity"
+      },
+      {
+        "id": "MA_SYNTHETIC_EXPL_UN",
+        "bbid": "EXPL UN",
+        "name": "Example Hospitality Inc",
+        "type": "Single Stock",
+        "assetClass": "Equity"
+      },
+      {
+        "id": "MA_SYNTHETIC_000001_CG",
+        "bbid": "000001 CG",
+        "name": "Example Flavor Co-A",
+        "type": "Single Stock",
+        "assetClass": "Equity"
+      },
+      {
+        "id": "MA_SYNTHETIC_EXMP_CT",
+        "bbid": "EXMP CT",
+        "name": "Example Corp-CDR",
+        "type": "Single Stock",
+        "assetClass": "Equity"
+      },
+      {
+        "id": "MA_SYNTHETIC_EXMP34_BS",
+        "bbid": "EXMP34 BS",
+        "name": "Example Corp - BDR",
+        "type": "Single Stock",
+        "assetClass": "Equity"
+      },
+      {
+        "id": "MA_SYNTHETIC_BASKET_2",
+        "bbid": "EXBSKT2",
+        "name": "Example Supply Chain",
+        "type": "Custom Basket",
+        "assetClass": "Equity"
+      },
+      {
+        "id": "MA_SYNTHETIC_BASKET_3",
+        "bbid": "EXBSKT3",
+        "name": "Example AI Beneficiaries",
+        "type": "Custom Basket",
+        "assetClass": "Equity"
+      }
+    ]
+  }
+}

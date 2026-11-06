@@ -1,0 +1,190 @@
+{
+  "requestBody": {
+    "expressions": [
+      "a = EXMP UW.spot()",
+      "b = FRED(UNRATE).value()",
+      "correlation(b, a)"
+    ],
+    "statistics": true,
+    "realTime": false,
+    "hints": [],
+    "variables": {},
+    "interval": "1D",
+    "startDate": "2025-10-16",
+    "endDate": "2026-10-16"
+  },
+  "status": 200,
+  "body": {
+    "results": [
+      {
+        "type": "series",
+        "values": {
+          "2026-10-09": 101.25,
+          "2026-10-12": 102.5,
+          "2026-10-13": 101.75,
+          "2026-10-14": 103.0,
+          "2026-10-15": 104.5
+        }
+      },
+      {
+        "type": "series",
+        "values": {
+          "2025-11-01": 4.5,
+          "2025-12-01": 4.4,
+          "2026-01-01": 4.3,
+          "2026-02-01": 4.4,
+          "2026-03-01": 4.3,
+          "2026-04-01": 4.3,
+          "2026-05-01": 4.3,
+          "2026-06-01": 4.2,
+          "2026-07-01": 4.1,
+          "2026-08-01": 4.1,
+          "2026-09-01": 4.2
+        }
+      },
+      {
+        "type": "series",
+        "values": {
+          "2026-07-01": 0.25,
+          "2026-08-01": -0.125,
+          "2026-09-01": -0.5
+        }
+      }
+    ],
+    "statistics": [
+      {
+        "low": {
+          "value": 101.25,
+          "keys": ["2026-10-09"]
+        },
+        "high": {
+          "value": 104.5,
+          "keys": ["2026-10-15"]
+        },
+        "first": {
+          "value": 101.25,
+          "keys": ["2026-10-09"]
+        },
+        "last": {
+          "value": 104.5,
+          "keys": ["2026-10-15"]
+        },
+        "median": {
+          "value": 102.5
+        },
+        "avg": {
+          "value": 102.6
+        },
+        "stdDev": {
+          "value": 1.2574776339959293
+        },
+        "zscore": {
+          "value": 1.5109612677263382
+        },
+        "percentile": {
+          "value": 100.0
+        }
+      },
+      {
+        "low": {
+          "value": 4.1,
+          "keys": ["2026-07-01", "2026-08-01"]
+        },
+        "high": {
+          "value": 4.5,
+          "keys": ["2025-11-01"]
+        },
+        "first": {
+          "value": 4.5,
+          "keys": ["2025-11-01"]
+        },
+        "last": {
+          "value": 4.2,
+          "keys": ["2026-09-01"]
+        },
+        "median": {
+          "value": 4.3
+        },
+        "avg": {
+          "value": 4.281818181818182
+        },
+        "stdDev": {
+          "value": 0.12504544628399578
+        },
+        "zscore": {
+          "value": -0.6543075677650942
+        },
+        "percentile": {
+          "value": 31.81818181818182
+        }
+      },
+      {
+        "low": {
+          "value": -0.5,
+          "keys": ["2026-09-01"]
+        },
+        "high": {
+          "value": 0.25,
+          "keys": ["2026-07-01"]
+        },
+        "first": {
+          "value": 0.25,
+          "keys": ["2026-07-01"]
+        },
+        "last": {
+          "value": -0.5,
+          "keys": ["2026-09-01"]
+        },
+        "median": {
+          "value": -0.125
+        },
+        "avg": {
+          "value": -0.125
+        },
+        "stdDev": {
+          "value": 0.375
+        },
+        "zscore": {
+          "value": -1.0
+        },
+        "percentile": {
+          "value": 33.333333333333336
+        }
+      }
+    ],
+    "asset_ids": ["MA_SYNTHETIC_EXMP_UW"],
+    "entities": [
+      [
+        {
+          "entityName": "EXMP UW",
+          "mqid": "MA_SYNTHETIC_EXMP_UW",
+          "type": "asset",
+          "assetName": "Example Corp",
+          "properties": {
+            "assetClass": "Equity",
+            "description": "",
+            "assetType": "Single Stock",
+            "region": null
+          }
+        }
+      ],
+      [],
+      [
+        {
+          "entityName": "EXMP UW",
+          "mqid": "MA_SYNTHETIC_EXMP_UW",
+          "type": "asset",
+          "assetName": "Example Corp",
+          "properties": {
+            "assetClass": "Equity",
+            "description": "",
+            "assetType": "Single Stock",
+            "region": null
+          }
+        }
+      ]
+    ],
+    "datasets": ["FRED", "EXAMPLE_PRICES"],
+    "tsdb_symbols": []
+  }
+}

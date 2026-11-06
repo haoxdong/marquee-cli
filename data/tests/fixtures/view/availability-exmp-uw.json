@@ -1,0 +1,138 @@
+{
+  "measures": [
+    {
+      "origin": "market_data",
+      "frequency": "End Of Day",
+      "description": "Spot price.",
+      "dataField": "spot",
+      "name": "spot",
+      "group": "measures",
+      "returns": {
+        "type": "series",
+        "description": "date-based time series of absolute value"
+      },
+      "datasets": [
+        { "id": "EXAMPLE_EOD", "vendor": "Example Vendor", "linkable": true }
+      ],
+      "restrictions": {
+        "asset_class": "Equity",
+        "asset_type": ["ETF", "Single Stock"]
+      }
+    },
+    {
+      "origin": "market_data",
+      "frequency": "Real Time",
+      "description": "Spot price.",
+      "dataField": "spot",
+      "name": "spot",
+      "group": "measures",
+      "returns": {
+        "type": "series",
+        "description": "date-based time series of absolute value"
+      },
+      "datasets": [
+        { "id": "EXAMPLE_RT", "vendor": "Example Vendor", "linkable": true }
+      ],
+      "restrictions": {
+        "asset_class": "Equity",
+        "asset_type": ["ETF", "Single Stock"]
+      }
+    },
+    {
+      "name": "example_estimates",
+      "parameters": [
+        {
+          "name": "metric",
+          "variadic": false,
+          "default": "Earnings Per Share",
+          "type": "enum string",
+          "values": ["Earnings Per Share", "Sales"],
+          "description": "metric for estimate e.g. EPS"
+        },
+        {
+          "name": "period",
+          "variadic": false,
+          "default": 1,
+          "type": "int",
+          "description": "rolling window for the estimate"
+        }
+      ],
+      "group": "measures_example",
+      "functionSignature": "example_estimates(metric='Earnings Per Share', period=1)",
+      "returns": { "type": "series" },
+      "entity_type": "asset",
+      "description": "Consensus estimates, as an example vendor reports them. **Usage** Pick a metric.",
+      "datasets": [
+        {
+          "id": "EXAMPLE_ESTIMATES_A",
+          "vendor": "Example Research",
+          "linkable": true
+        },
+        {
+          "id": "EXAMPLE_ESTIMATES_B",
+          "vendor": "Example Research",
+          "linkable": true
+        }
+      ],
+      "restrictions": {
+        "asset_class": "Equity",
+        "asset_type": ["Single Stock"]
+      }
+    },
+    {
+      "origin": "market_data",
+      "frequency": "End Of Day",
+      "description": "Implied volatility.",
+      "name": "implied_volatility",
+      "group": "measures",
+      "returns": { "type": "series" },
+      "datasets": [
+        { "id": "EXAMPLE_VOL", "vendor": "Example Vendor", "linkable": false }
+      ],
+      "autocomplete": [
+        {
+          "name": "tenor",
+          "values": [
+            {
+              "conditions": { "assetClass": ["FX"] },
+              "default": "1y",
+              "allowed": ["1m", "1y"]
+            },
+            {
+              "conditions": { "assetClass": ["Equity"] },
+              "default": "1m",
+              "allowed": ["1m", "3m"]
+            }
+          ]
+        }
+      ],
+      "restrictions": {
+        "asset_class": "Equity",
+        "asset_type": ["Single Stock"]
+      }
+    },
+    {
+      "origin": "market_data",
+      "frequency": "End Of Day",
+      "description": "Short interest.",
+      "name": "short_interest",
+      "group": "measures",
+      "returns": { "type": "series" },
+      "datasets": [],
+      "restrictions": { "asset_class": "Equity" }
+    },
+    {
+      "origin": "market_data",
+      "frequency": "End Of Day",
+      "description": "FX swap rate.",
+      "name": "fx_swap_rate",
+      "group": "measures",
+      "returns": { "type": "series" },
+      "datasets": [
+        { "id": "EXAMPLE_FX", "vendor": "Example Vendor", "linkable": true }
+      ],
+      "restrictions": { "asset_class": "FX" }
+    }
+  ],
+  "requestId": "synthetic-request"
+}

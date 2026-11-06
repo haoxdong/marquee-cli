@@ -1,0 +1,76 @@
+{
+  "totalResults": 1000,
+  "results": [
+    {
+      "id": "DCFREDUNRATE",
+      "title": "Unemployment Rate",
+      "frequency": "Monthly",
+      "units": "Percent",
+      "seasonalAdjustmentShort": "SA",
+      "notes": "Example notes on the series."
+    },
+    {
+      "id": "DCFREDUNRATENSA",
+      "title": "Unemployment Rate",
+      "frequency": "Monthly",
+      "units": "Percent",
+      "seasonalAdjustmentShort": "NSA"
+    },
+    {
+      "id": "DCFREDU2RATE",
+      "title": "Unemployment Rate - Job Losers (U-2)",
+      "frequency": "Monthly",
+      "units": "Percent",
+      "seasonalAdjustmentShort": "SA"
+    },
+    {
+      "id": "DCFREDNROU",
+      "title": "Noncyclical Rate of Unemployment",
+      "frequency": "Quarterly",
+      "units": "Percent",
+      "seasonalAdjustmentShort": "NSA"
+    },
+    {
+      "id": "DCFREDCAUR",
+      "title": "Unemployment Rate in California",
+      "frequency": "Monthly",
+      "units": "Percent",
+      "seasonalAdjustmentShort": "SA"
+    },
+    {
+      "id": "DCFREDLNS14024887",
+      "title": "Unemployment Rate - 16-24 Yrs.",
+      "frequency": "Monthly",
+      "units": "Percent",
+      "seasonalAdjustmentShort": "SA"
+    },
+    {
+      "id": "DCFREDTXUR",
+      "title": "Unemployment Rate in Texas",
+      "frequency": "Monthly",
+      "units": "Percent",
+      "seasonalAdjustmentShort": "SA"
+    },
+    {
+      "id": "DCFREDUNRATEMD",
+      "title": "FOMC Summary of Economic Projections for the Civilian Unemployment Rate, Median",
+      "frequency": "Annual",
+      "units": "Percent",
+      "seasonalAdjustmentShort": "NSA"
+    },
+    {
+      "id": "DCFREDLNS14000003",
+      "title": "Unemployment Rate - White",
+      "frequency": "Monthly",
+      "units": "Percent",
+      "seasonalAdjustmentShort": "SA"
+    },
+    {
+      "id": "DCFREDLNS14000002",
+      "title": "Unemployment Rate - Women",
+      "frequency": "Monthly",
+      "units": "Percent",
+      "seasonalAdjustmentShort": "SA"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "status": 200,
+  "body": {
+    "assets": {
+      "totalResults": 1,
+      "results": [
+        {
+          "id": "MA_SYNTHETIC_XFUZ8",
+          "name": "Example Rate Future DEC28",
+          "type": "Future",
+          "bbid": "XFUZ8 Comdty"
+        }
+      ]
+    }
+  }
+}

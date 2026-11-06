@@ -1,0 +1,35 @@
+{
+  "requestBody": {
+    "expressions": ["Asset(\"EXMP UW\").close_price()"],
+    "statistics": true,
+    "realTime": false,
+    "hints": [],
+    "variables": {},
+    "interval": "1D",
+    "startDate": "2025-10-16",
+    "endDate": "2026-10-16"
+  },
+  "status": 400,
+  "body": {
+    "results": [
+      {
+        "error": "Error",
+        "message": "Bad Request (Bad Request) (Historical mode)",
+        "statusCode": 400
+      }
+    ],
+    "expressions": ["EXMP UW.close_price()"],
+    "statistics": [
+      {
+        "error": "Error",
+        "message": "No statistics for non-series object."
+      }
+    ],
+    "asset_ids": [],
+    "entities": [
+      [{ "entityName": "EXMP UW", "mqid": "EXMP UW", "type": "asset" }]
+    ],
+    "datasets": [],
+    "tsdb_symbols": []
+  }
+}

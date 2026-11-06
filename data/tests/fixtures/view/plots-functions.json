@@ -1,0 +1,95 @@
+{
+  "results": [
+    {
+      "name": "zscores",
+      "parameters": [
+        {
+          "name": "x",
+          "variadic": false,
+          "type": "series",
+          "description": "time series of prices"
+        },
+        {
+          "name": "w",
+          "variadic": false,
+          "type": ["Window", "int", "string"],
+          "description": "Window or int: size of window and ramp up to use.\nWindow size defaults to length of series."
+        }
+      ],
+      "group": "statistics",
+      "functionSignature": "zscores(x, w)",
+      "returns": { "type": "series", "description": "timeseries of z-scores" },
+      "description": "Rolling z-scores over a given window **Usage** Calculate the standard score of each value over the window."
+    },
+    {
+      "name": "zscore_band",
+      "parameters": [
+        {
+          "name": "x",
+          "variadic": false,
+          "type": "series",
+          "description": "time series"
+        },
+        {
+          "name": "method",
+          "variadic": false,
+          "default": "step",
+          "type": "enum string",
+          "values": ["intersect", "step", "nan"],
+          "description": "how to align dates"
+        }
+      ],
+      "group": "statistics",
+      "functionSignature": "zscore_band(x, method='step')",
+      "returns": { "type": "series" },
+      "description": "An example band around z-scores."
+    }
+  ],
+  "classes": [
+    {
+      "name": "MarketCoordinate",
+      "parameters": [
+        {
+          "name": "coordinate",
+          "variadic": false,
+          "type": "string",
+          "description": "the coordinate name"
+        }
+      ],
+      "group": "constructors",
+      "functionSignature": "MarketCoordinate(coordinate)",
+      "hidden": true,
+      "returns": {
+        "type": "MarketCoordinate",
+        "methods": [
+          {
+            "name": "value",
+            "parameters": [
+              {
+                "name": "location",
+                "variadic": false,
+                "default": "NYC",
+                "type": "enum string",
+                "values": ["NYC", "LDN"],
+                "description": "where close data was recorded"
+              }
+            ],
+            "functionSignature": "value(location='NYC')",
+            "returns": { "type": "series" },
+            "description": "Get the coordinate's value."
+          },
+          {
+            "name": "bid",
+            "parameters": [],
+            "functionSignature": "bid()",
+            "returns": { "type": "series" },
+            "description": "Get the coordinate's bid."
+          }
+        ]
+      },
+      "description": "A market data coordinate."
+    }
+  ],
+  "backtest": {},
+  "requestId": "synthetic-request"
+}

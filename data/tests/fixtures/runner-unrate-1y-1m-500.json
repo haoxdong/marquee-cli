@@ -1,0 +1,22 @@
+{
+  "requestBody": {
+    "expressions": ["FRED(UNRATE).value()"],
+    "statistics": true,
+    "realTime": false,
+    "hints": [],
+    "variables": {},
+    "interval": "1M",
+    "startDate": "2025-10-16",
+    "endDate": "2026-10-16"
+  },
+  "status": 500,
+  "body": {
+    "statusCode": 500,
+    "reasonPhrase": "Internal Server Error",
+    "title": "500 - Internal Server Error",
+    "messages": [
+      "Error ID: 0000000000000000001",
+      "Message: 500\nInternal Server Error"
+    ]
+  }
+}

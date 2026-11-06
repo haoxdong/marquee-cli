@@ -1,0 +1,119 @@
+import type { Tagged } from 'type-fest';
+
+// The same tags as the Widget module's identifiers (ADR 0074). The registry sits below
+// that module, so it names the tags instead of importing the types.
+type WidgetId = Tagged<string, 'WidgetId'>;
+type ConfigId = Tagged<string, 'ConfigId'>;
+
+/** The stored name of an Referent instance, without its `@`: `w1`, `s1.w2`. */
+export type Ref = Tagged<string, 'Ref'>;
+
+export type InteractionSessionNamespaceOptions = Readonly<{
+  dir?: string;
+  session?: number | string | NodeJS.ProcessEnv;
+  inactivityMs?: number;
+  maxNamespaces?: number;
+  now?: () => number;
+}>;
+
+export interface InteractionSessionNamespace<T> {
+  read(): T | undefined;
+  update(updater: (current: T | undefined) => T): T;
+}
+
+type WidgetRefIdentity = Readonly<{
+  type: 'widget';
+  widgetId: WidgetId;
+  configurationId: ConfigId | null;
+  selectedContext: string | null;
+}>;
+
+export type ReferentRef =
+  | Readonly<{ type: 'search'; searchKind: 'market-data' | 'research' }>
+  | (WidgetRefIdentity & Readonly<{ dashboardId?: never; childId?: never }>)
+  | (WidgetRefIdentity & Readonly<{ dashboardId: string; childId: string }>)
+  | Readonly<{ type: 'dashboard'; dashboardId: string }>
+  | Readonly<{
+      type: 'entity-feed';
+      entityId: string;
+      entityKind: 'asset' | 'country' | 'portfolio';
+    }>
+  | Readonly<{ type: 'section'; dashboardId: string; sectionId: string }>
+  | Readonly<{ type: 'document'; documentId: string; realm: 'markets' | 'research' }>;
+
+export type ReferentIdentity =
+  | { family: 'search'; searchKind: 'market-data' | 'research' }
+  | {
+      family: 'widget';
+      widgetId: string;
+      configurationId: string | null;
+      selectedContext: string | null;
+    }
+  | { family: 'dashboard'; dashboardId: string }
+  | {
+      family: 'entity-feed';
+      entityId: string;
+      entityKind: 'asset' | 'country' | 'portfolio';
+    }
+  | { family: 'section'; dashboardId: string; sectionId: string }
+  | { family: 'document'; documentId: string; realm: 'markets' | 'research' };
+
+export interface ReferentMembership {
+  ancestors: string[];
+  dashboardId?: string;
+  dashboardChildId?: string;
+}
+
+export interface StoredReferent {
+  ref: ReferentRef;
+  identity: ReferentIdentity;
+  membership: ReferentMembership;
+}
+
+export interface RegistryReferentInput {
+  namespace: string;
+  root: ReferentRef;
+  refs?: Record<string, ReferentRef>;
+  payload: unknown;
+}
+
+export interface RegistryReferent {
+  namespace: string;
+  root: ReferentRef;
+  refs: Record<string, ReferentRef>;
+  payload: unknown;
+}
+
+export interface RegistryReferentHandle extends RegistryReferent {
+  childRef(name: string): Ref;
+}
+
+export type ReferentResolution =
+  | { ok: true; cleanRef: string; ref: ReferentRef }
+  | { ok: false; cleanRef: string; message: string };
+
+export interface ReferentRegistry {
+  claimSearch(): Ref;
+  claimWidget(): Ref;
+  claimDashboard(): Ref;
+  claimContent(): Ref;
+  setRefs(namespace: string, refs: Record<string, ReferentRef>): void;
+  updateRefs(
+    refNames: readonly string[],
+    updater: (refs: Readonly<Record<string, ReferentRef | undefined>>) => Record<string, ReferentRef>,
+  ): void;
+  resolveRef(name: Ref): ReferentRef | undefined;
+  resolveReferent(name: Ref): StoredReferent | undefined;
+  getAllRefs(): Record<string, ReferentRef>;
+  setPayload(namespace: string, payload: unknown): void;
+  getPayload(namespace: string): unknown;
+  storeReferent(input: RegistryReferentInput): RegistryReferentHandle;
+  getReferent(namespace: string): RegistryReferent | undefined;
+  refName(name: string): Ref;
+  resolve(name: string): ReferentResolution;
+  formatUnknownRef(
+    cleanRef: string,
+    options?: { prefix?: 'Error' | 'error' },
+  ): string;
+  clean(): void;
+}
