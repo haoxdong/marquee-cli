@@ -1,6 +1,6 @@
 # Marquee CLI Context
 
-The Marquee CLI retrieves Marquee artifacts (MarketView Widgets and Dashboards, and Content) and evaluates Expressions over Marquee data for agents and people. Its relationships to Marquee and to the agent platform are in [GLOSSARY-MAP.md](../GLOSSARY-MAP.md).
+The Marquee CLI retrieves MarketView Widgets and Dashboards, and Content, and evaluates Expressions over Marquee data for agents and people. Its relationships to Marquee and to the agent platform are in [GLOSSARY-MAP.md](../GLOSSARY-MAP.md).
 
 ## Language
 
@@ -15,19 +15,19 @@ The single action word that ends every CLI command, after a path of one or two n
 _Avoid_: subcommand (ambiguous between nouns and verbs)
 
 **CLI Interaction Session**:
-A host-supplied identity that scopes one set of Artifacts: an agent conversation shares it across its main agent, subagents, and all their commands, and a human terminal shares it across its commands. A new identity starts empty, and an inactive one may expire without an explicit close.
+A host-supplied identity that scopes one set of Referents: an agent conversation shares it across its main agent, subagents, and all their commands, and a human terminal shares it across its commands. A new identity starts empty, and an inactive one may expire without an explicit close.
 _Avoid_: cwd session, process session, repository session, explicit-close lifecycle
 
-**Artifact**:
-A CLI result instance with a typed identity, scoped to one CLI Interaction Session and reusable by later commands through a Ref. The families are MarketView Search, Content Search, Widget, Dashboard, Entity Feed, Section, and Document; cached payloads, links, parameters, facets, and rendered data are Artifact state, not Artifacts. A nested Artifact keeps its own identity under one parent: a search finds Widgets, Dashboard Surfaces, and Documents without owning them or granting edit rights, while a Dashboard's Widget member also carries its Dashboard and Dashboard Child.
-_Avoid_: provider object, arbitrary cache record, response envelope, Widget Snippet
+**Referent**:
+The thing a Ref names: a CLI result instance with a typed identity, scoped to one CLI Interaction Session and reusable by later commands through a Ref. The families are MarketView Search, Content Search, Widget, Dashboard, Entity Feed, Section, and Document; cached payloads, links, parameters, facets, and rendered data are Referent state, not Referents. A nested Referent keeps its own identity under one parent: a search finds Widgets, Dashboard Surfaces, and Documents without owning them or granting edit rights, while a Dashboard's Widget member also carries its Dashboard and Dashboard Child.
+_Avoid_: Artifact (that names only the agent's downloadable file in Files, ADR 0081), provider object, arbitrary cache record, response envelope, Widget Snippet
 
 **Ref**:
-The stored name of an Artifact instance, such as `@w1`, `@d1`, `@s1`, or `@c1`. A dot means membership (`@s1.w1` is Widget 1 of search 1), never property access.
+The stored name of a Referent, such as `@w1`, `@d1`, `@s1`, or `@c1`. A dot means membership (`@s1.w1` is Widget 1 of search 1), never property access.
 _Avoid_: attribute refs, property refs, `.data`/`.link` child refs, `@cm`/`@cr` prefixes
 
 **Browser Session**:
-One isolated agent-browser browser, with its own tabs and page state, named by the caller in agent-browser's own terms. Unnamed commands share one Browser Session per CLI Interaction Session; parallel subagents that browse name their own, while still sharing that CLI Interaction Session's Artifacts. An idle Browser Session ends on its own.
+One isolated agent-browser browser, with its own tabs and page state, named by the caller in agent-browser's own terms. Unnamed commands share one Browser Session per CLI Interaction Session; parallel subagents that browse name their own, while still sharing that CLI Interaction Session's Referents. An idle Browser Session ends on its own.
 _Avoid_: session (bare), Marquee session, lease, pool slot
 
 ### MarketView
@@ -49,12 +49,12 @@ A saved set of Widget parameter and date choices identified by a `WC...` ID and 
 _Avoid_: context, widget context
 
 **Configured Widget**:
-A Widget paired with a Widget Config. It is one optional saved form of a Widget, not the identity every Widget Artifact must have.
-_Avoid_: Widget Artifact, Widget Config, Dashboard child
+A Widget paired with a Widget Config. It is one optional saved form of a Widget, not the identity every Widget Referent must have.
+_Avoid_: Widget Referent, Widget Config, Dashboard child
 
-**Widget Artifact**:
+**Widget Referent**:
 A Widget identity stored by the CLI: Widget ID plus optional Widget Config ID and Selected Context. It names a Widget for a later command and is not a snapshot of rendered values.
-_Avoid_: Configured Widget (when the Config ID is absent), Widget cache, render snapshot
+_Avoid_: Widget Artifact, Configured Widget (when the Config ID is absent), Widget cache, render snapshot
 
 **Widget Render**:
 Rendering a Widget from exactly four values: Widget Definition, Widget Parameter Overrides, Selected Context, and Widget Dates. It neither needs nor creates a Widget Config.
