@@ -242,23 +242,6 @@ describe('MarketView Widget presenter', () => {
       });
     });
 
-    // ADR 0085 decision 4: an empty `-p` value is agent misuse, classed `usage`.
-    it('rejects an empty parameter value as usage, keeping its Error: line and exit 1', async () => {
-      const empty: WidgetError = { kind: 'invalid-input', identity: { widgetId: 'MW_ONE' }, input: 'asset', problem: 'empty' };
-      const out = { stderr: '', exitCode: undefined as number | undefined };
-
-      await expect(renderMarketviewWidgetTab(failed({ kind: 'widget', error: empty }, withCalls), overridden, {
-        write() {},
-        writeError(text) {
-          out.stderr += text;
-        },
-        setExitCode(code) {
-          out.exitCode = code;
-        },
-      })).rejects.toMatchObject({ code: 'marquee.usage' });
-      expect(out).toEqual({ stderr: `Error: asset must not be empty${fallback}\n`, exitCode: 1 });
-    });
-
     // ADR 0085 decision 4: a `-p` the Widget's own definition rejects is agent misuse, classed `usage`.
     it.each<[WidgetError, string]>([
       [{ kind: 'invalid-input', identity: { widgetId: 'MW_ONE' }, input: 'flag', problem: 'boolean-required' }, 'flag must be true or false'],

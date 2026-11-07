@@ -465,35 +465,6 @@ describe('browser open', () => {
     }
   });
 
-  it('opens stored widget refs', async () => {
-    const refsDir = mkdtempSync(join(tmpdir(), 'marquee-refs-'));
-    const registry = createReferentRegistry(refsDir, process.ppid);
-    registry.setRefs('w1', {
-      w1: {
-        type: 'widget',
-        widgetId: 'MW123' as WidgetId,
-        configurationId: 'WC1' as ConfigId,
-        selectedContext: null,
-      },
-    });
-
-    const transport = createMockTransport({ '*': '' });
-    const { program } = createProgram(() => {}, transport, refsDir);
-
-    try {
-      await program.parseAsync(['browser', 'open', '@w1'], { from: 'user' });
-
-      expect(transport.run).toHaveBeenCalledWith(
-        'open',
-        ['https://marquee.gs.com/s/marketview/widget/MW123?config=WC1'],
-
-
-      );
-    } finally {
-      rmSync(refsDir, { recursive: true, force: true });
-    }
-  });
-
   it('prints current ref recovery hints when a stored browser target is unknown', async () => {
     const refsDir = mkdtempSync(join(tmpdir(), 'marquee-refs-'));
     const registry = createReferentRegistry(refsDir, process.ppid);

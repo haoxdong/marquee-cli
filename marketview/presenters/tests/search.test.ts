@@ -626,16 +626,6 @@ describe('MarketView Search input parsing', () => {
     expect(run).toEqual({ output: '', errors: message, exitCodes: [1], requests: [], usage: true });
   });
 
-  it('rejects an empty query as usage before searching', async () => {
-    expect(await runSearch({ query: '  ' })).toEqual({
-      output: '',
-      errors: 'Error: marketview search query must not be empty\n',
-      exitCodes: [1],
-      requests: [],
-      usage: true,
-    });
-  });
-
   // ADR 0085 decision 4: agent misuse, classed `usage`.
   it('rejects an empty query as usage before searching', async () => {
     expect(await runSearch({ query: '  ' })).toEqual({
