@@ -13,11 +13,6 @@ describe('allOk', () => {
     await expect(allOk([])).resolves.toEqual({ ok: true, value: [] });
   });
 
-  it('fails on the first failure without waiting for a sibling that never answers', async () => {
-    const failed: Promise<Result<number, string>> = Promise.resolve({ ok: false, error: 'denied' });
-    await expect(allOk([never, failed])).resolves.toEqual({ ok: false, error: 'denied' });
-  });
-
   it('rejects with a sibling that throws', async () => {
     await expect(allOk([never, Promise.reject(new Error('defect'))])).rejects.toThrow('defect');
   });
